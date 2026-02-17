@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dec_sol - Design Engine</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-color: #000000;
+            /* AMOLED Black */
+            --text-color: #e2e8f0;
+            --accent-color: #22d3ee;
+            /* Cyan */
+            --success-color: #22c55e;
+            --error-color: #ef4444;
+            --terminal-bg: #111111;
+            --cursor-color: #22d3ee;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Container - Centered Single Panel */
+        .container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        /* Background Gradient Effect */
+        .container::before {
+            content: '';
+            position: absolute;
+            width: 150%;
+            height: 150%;
+            background: radial-gradient(circle at center, rgba(34, 211, 238, 0.05) 0%, transparent 60%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Terminal Window - Centered */
+        .terminal-window {
+            background: var(--terminal-bg);
+            border-radius: 12px;
+            padding: 3rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9);
+            font-family: 'JetBrains Mono', monospace;
+            border: 1px solid #333;
+            max-width: 700px;
+            width: 90%;
+            position: relative;
+            z-index: 1;
+        }
+
+        .terminal-header {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 2rem;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .dot.red {
+            background-color: #ef4444;
+        }
+
+        .dot.yellow {
+            background-color: #eab308;
+        }
+
+        .dot.green {
+            background-color: #22c55e;
+        }
+
+        .typewriter h1 {
+            color: var(--accent-color);
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .typewriter p {
+            color: #94a3b8;
+            margin-bottom: 3rem;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .command-line {
+            display: flex;
+            align-items: center;
+            color: #cbd5e1;
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        .prompt {
+            color: var(--success-color);
+            margin-right: 12px;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 1.2em;
+            background-color: var(--cursor-color);
+            animation: blink 1s step-end infinite;
+            vertical-align: middle;
+            margin-left: 5px;
+        }
+
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0;
+            }
+        }
+
+        /* Auth Links */
+        .auth-actions {
+            margin-top: 2rem;
+            display: flex;
+            gap: 2rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1rem;
+        }
+
+        .auth-link {
+            color: #94a3b8;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-bottom: 1px dashed #555;
+            padding-bottom: 2px;
+        }
+
+        .auth-link:hover {
+            color: var(--accent-color);
+            border-bottom-color: var(--accent-color);
+        }
+
+        /* Auth Overlay (Nano/Vim style) */
+        .auth-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* Cover terminal window */
+            background: rgba(17, 17, 17, 0.98);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+        }
+
+        .auth-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .auth-box {
+            background: transparent;
+            width: 100%;
+            padding: 2rem;
+        }
+
+        .nano-header {
+            background: #e2e8f0;
+            color: #000;
+            padding: 4px 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 2rem;
+            border-radius: 2px;
+        }
+
+        .form-group {
+            margin-bottom: 2rem;
+        }
+
+        .form-label {
+            display: block;
+            color: var(--accent-color);
+            margin-bottom: 0.8rem;
+            font-size: 0.9rem;
+        }
+
+        .ghost-input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #555;
+            color: #fff;
+            padding: 8px 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.2rem;
+            outline: none;
+        }
+
+        .ghost-input:focus {
+            border-bottom-color: var(--accent-color);
+        }
+
+        .nano-footer {
+            margin-top: 2rem;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            color: #888;
+        }
+
+        .cmd-btn {
+            background: transparent;
+            border: 1px solid #555;
+            color: #fff;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-family: 'JetBrains Mono', monospace;
+            transition: all 0.2s;
+        }
+
+        .cmd-btn:hover {
+            background: #333;
+            border-color: #888;
+        }
+
+        .cmd-btn.primary {
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+        }
+
+        .cmd-btn.primary:hover {
+            background: rgba(34, 211, 238, 0.1);
+        }
+
+        .error-msg {
+            color: var(--error-color);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            display: none;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="terminal-window">
+
+            <!-- Auth Overlay: Login -->
+            <div id="login-overlay" class="auth-overlay">
+                <div class="auth-box">
+                    <div class="nano-header"> GNU nano 7.2 | Login Buffer </div>
+                    <div class="error-msg" id="login-error"></div>
+                    <form id="login-form">
+                        <div class="form-group">
+                            <label class="form-label">&gt; USERNAME</label>
+                            <input type="text" class="ghost-input" id="login-username" required autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">&gt; PASSWORD</label>
+                            <input type="password" class="ghost-input" id="login-password" required>
+                        </div>
+                        <div class="nano-footer">
+                            <button type="button" class="cmd-btn" onclick="closeAuth()">^C Cancel</button>
+                            <button type="submit" class="cmd-btn primary">^O Login</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Auth Overlay: Signup -->
+            <div id="signup-overlay" class="auth-overlay">
+                <div class="auth-box">
+                    <div class="nano-header"> GNU nano 7.2 | New User Buffer </div>
+                    <div class="error-msg" id="signup-error"></div>
+                    <form id="signup-form">
+                        <div class="form-group">
+                            <label class="form-label">&gt; NEW_USERNAME</label>
+                            <input type="text" class="ghost-input" id="signup-username" required autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">&gt; SET_PASSWORD</label>
+                            <input type="password" class="ghost-input" id="signup-password" required>
+                        </div>
+                        <div class="nano-footer">
+                            <button type="button" class="cmd-btn" onclick="closeAuth()">^C Cancel</button>
+                            <button type="submit" class="cmd-btn primary">^O Create Account</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Main Terminal Content -->
+            <div class="terminal-header">
+                <div class="dot red"></div>
+                <div class="dot yellow"></div>
+                <div class="dot green"></div>
+            </div>
+
+            <div class="typewriter">
+                <div class="command-line">
+                    <span class="prompt" id="terminal-prompt">
+                        {% if user.is_authenticated %}
+                        {{ user.username }}@dec_sol:~$
+                        {% else %}
+                        user@dec_sol:~$
+                        {% endif %}
+                    </span>
+                    <span id="typing-text"></span><span class="cursor"></span>
+                </div>
+                <h1>Make Proper Decisions.</h1>
+                <p>
+                    Initialize your creative engine. <br>
+                    Render high-fidelity concepts. <br>
+                </p>
+
+                <div class="auth-actions" id="auth-actions">
+                    {% if user.is_authenticated %}
+                    <a class="auth-link" onclick="logout()">[ ~/logout ]</a>
+                    {% else %}
+                    <a class="auth-link" onclick="openAuth('login')">[ ./login ]</a>
+                    <a class="auth-link" onclick="openAuth('signup')">[ ./signup ]</a>
+                    {% endif %}
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // --- Typing Effect ---
+        const text = "./init_decision_engine.sh";
+        const typingElement = document.getElementById('typing-text');
+        let index = 0;
+        function type() {
+            if (index < text.length) {
+                typingElement.textContent += text.charAt(index);
+                index++;
+                setTimeout(type, 50 + Math.random() * 100);
+            }
+        }
+        setTimeout(type, 500);
+
+        // --- Auth Logic ---
+        function openAuth(type) {
+            document.querySelectorAll('.auth-overlay').forEach(el => el.classList.remove('active'));
+            document.getElementById(type + '-overlay').classList.add('active');
+            // Clear errors
+            document.querySelectorAll('.error-msg').forEach(el => el.style.display = 'none');
+            // Focus first input
+            setTimeout(() => {
+                const firstInput = document.getElementById(type + '-username');
+                if (firstInput) firstInput.focus();
+            }, 100);
+        }
+
+        function closeAuth() {
+            document.querySelectorAll('.auth-overlay').forEach(el => el.classList.remove('active'));
+        }
+
+        // Login
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+
+            try {
+                const res = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                const data = await res.json();
+
+                if (res.ok) {
+                    window.location.reload();
+                } else {
+                    const errEl = document.getElementById('login-error');
+                    errEl.textContent = "Error: " + data.error;
+                    errEl.style.display = 'block';
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        });
+
+        // Signup
+        document.getElementById('signup-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('signup-username').value;
+            const password = document.getElementById('signup-password').value;
+
+            try {
+                const res = await fetch('/api/signup', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                const data = await res.json();
+
+                if (res.ok) {
+                    window.location.reload();
+                } else {
+                    const errEl = document.getElementById('signup-error');
+                    errEl.textContent = "Error: " + data.error;
+                    errEl.style.display = 'block';
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        });
+
+        // Logout
+        async function logout() {
+            await fetch('/api/logout', { method: 'POST' });
+            window.location.reload();
+        }
+
+    </script>
+</body>
+
+</html>
