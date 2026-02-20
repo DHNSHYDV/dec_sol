@@ -146,7 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     return "Server error. Make sure Flask is running (flask run) and refresh the page.";
                 }
                 const data = await resp.json();
-                return data.reply || "I couldn't process that. Please try again or contact support@deshkehaath.in.";
+                return data.reply || "I couldn't process that. Please try again or contact support@featherlite.com.";
             } catch (e) {
                 return "Connection failed. Start the server with: flask run. Then refresh and try again.";
             }

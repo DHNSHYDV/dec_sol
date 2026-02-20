@@ -1,83 +1,45 @@
-# Desh Ke Haath: Indian Heritage Craft E-commerce
+# Featherlite: Professional Wardrobe Care
 
-**"Connecting India's Soul to the Digital World"**
+**"Pristine Care, Professional Finish"**
 
-Desh Ke Haath is a premium e-commerce platform dedicated to showcasing and selling authentic Indian handicrafts. We bridge the gap between traditional Indian artisans and the modern digital market, celebrating the mantra *"States Alag, Jazba Ek"* (Different States, One Spirit).
+Featherlite Laundry Studio is a premium laundry and dry cleaning flagship that combines high-end garment care with state-of-the-art interactive technology. We provide a seamless experience for your wardrobe, from 3D restoration previews to AI-powered pickup scheduling.
 
 ## 🚀 Key Features
 
-- **Curated Craft Collection**: Explore high-quality handicrafts categorized by Indian states (Jaipur Blue Pottery, Banarasi Saree, Madhubani Art, etc.).
-- **AI-Powered Discovery**: 
-  - **Vision Engine**: Real-time analysis of craft patterns and authenticity.
-  - **Craft Assistant**: A Gemini-powered AI chatbot to help users learn about heritage and find products.
-- **Seamless Shopping Experience**:
-  - Dynamic shopping cart with client-side persistence.
-  - Robust checkout flow with integrated shipping management.
-  - Multiple payment options including a dynamic UPI QR code generator.
-- **User Trust & Security**:
-  - Secure authentication (Sign Up / Log In).
-  - Order history and localized profile management.
-- **Premium Aesthetics**: Modern, dark-themed UI with glassmorphism and smooth micro-animations.
+- **3D Experience Studio**: Interact with high-fidelity 3D models of sneakers, curtains, and carpets to preview restoration results.
+- **Machinery Zoom Parallax**: A cinematic look into our professional machinery with interactive zoom effects on the About page.
+- **SaaS Pickup Scheduling**: Secure, authenticated booking flow with real-time slot validation based on local timezone and capacity.
+- **Custom Video Tour**: Integrated machinery and workplace showcase with a premium custom-built media player.
+- **Modern Dark UI**: A high-performance, dark-themed frontend built with GSAP and Lenis for smooth scrolling and micro-animations.
 
 ## 🛠 Tech Stack
 
 - **Backend**: [Flask](https://flask.palletsprojects.com/) (Python)
 - **Database**: [SQLAlchemy](https://www.sqlalchemy.org/) with SQLite
 - **Authentication**: [Flask-Login](https://flask-login.readthedocs.io/)
-- **Frontend**: HTML5, Vanilla CSS3 (Custom Design System), JavaScript (ES6+)
-- **AI Integration**: [SambaNova Systems](https://sambanova.ai/) & [Google Gemini](https://ai.google.dev/)
-- **APIs**: [QR Server API](https://goqr.me/api/) for dynamic payment codes
+- **Frontend**: HTML5, Vanilla CSS3, JavaScript (ES6+)
+- **Animations**: [GSAP](https://greensock.com/gsap/) & [ScrollTrigger](https://greensock.com/scrolltrigger/)
+- **Smooth Scrolling**: [Lenis](https://lenis.darkroom.engineering/)
+- **3D Rendering**: [Three.js](https://threejs.org/)
 
 ## 📦 Project Structure
 
 ```text
 ├── app.py              # Main Flask application and API routes
 ├── models.py           # SQLAlchemy database models
-├── instance/           # Local SQLite database (site.db)
+├── instance/           # Local SQLite database
 ├── static/
-│   ├── css/            # Stylized custom CSS modules
-│   ├── js/             # Interactive frontend logic
-│   └── uploads/        # User-uploaded profile images
+│   ├── css/            # Custom CSS modules
+│   ├── js/             # Frontend logic & 3D scene Code
+│   ├── models/         # 3D .glb assets
+│   └── images/         # Branding and Machinery assets
 ├── templates/          # Jinja2 HTML templates
 └── requirements.txt    # Project dependencies
 ```
-
-## 🛠 Installation & Setup
-
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/DHNSHYDV/craft-site.git
-   cd craft-site
-   ```
-
-2. **Create a virtual environment**:
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
-   ```
-
-3. **Install dependencies**:
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-4. **Environment Variables**:
-   Create a `.env` file in the root directory and add your keys:
-   ```env
-   SECRET_KEY=your_secret_key
-   SAMBANOVA_API_KEY=your_api_key
-   GEMINI_API_KEY=your_api_key
-   ```
-
-5. **Run the Application**:
-   ```bash
-   python app.py
-   ```
-   *The app will be available at `http://localhost:5001`.*
 
 ## 📄 License
 
 This project is licensed under the MIT License - see the `LICENSE` file for details.
 
 ---
-*Built with ❤️ for Indian Artisans.*
+*Built with ❤️ for Professional Garment Care.*
