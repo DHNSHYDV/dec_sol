@@ -1,0 +1,3660 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Featherlite | Professional Chaos, Meet Pristine Care</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <meta name="description" content="Feather Lite Laundry Studio - Professional care for your wardrobe and home.">
+    <link rel="preload" href="{{ url_for('static', filename='videos/hero_bg.mp4') }}" as="video" type="video/mp4">
+
+    <style>
+        :root {
+            --bg-color: #0f0f11;
+            --text-color: #f3f4f6;
+            --accent-cyan: #22d3ee;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --nav-height: 80px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        /* 3D Canvas - Just behind content, in front of video */
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            z-index: -2;
+        }
+
+        /* Video Background - Deepest layer */
+        .video-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -5;
+            opacity: 0.5;
+            /* Dim so text is readable */
+            filter: contrast(1.1) brightness(0.6) grayscale(100%);
+            /* Stylized charcoal look */
+            transition: opacity 1s ease;
+        }
+
+        .content-layer {
+            position: relative;
+            z-index: 10;
+        }
+
+        /* --- Navigation --- */
+        .nav-master-wrapper {
+            position: fixed;
+            top: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            z-index: 1000;
+            width: 95%;
+            max-width: 1300px;
+            justify-content: center;
+            opacity: 0;
+            /* Initially hidden for animation */
+        }
+
+        .glass-nav {
+            position: relative;
+            flex: 1;
+            max-width: 1200px;
+            height: var(--nav-height);
+            background: rgba(15, 15, 17, 0.6);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+            box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.5);
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-logo img {
+            height: 50px;
+            /* Adjust based on logo aspect ratio */
+            width: auto;
+            object-fit: contain;
+            /* Optional: Add a subtle drop shadow if the logo needs it */
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+            transition: transform 0.3s ease;
+        }
+
+        .nav-logo:hover img {
+            transform: scale(1.05);
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+            margin-left: 12px;
+            justify-content: center;
+        }
+
+        .brand-name {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            font-size: 1.25rem;
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+            line-height: 1;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .brand-tagline {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            font-size: 0.7rem;
+            color: #e5e7eb;
+            text-transform: uppercase;
+            letter-spacing: 0.16em;
+            margin-top: 3px;
+            opacity: 1;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .nav-item {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0.6rem 1.2rem;
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow: hidden;
+        }
+
+        .nav-item:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-icon {
+            width: 20px;
+            height: 20px;
+            stroke-width: 1.5px;
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .nav-item:hover .nav-icon {
+            transform: scale(1.1) rotate(-5deg);
+            stroke: #fff;
+            filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.5));
+        }
+
+        /* Mobile Nav Adjustments */
+        @media (max-width: 768px) {
+            .glass-nav {
+                width: 95%;
+                padding: 0 1rem;
+                height: 70px;
+                top: 1rem;
+            }
+
+            .nav-logo img {
+                height: 40px;
+            }
+
+            .brand-name {
+                display: none;
+                /* Hide text on small screens to save space */
+            }
+
+            .brand-tagline {
+                display: none;
+            }
+
+            .nav-item span {
+                display: none;
+                /* Hide labels, show icons only */
+            }
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            color: #94a3b8;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border-radius: 12px;
+        }
+
+        .nav-item:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-icon {
+            width: 20px !important;
+            height: 20px !important;
+            flex-shrink: 0;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Circular Profile Next to Navigation */
+        .profile-container-v2 {
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .profile-trigger {
+            background: rgba(255, 255, 255, 0.05);
+            /* Match nav items background */
+            border: 1px solid var(--glass-border);
+            color: #94a3b8;
+            width: 44px;
+            /* Matches default nav item height/feel */
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            padding: 0;
+        }
+
+        .profile-trigger:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .profile-dropdown-v2 {
+            position: absolute;
+            top: calc(100% + 12px);
+            right: 0;
+            width: 240px;
+            background: rgba(15, 15, 17, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 0.8rem;
+            display: none;
+            flex-direction: column;
+            gap: 4px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+            transform: translateY(10px);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 1001;
+        }
+
+        .dropdown-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0.8rem 1rem;
+            color: #d1d5db;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            border-radius: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .dropdown-link:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--accent-cyan);
+        }
+
+        .dropdown-icon {
+            width: 18px !important;
+            height: 18px !important;
+            opacity: 0.7;
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 768px) {
+            .profile-container-v2 {
+                top: 1rem;
+                right: 1rem;
+            }
+
+            .profile-trigger {
+                width: 44px;
+                height: 44px;
+            }
+        }
+
+
+
+        /* --- Hero Section --- */
+        .hero-section {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 2rem;
+            padding-top: var(--nav-height);
+        }
+
+        h1 {
+            font-family: 'Inter', sans-serif;
+            font-size: 5rem;
+            /* Larger impact */
+            font-style: normal;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            line-height: 1.05;
+            letter-spacing: -0.05em;
+            opacity: 0;
+            transform: translateY(30px);
+            text-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        p.subtitle {
+            font-size: 1.25rem;
+            color: #d1d5db;
+            margin-bottom: 3.5rem;
+            max-width: 650px;
+            line-height: 1.6;
+            opacity: 0;
+            transform: translateY(20px);
+            font-weight: 300;
+        }
+
+        .cta-container {
+            display: flex;
+            gap: 1.5rem;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .cta-button {
+            position: relative;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 1rem 2.5rem;
+            border-radius: 100px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            text-decoration: none;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .cta-button.primary {
+            background: var(--text-color);
+            color: var(--bg-color);
+            border-color: var(--text-color);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.3);
+        }
+
+        .cta-button.primary:hover {
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+            transform: translateY(-2px);
+        }
+
+        /* --- Experience Section (Overlay) --- */
+        .experience-section {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            /* background transparent so Three.js canvas (z-index:-2) shows through */
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            padding-bottom: 5rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.8s ease;
+        }
+
+        .experience-section.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .exp-controls {
+            width: 80%;
+            max-width: 600px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+            z-index: 101;
+        }
+
+        .slider-container {
+            width: 100%;
+            position: relative;
+            /* Container just holds the input, background moved to track */
+            height: 30px;
+            /* Give it space for thumb */
+            display: flex;
+            align-items: center;
+        }
+
+        input[type=range] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            background: transparent;
+            outline: none;
+            cursor: pointer;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* The Track */
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            cursor: pointer;
+        }
+
+        /* The Thumb */
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 24px;
+            width: 24px;
+            border-radius: 50%;
+            background: #fff;
+            border: 2px solid var(--bg-color);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            /* Center vertically on track: (trackHeight / 2) - (thumbHeight / 2) */
+            /* (4 / 2) - (24 / 2) = 2 - 12 = -10px */
+            margin-top: -10px;
+            transition: transform 0.2s;
+        }
+
+        input[type=range]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        /* --- Stage Manager Side Tabs --- */
+        .stage-manager-sidebar {
+            position: absolute;
+            left: 2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            z-index: 110;
+        }
+
+        .stage-tab {
+            width: 70px;
+            height: 70px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            color: #9ca3af;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Stage Manager Sidebar Overlay Base Hover */
+        .stage-tab:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+            color: #fff;
+        }
+
+        .stage-tab.active {
+            background: rgba(34, 211, 238, 0.15);
+            /* Cyan tint */
+            border-color: #22d3ee;
+            color: #22d3ee;
+            box-shadow: 0 0 20px rgba(34, 211, 238, 0.2);
+        }
+
+        .stage-tab svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        @media (max-width: 1024px) {
+            .stage-manager-sidebar {
+                left: 1rem;
+                top: 50%;
+            }
+
+            .stage-tab {
+                width: 60px;
+                height: 60px;
+            }
+        }
+
+        .label-container {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #9ca3af;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            background: none;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            transition: all 0.3s;
+            z-index: 102;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #fff;
+        }
+
+        .exp-content {
+            position: absolute;
+            top: 15%;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(-20px);
+            z-index: 101;
+            pointer-events: none;
+        }
+
+        .exp-title {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #fff;
+        }
+
+        .exp-subtitle {
+            font-size: 1.2rem;
+            color: #9ca3af;
+        }
+
+        /* --- Pickup Modal --- */
+        #pickup-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(15, 15, 17, 0.95);
+            backdrop-filter: blur(20px);
+            z-index: 2000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* Center for smaller form modal */
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        #pickup-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .pickup-content {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 2.5rem;
+            width: 90%;
+            max-width: 500px;
+            transform: translateY(20px) scale(0.95);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            position: relative;
+        }
+
+        #pickup-modal.active .pickup-content {
+            transform: translateY(0) scale(1);
+        }
+
+        .pickup-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .pickup-title {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 1.8rem;
+            color: #fff;
+            margin-bottom: 0.5rem;
+        }
+
+        .pickup-subtitle {
+            font-size: 0.95rem;
+            color: #9ca3af;
+        }
+
+        .pickup-form-group {
+            margin-bottom: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .pickup-label {
+            font-size: 0.9rem;
+            color: #e5e7eb;
+            font-weight: 500;
+        }
+
+        .pickup-input {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #fff;
+            padding: 0.8rem 1rem;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s;
+            color-scheme: dark;
+            /* Helps native date/time pickers adopt dark theme */
+        }
+
+        .pickup-input:focus {
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .pickup-submit {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            border-radius: 12px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 1rem;
+        }
+
+        .pickup-submit:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .pickup-close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: #9ca3af;
+            cursor: pointer;
+            padding: 0.5rem;
+            transition: color 0.3s;
+        }
+
+        .pickup-close-btn:hover {
+            color: #fff;
+        }
+
+        /* --- Pickup Modal Steps --- */
+        .pickup-step {
+            display: none;
+        }
+
+        .pickup-step.active {
+            display: block;
+        }
+
+        .branch-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .branch-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .branch-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateX(4px);
+        }
+
+        .branch-card.selected {
+            border-color: rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .branch-info {
+            flex: 1;
+        }
+
+        .branch-name {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .branch-address {
+            font-size: 0.8rem;
+            color: #9ca3af;
+            padding-left: 1.5rem;
+        }
+
+        .branch-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-left: 0.5rem;
+        }
+
+        .branch-dir-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(59, 130, 246, 0.15);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            color: #60a5fa;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .branch-dir-btn:hover {
+            background: rgba(59, 130, 246, 0.3);
+            transform: scale(1.1);
+        }
+
+        .pickup-back-btn {
+            position: absolute;
+            left: 1rem;
+            top: 1rem;
+            background: none;
+            border: none;
+            color: #9ca3af;
+            cursor: pointer;
+            padding: 0.5rem;
+            transition: color 0.2s;
+        }
+
+        .pickup-back-btn:hover {
+            color: #fff;
+        }
+
+        @media (max-width: 480px) {
+            .branch-card {
+                padding: 0.85rem 1rem;
+            }
+
+            .branch-name {
+                font-size: 0.95rem;
+            }
+
+            .pickup-content {
+                padding: 2rem 1.25rem;
+            }
+        }
+
+        /* --- Premium Modal --- */
+        #premium-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(15, 15, 17, 0.95);
+            backdrop-filter: blur(20px);
+            z-index: 2000;
+            /* Increased to stay above glass-nav which is 1000 */
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            /* Start from top to avoid clipping */
+            overflow-y: auto;
+            /* Let parent scroll */
+            padding: 10rem 1rem 4rem;
+            /* Increased top padding to push box down */
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        #premium-modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .premium-content {
+            width: 90%;
+            max-width: 1000px;
+            background: #18181b;
+            /* Solid dark background */
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            /* Slightly brighter border */
+            border-radius: 24px;
+            padding: 3rem;
+            position: relative;
+            transform: translateY(20px);
+            transition: transform 0.4s ease;
+            /* Removed internal scroll to let parent handle it */
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+            /* Deep shadow for pop */
+        }
+
+        #premium-modal.active .premium-content {
+            transform: translateY(0);
+        }
+
+        .premium-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .premium-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2rem;
+            font-weight: 800;
+            color: #fbbf24;
+            /* Gold */
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .premium-subtitle {
+            color: #9ca3af;
+            font-size: 1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Table Styling */
+        .pricing-table-container {
+            overflow-x: auto;
+            margin-bottom: 2rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        table.pricing-table {
+            width: 100%;
+            border-collapse: collapse;
+            color: #f3f4f6;
+            font-size: 0.9rem;
+        }
+
+        .pricing-table th,
+        .pricing-table td {
+            padding: 1rem;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .pricing-table th {
+            background: rgba(255, 255, 255, 0.05);
+            font-weight: 700;
+            text-transform: uppercase;
+            font-family: 'Montserrat', sans-serif;
+            letter-spacing: 0.05em;
+        }
+
+        .pricing-table th:first-child,
+        .pricing-table td:first-child {
+            text-align: left;
+            font-weight: 600;
+            color: #d1d5db;
+        }
+
+        .pricing-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .pricing-table tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        /* Mobile Pricing Cards (Hidden by default) */
+        .pricing-cards-mobile {
+            display: none;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .price-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 1.5rem;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .price-card:hover {
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-5px);
+        }
+
+        /* Tier Glows */
+        .glow-silver {
+            box-shadow: 0 0 20px rgba(229, 231, 235, 0.1);
+        }
+
+        .glow-gold {
+            box-shadow: 0 0 20px rgba(251, 191, 36, 0.1);
+        }
+
+        .glow-platinum {
+            box-shadow: 0 0 20px rgba(148, 163, 184, 0.1);
+        }
+
+        .glow-diamond {
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.1);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 0.75rem;
+        }
+
+        .card-plan-name {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .card-price {
+            font-family: 'Inconsolata', monospace;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #fff;
+        }
+
+        .card-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .detail-label {
+            font-size: 0.7rem;
+            color: #9ca3af;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .detail-value {
+            font-size: 0.9rem;
+            color: #f3f4f6;
+            font-weight: 500;
+        }
+
+        /* Highlight specific headers */
+        .th-silver {
+            color: #e5e7eb;
+        }
+
+        .th-gold {
+            color: #fbbf24;
+        }
+
+        .th-platinum {
+            color: #e0e7ff;
+        }
+
+        .th-diamond {
+            color: #22d3ee;
+        }
+
+        /* Privileges Styling */
+        .privileges-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .privilege-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #d1d5db;
+            font-size: 0.9rem;
+        }
+
+        .privilege-icon {
+            color: #22d3ee;
+            flex-shrink: 0;
+        }
+
+        .close-premium {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #d1d5db;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .close-premium:hover {
+            background: rgba(239, 68, 68, 0.2);
+            /* Red tint on hover */
+            color: #ef4444;
+            border-color: rgba(239, 68, 68, 0.3);
+            transform: rotate(90deg);
+        }
+
+        .nav-item.premium-link {
+            color: #fbbf24;
+            border: 1px solid rgba(251, 191, 36, 0.2);
+            background: rgba(251, 191, 36, 0.05);
+        }
+
+        .nav-item.premium-link:hover {
+            background: rgba(251, 191, 36, 0.1);
+            box-shadow: 0 0 15px rgba(251, 191, 36, 0.2);
+        }
+
+        /* --- Services/Catalogue Section (Refined) --- */
+        #services {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, #0f0f11 0%, #1a1a1d 100%);
+            z-index: 150;
+            padding: 8rem 2rem 4rem;
+            overflow-y: auto;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            display: block;
+        }
+
+        #services.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        /* Scrollbar Styling for Services */
+        #services::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        #services::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        #services::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        #services::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .section-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: #fff;
+            text-align: center;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            background: linear-gradient(to right, #fff, #9ca3af);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: #9ca3af;
+            text-align: center;
+            margin-bottom: 5rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            font-weight: 300;
+            letter-spacing: 0.05em;
+        }
+
+        .catalogue-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            /* Forced 2 columns as requested */
+            gap: 2.5rem;
+            max-width: 1400px;
+            /* Reduced max-width slightly to keep it tight */
+            margin: 0 auto;
+            padding-bottom: 4rem;
+        }
+
+        @media (max-width: 1024px) {
+            .catalogue-grid {
+                grid-template-columns: 1fr;
+                /* Stack on smaller screens */
+            }
+        }
+
+        /* Premium Card Styling */
+        .cat-card {
+            background: rgba(30, 30, 35, 0.4);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 2.5rem;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+        }
+
+        .cat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at top right, rgba(34, 211, 238, 0.05), transparent 60%);
+            pointer-events: none;
+        }
+
+        .cat-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(34, 211, 238, 0.3);
+            box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.6);
+            background: rgba(30, 30, 35, 0.6);
+        }
+
+        .cat-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 1rem;
+        }
+
+        .currency-ind {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--accent-cyan);
+            background: rgba(34, 211, 238, 0.1);
+            padding: 0.3rem 0.6rem;
+            border-radius: 50px;
+            letter-spacing: 0;
+            text-transform: none;
+            white-space: nowrap;
+            /* Prevent wrapping */
+            flex-shrink: 0;
+            /* Prevent being squashed */
+            margin-left: auto;
+            /* Force push to right */
+        }
+
+        /* Professional Table Styling */
+        .cat-table {
+            width: 100%;
+            border-collapse: separate;
+            /* Allows border-radius on rows if needed */
+            border-spacing: 0;
+            font-size: 0.95rem;
+            color: #e5e7eb;
+        }
+
+        .cat-table th {
+            text-align: right;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: #9ca3af;
+            padding: 1rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            white-space: nowrap;
+            /* Prevent messy wrapping in headers */
+        }
+
+        .cat-table th:first-child {
+            text-align: left;
+            padding-left: 0.5rem;
+        }
+
+        .cat-table th:last-child {
+            padding-right: 0.5rem;
+        }
+
+        .cat-table td {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            transition: color 0.2s;
+        }
+
+        .cat-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .cat-table td:first-child {
+            font-weight: 500;
+            color: #d1d5db;
+            text-align: left;
+            padding-left: 0.5rem;
+        }
+
+        .cat-table td:not(:first-child) {
+            text-align: right;
+            font-family: 'Inconsolata', monospace;
+            font-weight: 600;
+            color: #f3f4f6;
+            letter-spacing: 0.02em;
+        }
+
+        /* Specific column alignments for "Indian Wear" */
+        .indian-wear-card .cat-table th,
+        .indian-wear-card .cat-table td {
+            text-align: center;
+            /* Center align for the multi-column layout */
+        }
+
+        .indian-wear-card .cat-table th:first-child,
+        .indian-wear-card .cat-table td:first-child {
+            text-align: left;
+            /* Keep Item Name left aligned */
+        }
+
+        /* Row Highlight on Hover */
+        .cat-table tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+            color: #fff;
+        }
+
+        .cat-table tr:hover td:not(:first-child) {
+            color: var(--accent-cyan);
+            /* Highlight price */
+        }
+
+        /* Category Selector for Services */
+        .service-selector {
+            display: flex;
+            overflow-x: auto;
+            gap: 1rem;
+            padding: 0.5rem 0.5rem 2.5rem;
+            margin-top: -1rem;
+            margin-bottom: 2rem;
+            justify-content: center;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .service-selector::-webkit-scrollbar {
+            display: none;
+        }
+
+        .cat-tab-pill {
+            /* custom-btn base styles */
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 130px;
+            width: max-content !important;
+            height: 48px;
+            color: #fff;
+            border-radius: 5px;
+            padding: 10px 25px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: inset 2px 2px 2px 0px rgba(255, 255, 255, .5),
+                7px 7px 20px 0px rgba(0, 0, 0, .1),
+                4px 4px 5px 0px rgba(0, 0, 0, .1);
+            outline: none;
+            flex-shrink: 0;
+
+            /* Base state: transparent outline style like the previous pills, 
+               but we override it below to act like btn-1. 
+               The prompt requests applying the style to these tabs. */
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.05);
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            white-space: nowrap;
+        }
+
+        /* The user's requested btn-1 style applied to hover & active states to maintain 
+           the interactive look of the tabs while adopting the exact requested gradients */
+        .cat-tab-pill:hover,
+        .cat-tab-pill.active {
+            background: rgb(6, 14, 131);
+            background: linear-gradient(0deg, rgba(6, 14, 131, 1) 0%, rgba(12, 25, 180, 1) 100%);
+            border: none;
+            /* Subtly shift padding to account for 1px border loss so it doesn't jump */
+            padding: 11px 26px;
+            color: #fff;
+        }
+
+        .cat-tab-pill:hover {
+            background: rgb(0, 3, 255);
+            background: linear-gradient(0deg, rgb(0, 17, 255) 0%, rgba(2, 126, 251, 1) 100%);
+        }
+
+        /* Grid Filtering */
+        .catalogue-grid[data-active-category] .cat-card {
+            display: none;
+        }
+
+        .catalogue-grid[data-active-category="apparel"] .apparel-card,
+        .catalogue-grid[data-active-category="indian"] .indian-wear-card,
+        .catalogue-grid[data-active-category="home"] .home-card,
+        .catalogue-grid[data-active-category="home"] .linen-card,
+        .catalogue-grid[data-active-category="home"] .bed-card,
+        .catalogue-grid[data-active-category="other"] .other-card {
+            display: block;
+        }
+
+        .disclaimer {
+            text-align: center;
+            color: #6b7280;
+            font-size: 0.8rem;
+            margin-top: 3rem;
+            font-style: italic;
+            opacity: 0.7;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .section-title {
+                font-size: 2.2rem;
+            }
+
+            .catalogue-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .cat-card {
+                padding: 1.5rem;
+            }
+
+            .cat-table th,
+            .cat-table td {
+                padding: 0.75rem 0.5rem;
+            }
+
+            /* Responsive Table Wrapper - NO MORE HORIZONTAL SCROLL */
+            .table-responsive {
+                width: 100%;
+                overflow-x: visible;
+                /* Changed from auto */
+                margin-bottom: 1rem;
+            }
+
+            .cat-table,
+            .cat-table tbody {
+                display: block;
+                width: 100%;
+                min-width: 0 !important;
+                /* Removed force scroll */
+            }
+
+            .cat-table tr:first-child {
+                display: none;
+                /* Hide header rows (redundant with badges) */
+            }
+
+            .cat-table tr {
+                display: block;
+                padding: 1.2rem 0;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            }
+
+            .cat-table td {
+                display: block;
+                width: 100%;
+                padding: 0.5rem 0 !important;
+                border: none;
+                text-align: left !important;
+            }
+
+            .cat-table td:first-child {
+                font-size: 1.15rem;
+                color: #fff;
+                font-weight: 600;
+                margin-bottom: 0.5rem;
+                padding-top: 0 !important;
+            }
+
+            /* Price Badge Row for columns */
+            .cat-table td:not(:first-child) {
+                display: inline-flex;
+                align-items: center;
+                background: rgba(255, 255, 255, 0.03);
+                padding: 0.5rem 0.8rem !important;
+                border-radius: 8px;
+                margin-right: 8px;
+                margin-bottom: 8px;
+                font-size: 0.85rem;
+                border: 1px solid rgba(255, 255, 255, 0.05);
+            }
+
+            /* Shared style for all badge labels */
+            .cat-table td:not(:first-child)::before {
+                color: #9ca3af;
+                font-size: 0.7rem;
+                margin-right: 5px;
+                text-transform: uppercase;
+                font-family: 'Montserrat', sans-serif;
+                font-weight: 700;
+            }
+
+            /* Default: Item, Dry Clean, Steam Iron */
+            .cat-table td:nth-child(2)::before {
+                content: "Dry Clean: ";
+            }
+
+            .cat-table td:nth-child(3)::before {
+                content: "Iron: ";
+            }
+
+            /* Indian Wear Special Case */
+            .indian-wear-card .cat-table td:nth-child(2)::before {
+                content: "Cotton: ";
+            }
+
+            .indian-wear-card .cat-table td:nth-child(3)::before {
+                content: "Special: ";
+            }
+
+            .indian-wear-card .cat-table td:nth-child(4)::before {
+                content: "Normal: ";
+            }
+
+            .indian-wear-card .cat-table td:nth-child(5)::before {
+                content: "Iron: ";
+            }
+
+            /* Home Linen Special Case */
+            .linen-card .cat-table td:nth-child(2)::before {
+                content: "S: ";
+            }
+
+            .linen-card .cat-table td:nth-child(3)::before {
+                content: "M: ";
+            }
+
+            .linen-card .cat-table td:nth-child(4)::before {
+                content: "L: ";
+            }
+
+            /* Bed Sheets Special Case */
+            .bed-card .cat-table td:nth-child(2)::before {
+                content: "Sgl: ";
+            }
+
+            .bed-card .cat-table td:nth-child(3)::before {
+                content: "Dbl: ";
+            }
+
+            /* Accessories/Shoes Case */
+            .other-card .cat-table td:nth-child(2)::before {
+                content: "Price: ";
+            }
+
+            /* Premium Modal Mobile Optimization */
+            #premium-modal {
+                padding: 10rem 1rem 2rem;
+                /* Increased from 6rem to clear navbar */
+            }
+
+            .premium-content {
+                padding: 1.5rem;
+                width: 100%;
+                max-width: 100%;
+                border-radius: 20px;
+                margin: 0;
+            }
+
+            /* About Section Responsive adjustments */
+            .about-container {
+                flex-direction: column;
+                gap: 2rem;
+                text-align: center;
+                align-items: center;
+            }
+
+            .about-image-wrapper {
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .about-text-wrapper {
+                padding-left: 0;
+            }
+
+            .about-title {
+                font-size: 2rem;
+            }
+
+            .premium-title {
+                font-size: 1.4rem;
+            }
+
+            .premium-subtitle {
+                font-size: 0.85rem;
+                margin-bottom: 2rem;
+            }
+
+            .pricing-table-container {
+                display: none !important;
+                /* Force hide table on mobile */
+            }
+
+            .pricing-cards-mobile {
+                display: flex !important;
+                flex-direction: row;
+                /* Horizontal for carousel */
+                gap: 1rem;
+                margin-top: 1rem;
+                overflow-x: auto;
+                scroll-snap-type: x mandatory;
+                padding: 1rem 0.5rem 2rem;
+                scrollbar-width: none;
+                /* Hide scrollbar Hide scrollbar firefox */
+                -ms-overflow-style: none;
+                /* Hide scrollbar IE/Edge */
+            }
+
+            .pricing-cards-mobile::-webkit-scrollbar {
+                display: none;
+                /* Hide scrollbar Chrome/Safari */
+            }
+
+            .price-card {
+                min-width: 85%;
+                /* Shows a peek of next card */
+                scroll-snap-align: center;
+                flex-shrink: 0;
+                background: rgba(255, 255, 255, 0.04);
+                backdrop-filter: blur(10px);
+            }
+
+            .pricing-dots {
+                display: flex;
+                justify-content: center;
+                gap: 8px;
+                margin-top: -0.5rem;
+                margin-bottom: 2rem;
+            }
+
+            .dot {
+                width: 6px;
+                height: 6px;
+                border-radius: 50%;
+                background: rgba(255, 255, 255, 0.2);
+                transition: all 0.3s ease;
+            }
+
+            .dot.active {
+                width: 18px;
+                border-radius: 10px;
+                background: var(--accent-cyan);
+            }
+
+            /* Hero Section Mobile Rework */
+            .hero-section {
+                padding-top: calc(var(--nav-height) + 4rem);
+                padding-bottom: 3rem;
+                height: auto;
+                min-height: 100vh;
+            }
+
+            h1 {
+                font-size: 2.8rem;
+                margin-bottom: 1.2rem;
+                line-height: 1.1;
+                letter-spacing: -0.02em;
+            }
+
+            p.subtitle {
+                font-size: 1rem;
+                margin-bottom: 2.5rem;
+                padding: 0 1rem;
+            }
+
+            .cta-container {
+                flex-direction: column;
+                gap: 1rem;
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .cta-button {
+                width: 100%;
+                justify-content: center;
+                padding: 0.9rem 2rem;
+            }
+
+            /* Category Selector for Services - Mobile Adjustment */
+            .service-selector {
+                justify-content: flex-start;
+                padding-bottom: 2rem;
+                gap: 0.8rem;
+            }
+
+            .cat-tab-pill {
+                min-width: auto;
+                /* Remove hard width so mobile buttons fit their padding/text */
+                height: 42px;
+                padding: 10px 18px;
+                /* Tighter padding for mobile */
+                font-size: 11px;
+                letter-spacing: 0.5px;
+                flex: 0 0 auto !important;
+                width: max-content !important;
+            }
+
+            .cat-tab-pill:hover,
+            .cat-tab-pill.active {
+                padding: 11px 19px;
+                /* adjust for border drop as above */
+            }
+
+            .close-premium {
+                top: 0.75rem;
+                right: 0.75rem;
+                background: rgba(255, 255, 255, 0.1);
+                border-radius: 50%;
+                padding: 0.4rem;
+            }
+
+            /* Experience Studio Mobile Refinements */
+            .exp-content {
+                top: 10%;
+            }
+
+            .exp-title {
+                font-size: 1.8rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .exp-subtitle {
+                font-size: 0.8rem;
+                padding: 0 1rem;
+            }
+
+            .stage-manager-sidebar {
+                left: 0.8rem;
+                gap: 0.8rem;
+            }
+
+            .stage-tab {
+                width: 52px;
+                height: 52px;
+                gap: 3px;
+                font-size: 0.55rem;
+            }
+
+            .stage-tab svg {
+                width: 16px;
+                height: 16px;
+            }
+
+            .back-btn {
+                top: 1rem;
+                left: 1rem;
+                padding: 0.4rem 0.8rem;
+                font-size: 0.65rem;
+            }
+
+            .experience-section {
+                padding-bottom: 4rem;
+            }
+
+            .exp-controls {
+                width: 90%;
+                gap: 1rem;
+            }
+        }
+
+        .cat-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .cat-table td:first-child {
+            font-weight: 500;
+            color: #d1d5db;
+        }
+
+        .cat-table td:not(:first-child) {
+            text-align: right;
+            font-family: 'Inconsolata', monospace;
+            /* Monospace for numbers alignment */
+            color: #fff;
+        }
+
+        .disclaimer {
+            text-align: center;
+            color: #6b7280;
+            font-size: 0.8rem;
+            margin-top: 3rem;
+            font-style: italic;
+        }
+
+        @media (max-width: 768px) {
+            .section-title {
+                font-size: 2.5rem;
+            }
+
+            .catalogue-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Background Video -->
+    <video autoplay muted playsinline class="video-background">
+        <!-- Assume file is named hero_bg.mp4 in static/videos -->
+        <source src="{{ url_for('static', filename='videos/hero_bg.mp4') }}" type="video/mp4">
+    </video>
+
+    <div id="canvas-container"></div>
+
+
+    <!-- Navigation Wrapper -->
+    <div class="nav-master-wrapper" id="navMaster">
+        <nav class="glass-nav">
+            <a href="#" class="nav-logo" aria-label="Home">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Featherlite Logo" loading="eager">
+                <div class="logo-text">
+                    <div class="brand-name">Feather Lite</div>
+                    <div class="brand-tagline">Laundry Studio</div>
+                </div>
+            </a>
+            <div class="nav-links">
+                <a href="#home" class="nav-item">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                    </svg>
+                    <span>Home</span>
+                </a>
+                <a href="#services" class="nav-item" id="services-link">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path
+                            d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275Z">
+                        </path>
+                    </svg>
+                    <span>Services</span>
+                </a>
+                <a href="{{ url_for('about') }}" class="nav-item">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    <span>About us</span>
+                </a>
+                <a href="#contact" class="nav-item">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <rect width="20" height="16" x="2" y="4" rx="2"></rect>
+                        <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+                    </svg>
+                    <span>Contact</span>
+                </a>
+                <a href="#" class="nav-item premium-link" id="open-premium-btn">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m2 4 3 12h14l3-12-6 7-4-3-4 3-6-7z"></path>
+                        <circle cx="12" cy="9" r="2"></circle>
+                    </svg>
+                    <span>Premium</span>
+                </a>
+            </div>
+        </nav>
+
+        <!-- Profile Menu (Next to Nav) -->
+        <div class="profile-container-v2">
+            <button class="profile-trigger" id="profileTrigger" aria-label="Profile Menu">
+                {% if current_user.is_authenticated %}
+                <!-- Show first letter of name as avatar -->
+                <span style="font-size:1rem;font-weight:700;color:#fff;">{{ current_user.name[0]|upper }}</span>
+                {% else %}
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+                {% endif %}
+            </button>
+            <div class="profile-dropdown-v2" id="profileDropdown">
+                {% if current_user.is_authenticated %}
+                <!-- Logged-in: show name and logout -->
+                <div
+                    style="padding:0.6rem 1rem;color:#a1a1aa;font-size:0.8rem;border-bottom:1px solid rgba(255,255,255,0.08);">
+                    {{ current_user.name }}<br>
+                    <span style="font-size:0.7rem;color:#71717a;">{{ current_user.email }}</span>
+                </div>
+                {% if current_user.role != 'user' %}
+                <a href="/admin/dashboard" class="dropdown-link">
+                    <svg class="dropdown-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="3" y1="9" x2="21" y2="9"></line>
+                        <line x1="9" y1="21" x2="9" y2="9"></line>
+                    </svg>
+                    Admin Panel
+                </a>
+                {% endif %}
+                <a href="#" class="dropdown-link" onclick="logoutUser(); return false;">
+                    <svg class="dropdown-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        <polyline points="16 17 21 12 16 7"></polyline>
+                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                    </svg>
+                    Logout
+                </a>
+                {% else %}
+                <!-- Not logged in: show signup link -->
+                <a href="{{ url_for('entry') }}" class="dropdown-link">
+                    <svg class="dropdown-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="8.5" cy="7" r="4"></circle>
+                        <polyline points="17 11 19 13 23 9"></polyline>
+                    </svg>
+                    Sign up as a customer
+                </a>
+                <a href="{{ url_for('entry') }}" class="dropdown-link">
+                    <svg class="dropdown-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+                        <polyline points="10 17 15 12 10 7"></polyline>
+                        <line x1="15" y1="12" x2="3" y2="12"></line>
+                    </svg>
+                    Login
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <main class="content-layer">
+        <section class="hero-section" id="home">
+            <h1 class="hero-title">Professional Chaos,<br>meet Pristine Care.</h1>
+            <p class="subtitle">High-end restoration for the modern wardrobe.</p>
+
+            <div class="cta-container">
+                {% if current_user.is_authenticated %}
+                <a href="#" class="cta-button primary" id="book-pickup-btn">
+                    <span>Book a Pickup</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M5 12h14" />
+                        <path d="m12 5 7 7-7 7" />
+                    </svg>
+                </a>
+                {% else %}
+                <a href="{{ url_for('entry') }}" class="cta-button primary">
+                    <span>Book a Pickup (Login Required)</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M5 12h14" />
+                        <path d="m12 5 7 7-7 7" />
+                    </svg>
+                </a>
+                {% endif %}
+                <button id="enter-studio-btn" class="cta-button">
+                    <span>Experience Studio</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- Services / Price List Section -->
+        <section id="services">
+            <h2 class="section-title">Our Services</h2>
+            <p class="section-subtitle">Comprehensive care for your wardrobe and home. Professional dry cleaning and
+                steam ironing services.</p>
+
+            <div class="service-selector">
+                <div class="cat-tab-pill active" onclick="switchServiceCategory('apparel', this)">Apparel</div>
+                <div class="cat-tab-pill" onclick="switchServiceCategory('indian', this)">Indian Wear</div>
+                <div class="cat-tab-pill" onclick="switchServiceCategory('home', this)">Home & Bed</div>
+                <div class="cat-tab-pill" onclick="switchServiceCategory('other', this)">Accessories</div>
+            </div>
+
+            <div class="catalogue-grid" data-active-category="apparel">
+
+
+
+
+
+                <!-- Top Wear -->
+                <div class="cat-card apparel-card">
+                    <h3 class="cat-title">
+                        <span style="display: flex; align-items: center; gap: 10px;">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path
+                                    d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z" />
+                            </svg>
+                            Top Wear
+                        </span>
+                        <span class="currency-ind">(Pricing in INR ₹)</span>
+                    </h3>
+                    <div class="table-responsive">
+                        <table class="cat-table">
+                            <tr>
+                                <th>Item</th>
+                                <th>Dry Clean</th>
+                                <th>Steam Iron</th>
+                            </tr>
+                            <tr>
+                                <td>T-shirt</td>
+                                <td>118/-</td>
+                                <td>45/-</td>
+                            </tr>
+                            <tr>
+                                <td>Shirt</td>
+                                <td>118/-</td>
+                                <td>55/-</td>
+                            </tr>
+                            <tr>
+                                <td>Cotton Ladies Top</td>
+                                <td>199/-</td>
+                                <td>59/-</td>
+                            </tr>
+                            <tr>
+                                <td>Short Dress</td>
+                                <td>189/-</td>
+                                <td>119/-</td>
+                            </tr>
+                            <tr>
+                                <td>Long Dress</td>
+                                <td>249/-</td>
+                                <td>149/-</td>
+                            </tr>
+                            <tr>
+                                <td>Long Dress Formal</td>
+                                <td>499/-</td>
+                                <td>199/-</td>
+                            </tr>
+                            <tr>
+                                <td>Sweater/cardigan</td>
+                                <td>249/-</td>
+                                <td>79/-</td>
+                            </tr>
+                            <tr>
+                                <td>Sports Jacket/blazer</td>
+                                <td>305/-</td>
+                                <td>149/-</td>
+                            </tr>
+                            <tr>
+                                <td>Leather Jacket (W/M)</td>
+                                <td>999/1299</td>
+                                <td>—</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Bottom Wear -->
+                <div class="cat-card apparel-card">
+                    <h3 class="cat-title">
+                        <span style="display: flex; align-items: center; gap: 10px;">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="m21 13-1.5-6.5a4 4 0 0 0-8 0L10 13" />
+                                <path d="M3 13v8c0 1.1.9 2 2 2h2a2 2 0 0 0 2-2v-3" />
+                                <path d="M21 13v8c0 1.1-.9 2-2 2h-2a2 2 0 0 1-2-2v-3" />
+                                <path d="M7 21h10" />
+                                <path d="M12 21v-8" />
+                            </svg>
+                            Bottom Wear
+                        </span>
+                        <span class="currency-ind">(Pricing in INR ₹)</span>
+                    </h3>
+                    <div class="table-responsive">
+                        <table class="cat-table">
+                            <tr>
+                                <th>Item</th>
+                                <th>Dry Clean</th>
+                                <th>Steam Iron</th>
+                            </tr>
+                            <tr>
+                                <td>Shorts/skirt</td>
+                                <td>118/-</td>
+                                <td>79/-</td>
+                            </tr>
+                            <tr>
+                                <td>Long Skirt</td>
+                                <td>249/-</td>
+                                <td>149/-</td>
+                            </tr>
+                            <tr>
+                                <td>Jeans</td>
+                                <td>189/-</td>
+                                <td>79/-</td>
+                            </tr>
+                            <tr>
+                                <td>Trouser Casual/Formal</td>
+                                <td>189/-</td>
+                                <td>79/-</td>
+                            </tr>
+                            <tr>
+                                <td>Leather Trouser</td>
+                                <td>349/-</td>
+                                <td>—</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Kids Wear -->
+                <div class="cat-card apparel-card">
+                    <h3 class="cat-title">
+                        <span style="display: flex; align-items: center; gap: 10px;">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9 12h6" />
+                                <path d="M10 16h4" />
+                                <path d="M12 3a7 7 0 0 0-7 7v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4a7 7 0 0 0-7-7z" />
+                                <path d="M9 7v1" />
+                                <path d="M15 7v1" />
+                            </svg>
+                            Kids Wear
+                        </span>
+                        <span class="currency-ind">(Pricing in INR ₹)</span>
+                    </h3>
+                    <div class="table-responsive">
+                        <table class="cat-table">
+                            <tr>
+                                <th>Item</th>
+                                <th>Dry Clean</th>
+                                <th>Steam Iron</th>
+                            </tr>
+                            <tr>
+                                <td>Shirt</td>
+                                <td>89/-</td>
+                                <td>39/-</td>
+                            </tr>
+                            <tr>
+                                <td>Pant</td>
+                                <td>99/-</td>
+                                <td>59/-</td>
+                            </tr>
+                            <tr>
+                                <td>Sweater</td>
+                                <td>109/-</td>
+                                <td>39/-</td>
+                            </tr>
+                            <tr>
+                                <td>Blazer</td>
+                                <td>249/-</td>
+                                <td>129/-</td>
+                            </tr>
+                            <tr>
+                                <td>Baby gown</td>
+                                <td>349/-</td>
+                                <td>249/-</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Bags & Shoes -->
+                <div class="cat-card other-card">
+                    <h3 class="cat-title">
+                        <span style="display: flex; align-items: center; gap: 10px;">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M6 20h12l-2-11H8z" />
+                                <path d="M6 20a4 4 0 0 1-4-4V8h22v8a4 4 0 0 1-4 4" />
+                                <path d="M12 13h.01" />
+                            </svg>
+                            Bags & Shoes
+                        </span>
+                        <span class="currency-ind">(Pricing in INR ₹)</span>
+                    </h3>
+                    <div class="table-responsive">
+                        <table class="cat-table">
+                            <tr>
+                                <th>Item</th>
+                                <th>Dry Clean</th>
+                            </tr>
+                            <tr>
+                                <td>Fabric Hand Bag</td>
+                                <td>299/-</td>
+                            </tr>
+                            <tr>
+                                <td>Leather Hand Bag</td>
+                                <td>449/-</td>
+                            </tr>
+                            <tr>
+                                <td>Sports Shoes</td>
+                                <td>356/-</td>
+                            </tr>
+                            <tr>
+                                <td>Leather Shoes</td>
+                                <td>599/-</td>
+                            </tr>
+                            <tr>
+                                <td>Kids Shoes</td>
+                                <td>249/-</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Accessories -->
+                <div class="cat-card other-card">
+                    <h3 class="cat-title">
+                        <span style="display: flex; align-items: center; gap: 10px;">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 2a3 3 0 0 0-3 3v14a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3" />
+                                <path d="M12 17a2 2 0 0 0 0-4 2 2 0 0 0 0 4" />
+                            </svg>
+                            Accessories
+                        </span>
+                        <span class="currency-ind">(Pricing in INR ₹)</span>
+                    </h3>
+                    <div class="table-responsive">
+                        <table class="cat-table">
+                            <tr>
+                                <th>Item</th>
+                                <th>Price</th>
+                            </tr>
+                            <tr>
+                                <td>Scarf</td>
+                                <td>99/-</td>
+                            </tr>
+                            <tr>
+                                <td>Neck Tie</td>
+                                <td>118/-</td>
+                            </tr>
+                            <tr>
+                                <td>Shawl</td>
+                                <td>149/-</td>
+                            </tr>
+                            <tr>
+                                <td>Socks (Pair)</td>
+                                <td>69/-</td>
+                            </tr>
+                            <tr>
+                                <td>Cap</td>
+                                <td>105/-</td>
+                            </tr>
+                            <tr>
+                                <td>Soft Toy (S/M/L)</td>
+                                <td>249/499/699</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Curtains & Carpets -->
+                <div class="cat-card home-card">
+                    <h3 class="cat-title">
+                        <span style="display: flex; align-items: center; gap: 10px;">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M3 21h18" />
+                                <path d="M5 21V7a8 8 0 0 1 14 0v14" />
+                            </svg>
+                            Curtains & Carpets
+                        </span>
+                        <span class="currency-ind">(Pricing in INR ₹)</span>
+                    </h3>
+                    <div class="table-responsive">
+                        <table class="cat-table">
+                            <tr>
+                                <th>Item</th>
+                                <th>Dry Clean</th>
+                                <th>Iron</th>
+                            </tr>
+                            <tr>
+                                <td>Single Layer</td>
+                                <td>15/-</td>
+                                <td>8/-</td>
+                            </tr>
+                            <tr>
+                                <td>Double Layer</td>
+                                <td>25/-</td>
+                                <td>10/-</td>
+                            </tr>
+                            <tr>
+                                <td>Heavy Fabric</td>
+                                <td>30/-</td>
+                                <td>12/-</td>
+                            </tr>
+                            <tr>
+                                <td>Carpet</td>
+                                <td>72/-</td>
+                                <td>—</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Indian Wear (Wide) -->
+                <div class="cat-card indian-wear-card">
+                    <h3 class="cat-title">
+                        <span style="display: flex; align-items: center; gap: 10px;">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10" />
+                                <path d="M2.05 12h19.9" />
+                                <path d="M12 2.05v19.9" />
+                                <path d="m4.93 4.93 14.14 14.14" />
+                                <path d="m4.93 19.07 14.14-14.14" />
+                            </svg>
+                            Indian Wear
+                        </span>
+                        <span class="currency-ind">(Pricing in INR ₹)</span>
+                    </h3>
+                    <div class="table-responsive">
+                        <table class="cat-table">
+                            <tr>
+                                <th>Item</th>
+                                <th>Cotton</th>
+                                <th>Special</th>
+                                <th>Ornml</th>
+                                <th>Iron</th>
+                            </tr>
+                            <tr>
+                                <td>Blouse</td>
+                                <td>159/-</td>
+                                <td>209/-</td>
+                                <td>259/-</td>
+                                <td>50/-</td>
+                            </tr>
+                            <tr>
+                                <td>Sarees</td>
+                                <td>305/-</td>
+                                <td>349/-</td>
+                                <td>499/-</td>
+                                <td>149/-</td>
+                            </tr>
+                            <tr>
+                                <td>Short Kurta</td>
+                                <td>179/-</td>
+                                <td>199/-</td>
+                                <td>249/-</td>
+                                <td>99/-</td>
+                            </tr>
+                            <tr>
+                                <td>Long Kurta</td>
+                                <td>199/-</td>
+                                <td>249/-</td>
+                                <td>349/-</td>
+                                <td>119/-</td>
+                            </tr>
+                            <tr>
+                                <td>Kameez</td>
+                                <td>249/-</td>
+                                <td>299/-</td>
+                                <td>349/-</td>
+                                <td>149/-</td>
+                            </tr>
+                            <tr>
+                                <td>Dupatta</td>
+                                <td>109/-</td>
+                                <td>169/-</td>
+                                <td>199/-</td>
+                                <td>59/-</td>
+                            </tr>
+                            <tr>
+                                <td>Salwar/Chudidar</td>
+                                <td>199/-</td>
+                                <td>249/-</td>
+                                <td>309/-</td>
+                                <td>55/-</td>
+                            </tr>
+                            <tr>
+                                <td>Lehenga</td>
+                                <td>449/-</td>
+                                <td>549/-</td>
+                                <td>699/-</td>
+                                <td>149/-</td>
+                            </tr>
+                            <tr>
+                                <td>Sherwani</td>
+                                <td>599/-</td>
+                                <td>799/-</td>
+                                <td>999/-</td>
+                                <td>199/-</td>
+                            </tr>
+                            <tr>
+                                <td>Bridal Dress</td>
+                                <td>1149/-</td>
+                                <td>2019/-</td>
+                                <td>3019/-</td>
+                                <td>349/-</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Home Linen -->
+                <div class="cat-card linen-card">
+                    <h3 class="cat-title">
+                        <span style="display: flex; align-items: center; gap: 10px;">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M3 6h18" />
+                                <path d="M5 6v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6" />
+                                <path d="M10 6V4a2 2 0 0 1 2-2h0a2 2 0 0 1 2 2v2" />
+                            </svg>
+                            Home Linen
+                        </span>
+                        <span class="currency-ind">(Pricing in INR ₹)</span>
+                    </h3>
+                    <table class="cat-table">
+                        <tr>
+                            <th>Item</th>
+                            <th>S</th>
+                            <th>M</th>
+                            <th>L</th>
+                        </tr>
+                        <tr>
+                            <td>Cushion</td>
+                            <td>249/-</td>
+                            <td>299/-</td>
+                            <td>349/-</td>
+                        </tr>
+                        <tr>
+                            <td>Pillow</td>
+                            <td>269/-</td>
+                            <td>305/-</td>
+                            <td>369/-</td>
+                        </tr>
+                        <tr>
+                            <td>Pillow Cover</td>
+                            <td>105/-</td>
+                            <td>169/-</td>
+                            <td>209/-</td>
+                        </tr>
+                        <tr>
+                            <td>Cushion Cover</td>
+                            <td>105/-</td>
+                            <td>149/-</td>
+                            <td>199/-</td>
+                        </tr>
+                        <tr>
+                            <td>Towel</td>
+                            <td>89/-</td>
+                            <td>105/-</td>
+                            <td>149/-</td>
+                        </tr>
+                        <tr>
+                            <td>Bath Robe</td>
+                            <td>—</td>
+                            <td>—</td>
+                            <td>220/-</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <!-- Bed Sheets -->
+                <div class="cat-card bed-card">
+                    <h3 class="cat-title">
+                        <span style="display: flex; align-items: center; gap: 10px;">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M2 4v16" />
+                                <path d="M2 8h18a2 2 0 0 1 2 2v10" />
+                                <path d="M2 17h20" />
+                                <path d="M6 8v9" />
+                            </svg>
+                            Bed Sheets
+                        </span>
+                        <span class="currency-ind">(Pricing in INR ₹)</span>
+                    </h3>
+                    <table class="cat-table">
+                        <tr>
+                            <th>Item</th>
+                            <th>Sgl</th>
+                            <th>Dbl</th>
+                        </tr>
+                        <tr>
+                            <td>Bed Sheet</td>
+                            <td>149/-</td>
+                            <td>199/-</td>
+                        </tr>
+                        <tr>
+                            <td>Fitted Sheet</td>
+                            <td>199/-</td>
+                            <td>249/-</td>
+                        </tr>
+                        <tr>
+                            <td>Cotton Quilt Cov</td>
+                            <td>349/-</td>
+                            <td>499/-</td>
+                        </tr>
+                        <tr>
+                            <td>Special Bed Cov</td>
+                            <td>349/-</td>
+                            <td>499/-</td>
+                        </tr>
+                        <tr>
+                            <td>Quilt / Duvet</td>
+                            <td>349/-</td>
+                            <td>549/-</td>
+                        </tr>
+                        <tr>
+                            <td>Blanket</td>
+                            <td>349/-</td>
+                            <td>549/-</td>
+                        </tr>
+                    </table>
+                </div>
+
+
+
+
+            </div>
+            <p class="disclaimer">All Prices Are Basic & Exclusive Of Taxes. Terms And Conditions Apply.</p>
+        </section>
+
+
+        <!-- Experience Section (Overlay) -->
+        <section id="experience" class="experience-section">
+            <!-- Beams Background Canvas (semi-transparent so 3D models show through) -->
+            <canvas id="beams-canvas"
+                style="position:absolute;inset:0;width:100%;height:100%;z-index:0;filter:blur(15px);pointer-events:none;opacity:0.35;"></canvas>
+
+            <button class="back-btn" onclick="exitExperienceMode()">← Back to Home</button>
+
+            <!-- Stage Manager Tabs -->
+            <div class="stage-manager-sidebar">
+                <div class="stage-tab active" data-category="sneaker">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M12 12h.01" />
+                        <path d="M19 12h.01" />
+                        <path d="M5 12h.01" />
+                        <path d="M20 20H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2z" />
+                    </svg>
+                    <span>Sneaker</span>
+                </div>
+                <div class="stage-tab" data-category="curtain">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M3 21h18" />
+                        <path d="M5 21V7a8 8 0 0 1 14 0v14" />
+                    </svg>
+                    <span>Curtain</span>
+                </div>
+                <div class="stage-tab" data-category="carpet">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                        <path d="M3 9h18" />
+                        <path d="M3 15h18" />
+                    </svg>
+                    <span>Carpet</span>
+                </div>
+            </div>
+
+            <div class="exp-content">
+                <h2 class="exp-title" id="experience-title">Sneaker Restoration</h2>
+            </div>
+
+            <div class="exp-controls">
+                <div class="label-container">
+                    <span>Original</span>
+                    <span>Restored</span>
+                </div>
+                <div class="slider-container">
+                    <input type="range" min="0" max="100" value="0" id="restoration-slider">
+                </div>
+            </div>
+        </section>
+
+        <!-- Pickup Scheduling Modal -->
+        <div id="pickup-modal">
+            <div class="pickup-content">
+                <button class="pickup-close-btn" id="pickup-close" aria-label="Close modal">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+
+                <!-- ═══ STEP 1: Branch Selection ═══ -->
+                <div id="pickup-step-branch" class="pickup-step active">
+                    <div class="pickup-header">
+                        <h2 class="pickup-title">Choose a Branch</h2>
+                        <p class="pickup-subtitle">Select the nearest Feather Lite outlet.</p>
+                    </div>
+                    <div class="branch-cards">
+                        <div class="branch-card" data-branch-id="1" data-branch-name="Manikonda" data-lat="17.4068228"
+                            data-lng="78.3741116"
+                            data-address="Opp Lanco Hills Road, Sri Laxmi Nagar Colony, Manikonda, Hyderabad 500089">
+                            <div class="branch-info">
+                                <h3 class="branch-name">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                                        <circle cx="12" cy="10" r="3" />
+                                    </svg>
+                                    Manikonda
+                                </h3>
+                                <p class="branch-address">Opp Lanco Hills Road, Sri Laxmi Nagar Colony</p>
+                            </div>
+                            <div class="branch-actions">
+                                <button type="button" class="branch-dir-btn"
+                                    onclick="getDirections(17.4068228, 78.3741116, 'ChIJd9HbMTKVbDsRCvWyd3cIBdc'); event.stopPropagation();"
+                                    title="Get Directions">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polygon points="3 11 22 2 13 21 11 13 3 11" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="branch-card" data-branch-id="2" data-branch-name="Kokapet" data-lat="17.3869657"
+                            data-lng="78.3409458" data-address="Featherlite Laundry Studio Kokapet, Hyderabad 500075">
+                            <div class="branch-info">
+                                <h3 class="branch-name">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                                        <circle cx="12" cy="10" r="3" />
+                                    </svg>
+                                    Kokapet
+                                </h3>
+                                <p class="branch-address">Featherlite Laundry Studio, Kokapet</p>
+                            </div>
+                            <div class="branch-actions">
+                                <button type="button" class="branch-dir-btn"
+                                    onclick="getDirections(17.3869657, 78.3409458, null); event.stopPropagation();"
+                                    title="Get Directions">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polygon points="3 11 22 2 13 21 11 13 3 11" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="branch-card" data-branch-id="3" data-branch-name="Film Nagar" data-lat="17.4138958"
+                            data-lng="78.4080465"
+                            data-address="Featherlite Laundry Studio, Film Nagar, Hyderabad 500033">
+                            <div class="branch-info">
+                                <h3 class="branch-name">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                                        <circle cx="12" cy="10" r="3" />
+                                    </svg>
+                                    Film Nagar
+                                </h3>
+                                <p class="branch-address">Featherlite Laundry Studio, Film Nagar</p>
+                            </div>
+                            <div class="branch-actions">
+                                <button type="button" class="branch-dir-btn"
+                                    onclick="getDirections(17.4138958, 78.4080465, 'ChIJC4T2TACXbDsRDAgicm5T6uo'); event.stopPropagation();"
+                                    title="Get Directions">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polygon points="3 11 22 2 13 21 11 13 3 11" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ═══ STEP 2: Date & Time ═══ -->
+                <div id="pickup-step-schedule" class="pickup-step">
+                    <div class="pickup-header">
+                        <button type="button" class="pickup-back-btn" id="pickup-back" title="Back to branches">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="15 18 9 12 15 6" />
+                            </svg>
+                        </button>
+                        <h2 class="pickup-title">Schedule Pickup</h2>
+                        <p class="pickup-subtitle">at <span id="selected-branch-name"
+                                style="color:#fff;font-weight:600;"></span></p>
+                    </div>
+                    <form id="pickup-form">
+                        <div class="pickup-form-group">
+                            <label class="pickup-label" for="pickup-date">Pickup Date</label>
+                            <input type="date" id="pickup-date" class="pickup-input" required>
+                        </div>
+                        <div class="pickup-form-group">
+                            <label class="pickup-label" for="pickup-time">Preferred Time</label>
+                            <select id="pickup-time" class="pickup-input" required disabled>
+                                <option value="" disabled selected>Select a Date First</option>
+                                <option value="09:00">09:00 AM - 11:00 AM</option>
+                                <option value="11:00">11:00 AM - 01:00 PM</option>
+                                <option value="13:00">01:00 PM - 03:00 PM</option>
+                                <option value="15:00">03:00 PM - 05:00 PM</option>
+                                <option value="17:00">05:00 PM - 07:00 PM</option>
+                                <option value="19:00">07:00 PM - 09:00 PM</option>
+                            </select>
+                        </div>
+                        <input type="hidden" id="pickup-branch-id" value="">
+                        <button type="submit" class="pickup-submit">Confirm Schedule</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Premium Modal -->
+        <div id="premium-modal">
+            <div class="premium-content">
+                <!-- Close Button Removed as requested -->
+
+                <div class="premium-header">
+                    <h2 class="premium-title">Exclusive Membership Plans</h2>
+                    <p class="premium-subtitle">Thoughtfully designed plans that make laundry effortless, faster, and
+                        more affordable — so your garments always look their best.</p>
+                </div>
+
+                <div class="pricing-table-container">
+                    <!-- Desktop Table Visibility logic handled via CSS -->
+                    <table class="pricing-table">
+                        <thead>
+                            <tr>
+                                <th>Details</th>
+                                <th class="th-silver">Silver</th>
+                                <th class="th-gold">Gold</th>
+                                <th class="th-platinum">Platinum</th>
+                                <th class="th-diamond">Diamond</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>What You Pay</td>
+                                <td>10,000/-</td>
+                                <td>20,000/-</td>
+                                <td>30,000/-</td>
+                                <td>50,000/-</td>
+                            </tr>
+                            <tr>
+                                <td>What You Get</td>
+                                <td>11,000/-</td>
+                                <td>23,000/-</td>
+                                <td>36,000/-</td>
+                                <td>61,000/-</td>
+                            </tr>
+                            <tr>
+                                <td>Gift Card (Home Linen)</td>
+                                <td>—</td>
+                                <td>500/-</td>
+                                <td>750/-</td>
+                                <td>1,000/-</td>
+                            </tr>
+                            <tr>
+                                <td>Free Laundry Basket</td>
+                                <td>x1</td>
+                                <td>x1</td>
+                                <td>x1</td>
+                                <td>x2</td>
+                            </tr>
+                            <tr>
+                                <td>Free Quick Delivery Coupons</td>
+                                <td>1</td>
+                                <td>2</td>
+                                <td>3</td>
+                                <td>3</td>
+                            </tr>
+                            <tr>
+                                <td>Savings Of</td>
+                                <td>2,000/-</td>
+                                <td>5,000/-</td>
+                                <td>12,000/-</td>
+                                <td>15,000/-</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Mobile Pricing Cards -->
+                <div class="pricing-cards-mobile" id="mobile-carousel">
+                    <!-- Silver Card -->
+                    <div class="price-card glow-silver" style="border-top: 4px solid #e5e7eb;">
+                        <div class="card-header">
+                            <span class="card-plan-name th-silver">Silver</span>
+                            <span class="card-price">10,000/-</span>
+                        </div>
+                        <div class="card-details">
+                            <div class="detail-item">
+                                <span class="detail-label">Get Value</span>
+                                <span class="detail-value">11,000/-</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Savings</span>
+                                <span class="detail-value">2,000/-</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Linen GC</span>
+                                <span class="detail-value">—</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Baskets</span>
+                                <span class="detail-value">x1</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Q-Delivery</span>
+                                <span class="detail-value">1 Coupon</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Gold Card -->
+                    <div class="price-card glow-gold" style="border-top: 4px solid #fbbf24;">
+                        <div class="card-header">
+                            <span class="card-plan-name th-gold">Gold</span>
+                            <span class="card-price">20,000/-</span>
+                        </div>
+                        <div class="card-details">
+                            <div class="detail-item">
+                                <span class="detail-label">Get Value</span>
+                                <span class="detail-value">23,000/-</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Savings</span>
+                                <span class="detail-value">5,000/-</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Linen GC</span>
+                                <span class="detail-value">500/-</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Baskets</span>
+                                <span class="detail-value">x1</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Q-Delivery</span>
+                                <span class="detail-value">2 Coupons</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Platinum Card -->
+                    <div class="price-card glow-platinum" style="border-top: 4px solid #94a3b8;">
+                        <div class="card-header">
+                            <span class="card-plan-name th-platinum">Platinum</span>
+                            <span class="card-price">30,000/-</span>
+                        </div>
+                        <div class="card-details">
+                            <div class="detail-item">
+                                <span class="detail-label">Get Value</span>
+                                <span class="detail-value">36,000/-</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Savings</span>
+                                <span class="detail-value">12,000/-</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Linen GC</span>
+                                <span class="detail-value">750/-</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Baskets</span>
+                                <span class="detail-value">x1</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Q-Delivery</span>
+                                <span class="detail-value">3 Coupons</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Diamond Card -->
+                    <div class="price-card glow-diamond" style="border-top: 4px solid #38bdf8;">
+                        <div class="card-header">
+                            <span class="card-plan-name th-diamond">Diamond</span>
+                            <span class="card-price">50,000/-</span>
+                        </div>
+                        <div class="card-details">
+                            <div class="detail-item">
+                                <span class="detail-label">Get Value</span>
+                                <span class="detail-value">61,000/-</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Savings</span>
+                                <span class="detail-value">15,000/-</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Linen GC</span>
+                                <span class="detail-value">1,000/-</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Baskets</span>
+                                <span class="detail-value">x2</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Q-Delivery</span>
+                                <span class="detail-value">3 Coupons</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pricing-dots" id="carousel-dots">
+                    <div class="dot active"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                </div>
+
+                <div class="premium-header" style="text-align: left; margin-bottom: 1rem;">
+                    <h3 style="font-family: 'Montserrat'; font-size: 1.2rem; margin-bottom: 0;">MEMBER PRIVILEGES</h3>
+                </div>
+
+                <div class="privileges-grid">
+                    <div class="privilege-item">
+                        <svg class="privilege-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m5 12 5 5 15-15" />
+                        </svg>
+                        <span>Special discounts on every order</span>
+                    </div>
+                    <div class="privilege-item">
+                        <svg class="privilege-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m5 12 5 5 15-15" />
+                        </svg>
+                        <span>Priority pickup & doorstep delivery</span>
+                    </div>
+                    <div class="privilege-item">
+                        <svg class="privilege-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m5 12 5 5 15-15" />
+                        </svg>
+                        <span>Preferential pricing on premium services</span>
+                    </div>
+                    <div class="privilege-item">
+                        <svg class="privilege-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m5 12 5 5 15-15" />
+                        </svg>
+                        <span>Faster turnaround for urgent garments</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </section>
+    </main>
+
+    <!-- Scripts -->
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <!-- GSAP (Already present below, removing duplicate) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <!-- Custom 3D Logic -->
+    <script type="module" src="{{ url_for('static', filename='js/feather_scene.js') }}"></script>
+
+    <script>
+        // CMS/Text Animations
+        gsap.registerPlugin(ScrollTrigger);
+
+        const tl = gsap.timeline({ defaults: { duration: 1.2, ease: "power4.out" } });
+
+        // Nav Entrance
+        tl.to(".nav-master-wrapper", { opacity: 1, y: 0, duration: 1 }, 0.2);
+
+        // Hero Text Stagger
+        tl.to(".hero-title", { opacity: 1, y: 0 }, 0.4)
+            .to(".subtitle", { opacity: 1, y: 0 }, 0.6)
+            .to(".cta-container", { opacity: 1, y: 0 }, 0.8);
+
+        // --- Experience Mode Logic ---
+        const experienceSection = document.getElementById('experience');
+        const heroSection = document.getElementById('home');
+        const enterBtn = document.getElementById('enter-studio-btn');
+        const slider = document.getElementById('restoration-slider');
+
+        // Visual feedback for loading (Optional: add a spinner or disabled state initially)
+        // enterBtn.style.opacity = '0.5';
+        // enterBtn.style.pointerEvents = 'none';
+
+        window.addEventListener('modelsLoaded', () => {
+            console.log("Global Event: Models Ready");
+            // enterBtn.style.opacity = '1';
+            // enterBtn.style.pointerEvents = 'all';
+            // Optional: Add a subtle pulse or glow to indicate readiness
+            gsap.to(enterBtn, { boxShadow: "0 0 20px rgba(255, 255, 255, 0.3)", duration: 0.5, yoyo: true, repeat: 1 });
+        });
+
+        // Enter Experience Mode
+        enterBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+
+            // 1. Lock Body Scroll
+            document.body.style.overflow = 'hidden';
+
+            // 2. Fade out Hero content & Nav & Video
+            gsap.to([heroSection, ".nav-master-wrapper", ".video-background"], { duration: 0.5, opacity: 0, pointerEvents: "none" });
+
+            // 3. Show Experience Overlay & Title
+            experienceSection.classList.add('active');
+            gsap.to(".exp-content", { duration: 0.8, opacity: 1, y: 0, delay: 0.3, ease: "power2.out" });
+
+            // 4. Trigger 3D Scene Transition
+            if (window.enterExperienceMode) window.enterExperienceMode();
+
+            // 5. Start Beams Background Animation
+            startBeamsAnimation();
+        });
+
+        // Exit Experience Mode
+        window.exitExperienceMode = function () {
+            document.body.style.overflow = '';
+            gsap.to([heroSection, ".nav-master-wrapper"], { duration: 0.5, opacity: 1, pointerEvents: "all" });
+            gsap.to(".video-background", { duration: 0.5, opacity: 0.5 });
+            experienceSection.classList.remove('active');
+            gsap.to(".exp-content", { duration: 0.3, opacity: 0, y: -20 });
+            if (window.exitExperienceMode3D) window.exitExperienceMode3D();
+            stopBeamsAnimation();
+        };
+
+        // ═══ Beams Background Animation (vanilla JS port) ═══
+        let beamsAnimFrame = null;
+        let beams = [];
+        const BEAM_COUNT = 30;
+
+        function createBeam(w, h) {
+            return {
+                x: Math.random() * w * 1.5 - w * 0.25,
+                y: Math.random() * h * 1.5 - h * 0.25,
+                width: 30 + Math.random() * 60,
+                length: h * 2.5,
+                angle: -35 + Math.random() * 10,
+                speed: 0.6 + Math.random() * 1.2,
+                opacity: 0.12 + Math.random() * 0.16,
+                hue: 190 + Math.random() * 70,
+                pulse: Math.random() * Math.PI * 2,
+                pulseSpeed: 0.02 + Math.random() * 0.03,
+            };
+        }
+
+        function resetBeam(beam, index, w, h) {
+            const col = index % 3;
+            const spacing = w / 3;
+            beam.y = h + 100;
+            beam.x = col * spacing + spacing / 2 + (Math.random() - 0.5) * spacing * 0.5;
+            beam.width = 100 + Math.random() * 100;
+            beam.speed = 0.5 + Math.random() * 0.4;
+            beam.hue = 190 + (index * 70) / BEAM_COUNT;
+            beam.opacity = 0.2 + Math.random() * 0.1;
+            return beam;
+        }
+
+        function startBeamsAnimation() {
+            const canvas = document.getElementById('beams-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            if (!ctx) return;
+
+            const dpr = window.devicePixelRatio || 1;
+            canvas.width = window.innerWidth * dpr;
+            canvas.height = window.innerHeight * dpr;
+            ctx.scale(dpr, dpr);
+
+            const w = window.innerWidth;
+            const h = window.innerHeight;
+            beams = Array.from({ length: BEAM_COUNT }, () => createBeam(w, h));
+
+            function drawBeam(beam) {
+                ctx.save();
+                ctx.translate(beam.x, beam.y);
+                ctx.rotate((beam.angle * Math.PI) / 180);
+                const pulsingOpacity = beam.opacity * (0.8 + Math.sin(beam.pulse) * 0.2);
+                const grad = ctx.createLinearGradient(0, 0, 0, beam.length);
+                grad.addColorStop(0, `hsla(${beam.hue}, 85%, 65%, 0)`);
+                grad.addColorStop(0.1, `hsla(${beam.hue}, 85%, 65%, ${pulsingOpacity * 0.5})`);
+                grad.addColorStop(0.4, `hsla(${beam.hue}, 85%, 65%, ${pulsingOpacity})`);
+                grad.addColorStop(0.6, `hsla(${beam.hue}, 85%, 65%, ${pulsingOpacity})`);
+                grad.addColorStop(0.9, `hsla(${beam.hue}, 85%, 65%, ${pulsingOpacity * 0.5})`);
+                grad.addColorStop(1, `hsla(${beam.hue}, 85%, 65%, 0)`);
+                ctx.fillStyle = grad;
+                ctx.fillRect(-beam.width / 2, 0, beam.width, beam.length);
+                ctx.restore();
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.filter = 'blur(35px)';
+                beams.forEach((beam, i) => {
+                    beam.y -= beam.speed;
+                    beam.pulse += beam.pulseSpeed;
+                    if (beam.y + beam.length < -100) {
+                        resetBeam(beam, i, w, h);
+                    }
+                    drawBeam(beam);
+                });
+                beamsAnimFrame = requestAnimationFrame(animate);
+            }
+
+
+            animate();
+        }
+
+        function stopBeamsAnimation() {
+            if (beamsAnimFrame) {
+                cancelAnimationFrame(beamsAnimFrame);
+                beamsAnimFrame = null;
+            }
+        }
+
+        // Slider Interaction
+        slider.addEventListener('input', (e) => {
+            const value = e.target.value / 100; // 0 to 1
+            if (window.updateShoeDissolve) window.updateShoeDissolve(value);
+        });
+
+        // Stage Manager Tab Switching
+        const stageTabs = document.querySelectorAll('.stage-tab');
+        const expTitle = document.getElementById('experience-title');
+
+        stageTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const category = tab.getAttribute('data-category');
+
+                // 1. Update UI
+                stageTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+
+                // 2. Update Title
+                const titles = {
+                    'sneaker': 'Sneaker Restoration',
+                    'curtain': 'Curtain Care',
+                    'carpet': 'Carpet Spa'
+                };
+                expTitle.innerText = titles[category];
+
+                // 3. Reset Slider
+                slider.value = 0;
+                if (window.updateShoeDissolve) window.updateShoeDissolve(0);
+
+                // 4. Trigger 3D Switch
+                if (window.switchExperienceCategory) {
+                    window.switchExperienceCategory(category);
+                }
+            });
+        });
+
+        // Hover effect helper for buttons (Magnetic feel)
+        document.querySelectorAll('.cta-button').forEach(btn => {
+            btn.addEventListener('mousemove', (e) => {
+                const rect = btn.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+                gsap.to(btn, { x: x * 0.1, y: y * 0.1, duration: 0.3 });
+            });
+            btn.addEventListener('mouseleave', () => {
+                gsap.to(btn, { x: 0, y: 0, duration: 0.3 });
+            });
+        });
+
+        // --- Premium Modal Logic ---
+        const premiumModal = document.getElementById('premium-modal');
+        const openPremiumBtn = document.getElementById('open-premium-btn');
+
+        openPremiumBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            premiumModal.classList.add('active');
+            gsap.fromTo(".premium-content", { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power2.out" });
+        });
+
+
+        // --- Services Page Logic (Independent View) ---
+        const servicesSection = document.getElementById('services');
+        const servicesLink = document.getElementById('services-link');
+
+        servicesLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (!servicesSection.classList.contains('active')) {
+                // Show services logic handled by universal listener below
+                document.querySelector('.nav-item[href="#services"]').click();
+            }
+        });
+
+        // Universal Nav Logic
+        const allNavLinks = document.querySelectorAll('.nav-item, .nav-logo');
+
+        allNavLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                const targetHref = link.getAttribute('href');
+
+                // If it's the premium button, let the other logic handle it (or handle it here)
+                if (link.id === 'open-premium-btn') return;
+
+                // If it is the Services link
+                if (targetHref === '#services') {
+                    // Logic handled by specific listener below or merge it here.
+                    // Let's merge it:
+                    e.preventDefault();
+                    if (!servicesSection.classList.contains('active')) {
+                        // Close others
+                        if (experienceSection.classList.contains('active')) exitExperienceMode();
+                        premiumModal.classList.remove('active');
+
+                        // Show Services
+                        gsap.to([heroSection, ".video-background"], { duration: 0.5, opacity: 0, pointerEvents: "none" });
+                        servicesSection.classList.add('active');
+                        gsap.fromTo(servicesSection,
+                            { opacity: 0, y: 20, pointerEvents: "none" },
+                            { opacity: 1, y: 0, duration: 0.5, pointerEvents: "all", clearProps: "pointerEvents" }
+                        );
+                    }
+                    return;
+                }
+
+                // For all other links (Home, About, Contact), Close Overlays
+                if (servicesSection.classList.contains('active')) {
+                    servicesSection.classList.remove('active');
+
+                    // Animate Services OUT
+                    gsap.to(servicesSection, {
+                        opacity: 0,
+                        y: 20,
+                        duration: 0.5,
+                        pointerEvents: "none",
+                        clearProps: "transform"
+                    });
+
+                    // restore hero
+                    gsap.to([heroSection, ".video-background"], { duration: 0.5, opacity: 1, pointerEvents: "all" });
+                    // Restore Video Opacity if needed
+                    gsap.to(".video-background", { duration: 0.5, opacity: 0.5 });
+                }
+
+                if (experienceSection.classList.contains('active')) exitExperienceMode();
+                premiumModal.classList.remove('active');
+            });
+        });
+
+        // Logout function
+        async function logoutUser() {
+            await fetch('/api/logout', { method: 'POST' });
+            window.location.href = '/';
+        }
+
+        // Profile Toggle Logic
+        const profileTrigger = document.getElementById('profileTrigger');
+        const profileDropdown = document.getElementById('profileDropdown');
+
+        if (profileTrigger && profileDropdown) {
+            profileTrigger.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+
+                const isActive = profileDropdown.style.display === 'flex';
+                profileDropdown.style.display = isActive ? 'none' : 'flex';
+
+                if (!isActive) {
+                    gsap.fromTo(profileDropdown,
+                        { opacity: 0, y: 10 },
+                        { opacity: 1, y: 0, duration: 0.3, ease: "power2.out" }
+                    );
+                }
+            });
+
+            document.addEventListener('click', (e) => {
+                if (profileDropdown.style.display === 'flex' &&
+                    !profileDropdown.contains(e.target) &&
+                    !profileTrigger.contains(e.target)) {
+                    profileDropdown.style.display = 'none';
+                }
+            });
+        }
+
+        // --- Creative Mobile Enhancements Logic ---
+
+        // Carousel Scroll Sync (Dots)
+        const carousel = document.getElementById('mobile-carousel');
+        const dotsList = document.querySelectorAll('#carousel-dots .dot');
+
+        if (carousel) {
+            carousel.addEventListener('scroll', () => {
+                const scrollLeft = carousel.scrollLeft;
+                const width = carousel.offsetWidth;
+                const index = Math.round(scrollLeft / width);
+
+                dotsList.forEach((dot, i) => {
+                    dot.classList.toggle('active', i === index);
+                });
+            });
+        }
+
+        // Service Category Switcher
+        window.switchServiceCategory = function (category, element) {
+            const grid = document.querySelector('.catalogue-grid');
+            const pills = document.querySelectorAll('.cat-tab-pill');
+
+            // Update active pill
+            pills.forEach(p => p.classList.remove('active'));
+            element.classList.add('active');
+
+            // Animation for transition
+            gsap.to('.catalogue-grid', {
+                opacity: 0,
+                y: 10,
+                duration: 0.2,
+                onComplete: () => {
+                    grid.setAttribute('data-active-category', category);
+                    gsap.to('.catalogue-grid', {
+                        opacity: 1,
+                        y: 0,
+                        duration: 0.3,
+                        ease: "power2.out"
+                    });
+                }
+            });
+        };
+
+        // ----------------------------------------------------
+        // Custom Video Player Logic (Vanilla JS conversion)
+        // ----------------------------------------------------
+        const video = document.getElementById("vpVideo");
+        const playBtn = document.getElementById("vpPlayPauseBtn");
+        const playIcon = document.getElementById("vpPlayIcon");
+        const pauseIcon = document.getElementById("vpPauseIcon");
+        const muteBtn = document.getElementById("vpMuteBtn");
+        const volHigh = document.getElementById("vpVolHigh");
+        const volLow = document.getElementById("vpVolLow");
+        const volMute = document.getElementById("vpVolMute");
+        const volumeSlider = document.getElementById("vpVolumeSlider");
+        const volumeFill = document.getElementById("vpVolumeFill");
+        const progressSlider = document.getElementById("vpProgressSlider");
+        const progressFill = document.getElementById("vpProgressFill");
+        const currentTimeEl = document.getElementById("vpCurrentTime");
+        const durationEl = document.getElementById("vpDuration");
+        const speedBtns = document.querySelectorAll("#vpSpeedControls .vp-btn");
+        let isVideoMuted = false;
+        let currentVolume = 1;
+
+        const formatTime = (seconds) => {
+            if (isNaN(seconds)) return "0:00";
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs.toString().padStart(2, "0")}`;
+        };
+
+        const togglePlay = () => {
+            if (video.paused) {
+                video.play();
+                playIcon.style.display = "none";
+                pauseIcon.style.display = "block";
+            } else {
+                video.pause();
+                playIcon.style.display = "block";
+                pauseIcon.style.display = "none";
+            }
+        };
+
+        const updateVolumeIcons = (vol) => {
+            volHigh.style.display = "none";
+            volLow.style.display = "none";
+            volMute.style.display = "none";
+            if (vol === 0 || isVideoMuted) volMute.style.display = "block";
+            else if (vol > 0.5) volHigh.style.display = "block";
+            else volLow.style.display = "block";
+        };
+
+        const handleVolumeChange = (e) => {
+            const val = e.target.value;
+            currentVolume = val / 100;
+            video.volume = currentVolume;
+            volumeFill.style.width = `${val}%`;
+            isVideoMuted = currentVolume === 0;
+            updateVolumeIcons(currentVolume);
+        };
+
+        const toggleMute = () => {
+            isVideoMuted = !isVideoMuted;
+            video.muted = isVideoMuted;
+            if (isVideoMuted) {
+                volumeFill.style.width = "0%";
+                volumeSlider.value = 0;
+                updateVolumeIcons(0);
+            } else {
+                volumeFill.style.width = `${currentVolume * 100}%`;
+                volumeSlider.value = currentVolume * 100;
+                video.volume = currentVolume || 1; // if unmuting from 0, set to 1
+                updateVolumeIcons(currentVolume || 1);
+            }
+        };
+
+        const handleTimeUpdate = () => {
+            const progress = (video.currentTime / video.duration) * 100;
+            if (isFinite(progress)) {
+                progressFill.style.width = `${progress}%`;
+                progressSlider.value = progress;
+            }
+            currentTimeEl.textContent = formatTime(video.currentTime);
+        };
+
+        const handleSeek = (e) => {
+            const val = e.target.value;
+            const time = (val / 100) * video.duration;
+            if (isFinite(time)) {
+                video.currentTime = time;
+                progressFill.style.width = `${val}%`;
+            }
+        };
+
+        const setSpeed = (e) => {
+            const speed = parseFloat(e.target.dataset.speed);
+            video.playbackRate = speed;
+            speedBtns.forEach(btn => btn.classList.remove("vp-active"));
+            e.target.classList.add("vp-active");
+        };
+
+        // Event Listeners for Video Player
+        if (playBtn) {
+            playBtn.addEventListener("click", togglePlay);
+            video.addEventListener("click", togglePlay);
+            muteBtn.addEventListener("click", toggleMute);
+            volumeSlider.addEventListener("input", handleVolumeChange);
+            progressSlider.addEventListener("input", handleSeek);
+            video.addEventListener("timeupdate", handleTimeUpdate);
+            video.addEventListener("loadedmetadata", () => {
+                durationEl.textContent = formatTime(video.duration);
+            });
+            speedBtns.forEach(btn => btn.addEventListener("click", setSpeed));
+
+            // Initial UI state setup for video player
+            updateVolumeIcons(1);
+        }
+
+        // --- Pickup Scheduling Modal Logic ---
+        const pickupModal = document.getElementById('pickup-modal');
+        const openPickupBtn = document.getElementById('book-pickup-btn');
+        const closePickupBtn = document.getElementById('pickup-close');
+        const pickupForm = document.getElementById('pickup-form');
+        const pickupDateInput = document.getElementById('pickup-date');
+        const pickupTimeSelect = document.getElementById('pickup-time');
+        const stepBranch = document.getElementById('pickup-step-branch');
+        const stepSchedule = document.getElementById('pickup-step-schedule');
+        const pickupBackBtn = document.getElementById('pickup-back');
+        const selectedBranchNameEl = document.getElementById('selected-branch-name');
+        const pickupBranchIdInput = document.getElementById('pickup-branch-id');
+
+        let selectedBranchId = null;
+
+        const getLocalDateString = (d) => {
+            const year = d.getFullYear();
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        };
+
+        const today = new Date();
+        const todayString = getLocalDateString(today);
+
+        if (pickupDateInput) pickupDateInput.setAttribute('min', todayString);
+
+        const resetPickupForm = () => {
+            if (pickupForm) pickupForm.reset();
+            if (pickupTimeSelect) {
+                pickupTimeSelect.disabled = true;
+                Array.from(pickupTimeSelect.options).forEach(opt => opt.disabled = false);
+            }
+            selectedBranchId = null;
+            if (stepBranch) stepBranch.classList.add('active');
+            if (stepSchedule) stepSchedule.classList.remove('active');
+            document.querySelectorAll('.branch-card').forEach(c => c.classList.remove('selected'));
+        };
+
+        if (openPickupBtn && pickupModal) {
+            openPickupBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                resetPickupForm();
+                pickupModal.classList.add('active');
+            });
+        }
+
+        const closePickupModal = () => {
+            if (pickupModal) pickupModal.classList.remove('active');
+        };
+
+        if (closePickupBtn) closePickupBtn.addEventListener('click', closePickupModal);
+
+        if (pickupModal) {
+            pickupModal.addEventListener('click', (e) => {
+                if (e.target === pickupModal) closePickupModal();
+            });
+        }
+
+        // Branch card click → go to step 2
+        document.querySelectorAll('.branch-card').forEach(card => {
+            card.addEventListener('click', () => {
+                selectedBranchId = card.dataset.branchId;
+                const branchName = card.dataset.branchName;
+                document.querySelectorAll('.branch-card').forEach(c => c.classList.remove('selected'));
+                card.classList.add('selected');
+                if (selectedBranchNameEl) selectedBranchNameEl.textContent = branchName;
+                if (pickupBranchIdInput) pickupBranchIdInput.value = selectedBranchId;
+                stepBranch.classList.remove('active');
+                stepSchedule.classList.add('active');
+            });
+        });
+
+        // Back button → return to branch selection
+        if (pickupBackBtn) {
+            pickupBackBtn.addEventListener('click', () => {
+                stepSchedule.classList.remove('active');
+                stepBranch.classList.add('active');
+            });
+        }
+
+        // Get Directions: browser Geolocation → Google Maps with place_id
+        // For coords+place_id stores: getDirections(lat, lng, place_id)
+        // For address-only: getDirections(null, null, null, 'address+string')
+        function getDirections(destLat, destLng, placeId, addressQuery) {
+            if (!confirm('Open Google Maps for directions to this store?')) return;
+
+            // Build destination param
+            let destParam;
+            if (destLat && destLng) {
+                destParam = `&destination=${destLat},${destLng}` + (placeId ? `&destination_place_id=${placeId}` : '');
+            } else if (addressQuery) {
+                destParam = `&destination=${encodeURIComponent(addressQuery)}`;
+            }
+
+            // Open window IMMEDIATELY (synchronous with click) to avoid popup blocker
+            const mapsTab = window.open('about:blank', '_blank');
+
+            if (!navigator.geolocation) {
+                mapsTab.location.href = `https://www.google.com/maps/dir/?api=1${destParam}&travelmode=driving`;
+                return;
+            }
+
+            navigator.geolocation.getCurrentPosition(
+                (pos) => {
+                    const origin = `${pos.coords.latitude},${pos.coords.longitude}`;
+                    mapsTab.location.href = `https://www.google.com/maps/dir/?api=1&origin=${origin}${destParam}&travelmode=driving`;
+                },
+                () => {
+                    mapsTab.location.href = `https://www.google.com/maps/dir/?api=1${destParam}&travelmode=driving`;
+                },
+                { enableHighAccuracy: true, timeout: 5000 }
+            );
+        }
+
+        // Handle Date Selection & Time Restrictions
+        if (pickupDateInput && pickupTimeSelect) {
+            pickupDateInput.addEventListener('change', (e) => {
+                pickupTimeSelect.disabled = false;
+                const selectedDate = e.target.value;
+                const now = new Date();
+                if (selectedDate === todayString) {
+                    const currentHour = now.getHours();
+                    Array.from(pickupTimeSelect.options).forEach(option => {
+                        if (option.value === "") return;
+                        option.disabled = currentHour >= parseInt(option.value.split(':')[0], 10);
+                    });
+                    if (pickupTimeSelect.selectedOptions[0]?.disabled) pickupTimeSelect.value = "";
+                } else {
+                    Array.from(pickupTimeSelect.options).forEach(opt => opt.disabled = false);
+                }
+            });
+        }
+
+        if (pickupForm) {
+            pickupForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const date = pickupDateInput.value;
+                const timeOption = pickupTimeSelect.options[pickupTimeSelect.selectedIndex];
+                const timeText = timeOption.text;
+                const timeValue = timeOption.value;
+                const branchId = pickupBranchIdInput ? pickupBranchIdInput.value : '1';
+
+                const submitBtn = pickupForm.querySelector('.pickup-submit');
+                const originalText = submitBtn.textContent;
+                submitBtn.textContent = "Scheduling...";
+                submitBtn.disabled = true;
+
+                try {
+                    const response = await fetch('/api/book_pickup', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            date, time: timeText, time_value: timeValue,
+                            branch_id: parseInt(branchId)
+                        })
+                    });
+                    const result = await response.json();
+                    if (response.ok) {
+                        alert(`Pickup scheduled at ${selectedBranchNameEl.textContent} for ${date} between ${timeText}.`);
+                        closePickupModal();
+                        resetPickupForm();
+                    } else {
+                        alert(`Error: ${result.error || 'Failed to schedule.'}`);
+                    }
+                } catch (error) {
+                    console.error('Error scheduling pickup:', error);
+                    alert('A network error occurred. Please try again.');
+                } finally {
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
+                }
+            });
+        }
+
+    </script>
+</body>
+
+</html>

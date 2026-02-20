@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Featherlite | Sign Up</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <style>
+        /* ── Shadcn / Tailwind Design Tokens (Dark) ── */
+        :root {
+            --background: #09090b;
+            /* zinc-950 */
+            --foreground: #fafafa;
+            /* zinc-50  */
+            --muted: #18181b;
+            /* zinc-900 */
+            --muted-foreground: #a1a1aa;
+            /* zinc-400 */
+            --border: #27272a;
+            /* zinc-800 */
+            --input: #27272a;
+            /* zinc-800 */
+            --ring: #d4d4d8;
+            /* zinc-300 */
+            --primary: #fafafa;
+            --primary-foreground: #18181b;
+            --accent: #27272a;
+            --accent-foreground: #fafafa;
+            --destructive: #ef4444;
+            --radius: 0.375rem;
+            --error: #f87171;
+        }
+
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            height: 100%;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ── Section: bg-muted h-screen ── */
+        .signup-page {
+            background: var(--muted);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        /* ── Card: border-muted bg-background … shadow-md ── */
+        .signup-card {
+            background: var(--background);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 3rem 1.5rem;
+            width: 100%;
+            max-width: 24rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, .4), 0 2px 4px -2px rgba(0, 0, 0, .4);
+        }
+
+        /* ── Header ── */
+        .signup-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .signup-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .signup-logo a {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .signup-logo img {
+            height: 2.5rem;
+            filter: invert(1);
+        }
+
+        .signup-logo-text {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--foreground);
+            letter-spacing: -0.01em;
+        }
+
+        .signup-heading {
+            font-size: 1.875rem;
+            font-weight: 600;
+            color: var(--foreground);
+            line-height: 1.2;
+        }
+
+        /* ── Form ── */
+        .signup-form {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            gap: 2rem;
+        }
+
+        .signup-fields {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        /* ── Input: Shadcn Input Token-Match ── */
+        .shad-input {
+            display: flex;
+            height: 2.5rem;
+            width: 100%;
+            border-radius: var(--radius);
+            border: 1px solid var(--input);
+            background: var(--background);
+            padding: 0.5rem 0.75rem;
+            font-size: 0.875rem;
+            line-height: 1.25rem;
+            color: var(--foreground);
+            outline: none;
+            font-family: inherit;
+            transition: border-color 0.15s, box-shadow 0.15s;
+        }
+
+        .shad-input::placeholder {
+            color: var(--muted-foreground);
+        }
+
+        .shad-input:focus {
+            border-color: var(--ring);
+            box-shadow: 0 0 0 2px rgba(212, 212, 216, 0.25);
+        }
+
+        /* ── Button Base ── */
+        .shad-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            white-space: nowrap;
+            border-radius: var(--radius);
+            font-size: 0.875rem;
+            font-weight: 500;
+            height: 2.5rem;
+            padding: 0.5rem 1rem;
+            width: 100%;
+            cursor: pointer;
+            border: none;
+            font-family: inherit;
+            transition: background-color 0.15s, color 0.15s;
+        }
+
+        /* ── Button Primary: bg-primary text-primary-foreground ── */
+        .shad-btn-primary {
+            background: var(--primary);
+            color: var(--primary-foreground);
+            margin-top: 0.5rem;
+        }
+
+        .shad-btn-primary:hover {
+            background: rgba(250, 250, 250, 0.9);
+        }
+
+        /* ── Button Outline ── */
+        .shad-btn-outline {
+            background: transparent;
+            border: 1px solid var(--input);
+            color: var(--foreground);
+        }
+
+        .shad-btn-outline:hover {
+            background: var(--accent);
+            color: var(--accent-foreground);
+        }
+
+        .shad-btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        /* ── Google Icon ── */
+        .google-icon {
+            width: 1.25rem;
+            height: 1.25rem;
+            margin-right: 0.5rem;
+            flex-shrink: 0;
+        }
+
+        /* ── Footer ── */
+        .signup-footer {
+            display: flex;
+            justify-content: center;
+            gap: 0.25rem;
+            font-size: 0.875rem;
+            color: var(--muted-foreground);
+        }
+
+        .signup-footer a {
+            color: var(--primary);
+            font-weight: 500;
+            text-decoration: none;
+        }
+
+        .signup-footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* ── Error message ── */
+        .error-msg {
+            color: var(--error);
+            font-size: 0.8rem;
+            text-align: center;
+            display: none;
+            width: 100%;
+        }
+
+        /* ── Tabs (Login / Signup toggle) ── */
+        .tab-row {
+            display: flex;
+            width: 100%;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: -0.5rem;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 0.6rem 0;
+            font-size: 0.875rem;
+            font-weight: 500;
+            font-family: inherit;
+            background: none;
+            border: none;
+            color: var(--muted-foreground);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: color 0.15s, border-color 0.15s;
+        }
+
+        .tab-btn.active {
+            color: var(--foreground);
+            border-bottom-color: var(--foreground);
+        }
+
+        .tab-btn:hover:not(.active) {
+            color: var(--foreground);
+        }
+
+        .tab-panel {
+            display: none;
+            width: 100%;
+        }
+
+        .tab-panel.active {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        /* ── Divider ── */
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            width: 100%;
+            color: var(--muted-foreground);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        /* ── Loading spinner ── */
+        .shad-btn.loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 1rem;
+            height: 1rem;
+            border: 2px solid var(--muted-foreground);
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            margin-right: 0.5rem;
+        }
+
+        /* ── Google Button Container ── */
+        .google-btn-wrapper {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        .google-btn-wrapper>div {
+            width: 100% !important;
+        }
+
+        /* ── Mobile Optimization ── */
+        @media (max-width: 480px) {
+            .signup-page {
+                padding: 0.5rem;
+                align-items: flex-start;
+                padding-top: 2rem;
+            }
+
+            .signup-card {
+                padding: 2rem 1.25rem;
+                gap: 1.5rem;
+                max-width: 100%;
+                border-radius: 0.5rem;
+            }
+
+            .signup-heading {
+                font-size: 1.5rem;
+            }
+
+            .signup-logo-text {
+                font-size: 1rem;
+            }
+
+            .signup-logo img {
+                height: 2rem;
+            }
+
+            .tab-btn {
+                font-size: 0.8rem;
+                padding: 0.5rem 0;
+            }
+
+            .shad-input {
+                height: 2.75rem;
+                font-size: 1rem;
+            }
+
+            .shad-btn {
+                height: 2.75rem;
+                font-size: 0.9rem;
+            }
+
+            .signup-footer {
+                font-size: 0.8rem;
+            }
+
+            .signup-form {
+                gap: 1.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <section class="signup-page">
+        <div class="signup-card">
+            <!-- Logo -->
+            <div class="signup-header">
+                <div class="signup-logo">
+                    <a href="/">
+                        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Featherlite Logo">
+                        <span class="signup-logo-text">Feather Lite</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Tabs -->
+            <div class="tab-row">
+                <button class="tab-btn active" data-tab="signup" onclick="switchTab('signup')">Sign Up</button>
+                <button class="tab-btn" data-tab="login" onclick="switchTab('login')">Login</button>
+            </div>
+
+            <!-- ═══ SIGNUP TAB ═══ -->
+            <div class="tab-panel active" id="panel-signup">
+                <div class="signup-heading" style="text-align:center; width:100%;">Create an account</div>
+                <div class="error-msg" id="signup-error"></div>
+
+                <form class="signup-form" id="signup-form">
+                    <div class="signup-fields">
+                        <input type="email" class="shad-input" id="signup-email" placeholder="Email (Gmail only)"
+                            required pattern=".*@gmail\.com$" title="Please use a valid @gmail.com address">
+                        <input type="password" class="shad-input" id="signup-password" placeholder="Password" required
+                            minlength="4">
+                    </div>
+                    <div class="shad-btn-group">
+                        <button type="submit" class="shad-btn shad-btn-primary">Create an account</button>
+                        <div class="divider">or</div>
+                        <div class="google-btn-wrapper" id="google-btn-signup"></div>
+                    </div>
+                </form>
+
+                <div class="signup-footer">
+                    <p>Already have an account?</p>
+                    <a href="#" onclick="switchTab('login'); return false;">Login</a>
+                </div>
+            </div>
+
+            <!-- ═══ LOGIN TAB ═══ -->
+            <div class="tab-panel" id="panel-login">
+                <div class="signup-heading" style="text-align:center; width:100%;">Welcome back</div>
+                <div class="error-msg" id="login-error"></div>
+
+                <form class="signup-form" id="login-form">
+                    <div class="signup-fields">
+                        <input type="email" class="shad-input" id="login-email" placeholder="Email" required>
+                        <input type="password" class="shad-input" id="login-password" placeholder="Password" required>
+                    </div>
+                    <div class="shad-btn-group">
+                        <button type="submit" class="shad-btn shad-btn-primary">Login to account</button>
+                        <div class="divider">or</div>
+                        <div class="google-btn-wrapper" id="google-btn-login"></div>
+                    </div>
+                </form>
+
+                <div class="signup-footer">
+                    <p>Don't have an account?</p>
+                    <a href="#" onclick="switchTab('signup'); return false;">Sign up</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        /* ── Tab Switching ── */
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+            document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+            document.getElementById('panel-' + tab).classList.add('active');
+            // Clear errors
+            document.querySelectorAll('.error-msg').forEach(e => { e.style.display = 'none'; e.textContent = ''; });
+        }
+
+        /* ── Signup ── */
+        document.getElementById('signup-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+
+            try {
+                const res = await fetch('/api/signup', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: email, password })
+                });
+                const data = await res.json();
+
+                if (res.ok) {
+                    window.location.href = '/';
+                } else {
+                    const err = document.getElementById('signup-error');
+                    err.textContent = data.error;
+                    err.style.display = 'block';
+                }
+            } catch (err) { console.error(err); }
+        });
+
+        /* ── Login ── */
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+
+            try {
+                const res = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: email, password })
+                });
+                const data = await res.json();
+
+                if (res.ok) {
+                    window.location.href = '/';
+                } else {
+                    const err = document.getElementById('login-error');
+                    err.textContent = data.error;
+                    err.style.display = 'block';
+                }
+            } catch (err) { console.error(err); }
+        });
+
+        /* ── Google Identity Services ── */
+        const GOOGLE_CLIENT_ID = '223602766897-7tup819vu961ck34pmjkc5dtl8rbjmoa.apps.googleusercontent.com';
+
+        function handleGoogleCredential(response) {
+            // Send the credential (JWT) to our backend for verification
+            fetch('/api/google-login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ credential: response.credential })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.message) {
+                        window.location.href = '/';
+                    } else {
+                        // Show error on whichever panel is active
+                        const activePanel = document.querySelector('.tab-panel.active');
+                        const errEl = activePanel.querySelector('.error-msg');
+                        errEl.textContent = data.error || 'Google login failed';
+                        errEl.style.display = 'block';
+                    }
+                })
+                .catch(err => {
+                    console.error('Google login error:', err);
+                });
+        }
+
+        function triggerGoogleLogin() {
+            google.accounts.id.initialize({
+                client_id: GOOGLE_CLIENT_ID,
+                callback: handleGoogleCredential,
+            });
+            google.accounts.id.prompt();
+        }
+
+        // Render official Google buttons on page load
+        window.onload = function () {
+            google.accounts.id.initialize({
+                client_id: GOOGLE_CLIENT_ID,
+                callback: handleGoogleCredential,
+            });
+
+            google.accounts.id.renderButton(
+                document.getElementById('google-btn-signup'),
+                { theme: 'filled_black', size: 'large', text: 'signup_with', shape: 'rectangular', width: 350 }
+            );
+
+            google.accounts.id.renderButton(
+                document.getElementById('google-btn-login'),
+                { theme: 'filled_black', size: 'large', text: 'signin_with', shape: 'rectangular', width: 350 }
+            );
+        };
+    </script>
+
+</body>
+
+</html>

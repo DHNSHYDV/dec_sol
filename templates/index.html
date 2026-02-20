@@ -416,7 +416,7 @@
                 const data = await res.json();
 
                 if (res.ok) {
-                    window.location.reload();
+                    window.location.href = '/';
                 } else {
                     const errEl = document.getElementById('login-error');
                     errEl.textContent = "Error: " + data.error;
@@ -442,7 +442,7 @@
                 const data = await res.json();
 
                 if (res.ok) {
-                    window.location.reload();
+                    window.location.href = '/';
                 } else {
                     const errEl = document.getElementById('signup-error');
                     errEl.textContent = "Error: " + data.error;
@@ -456,7 +456,7 @@
         // Logout
         async function logout() {
             await fetch('/api/logout', { method: 'POST' });
-            window.location.reload();
+            window.location.href = '/';
         }
 
     </script>
