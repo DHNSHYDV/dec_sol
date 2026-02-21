@@ -5,8 +5,14 @@
             "src": "app.py",
             "use": "@vercel/python",
             "config": {
-                "excludeFiles": "static/**"
+                "excludeFiles": "public/**"
             }
+        }
+    ],
+    "routes": [
+        {
+            "src": "/(.*)",
+            "dest": "app.py"
         }
     ]
 }
