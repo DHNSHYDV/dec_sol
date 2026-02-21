@@ -2999,37 +2999,31 @@
         const heroSection = document.getElementById('home');
         const enterBtn = document.getElementById('enter-studio-btn');
 
-        // Visual feedback for loading (Optional: add a spinner or disabled state initially)
-        // enterBtn.style.opacity = '0.5';
-        // enterBtn.style.pointerEvents = 'none';
+        // Visual feedback for loading
+        if (enterBtn) {
+            window.addEventListener('modelsLoaded', () => {
+                console.log("Global Event: Models Ready");
+                gsap.to(enterBtn, { boxShadow: "0 0 20px rgba(255, 255, 255, 0.3)", duration: 0.5, yoyo: true, repeat: 1 });
+            });
 
-        window.addEventListener('modelsLoaded', () => {
-            console.log("Global Event: Models Ready");
-            // enterBtn.style.opacity = '1';
-            // enterBtn.style.pointerEvents = 'all';
-            // Optional: Add a subtle pulse or glow to indicate readiness
-            gsap.to(enterBtn, { boxShadow: "0 0 20px rgba(255, 255, 255, 0.3)", duration: 0.5, yoyo: true, repeat: 1 });
-        });
+            // Enter Experience Mode
+            enterBtn.addEventListener('click', (e) => {
+                e.preventDefault();
 
-        // Enter Experience Mode
-        enterBtn.addEventListener('click', (e) => {
-            e.preventDefault();
+                // 1. Lock Body Scroll
+                document.body.style.overflow = 'hidden';
 
-            // 1. Lock Body Scroll
-            document.body.style.overflow = 'hidden';
+                // 2. Fade out Hero content & Nav & Video
+                gsap.to([heroSection, ".nav-master-wrapper", ".video-background"], { duration: 0.5, opacity: 0, pointerEvents: "none" });
 
-            // 2. Fade out Hero content & Nav & Video
-            gsap.to([heroSection, ".nav-master-wrapper", ".video-background"], { duration: 0.5, opacity: 0, pointerEvents: "none" });
+                // 3. Show Experience Overlay & Title
+                if (experienceSection) experienceSection.classList.add('active');
+                gsap.to(".exp-content", { duration: 0.8, opacity: 1, y: 0, delay: 0.3, ease: "power2.out" });
 
-            // 3. Show Experience Overlay & Title
-            experienceSection.classList.add('active');
-            gsap.to(".exp-content", { duration: 0.8, opacity: 1, y: 0, delay: 0.3, ease: "power2.out" });
-
-            // 4. Trigger 3D Scene Transition
-            if (window.enterExperienceMode) window.enterExperienceMode();
-
-            // 5. Beams Background Animation removed (optional)
-        });
+                // 4. Trigger 3D Scene Transition
+                if (window.enterExperienceMode) window.enterExperienceMode();
+            });
+        }
 
         // Exit Experience Mode
         window.exitExperienceMode = function () {
@@ -3151,7 +3145,7 @@
             };
 
             const isServicesHash = hash === '#services' || categoryMap[hash];
-            
+
             if (isServicesHash) {
                 const servicesSection = document.getElementById('services');
                 const heroSection = document.getElementById('home');
