@@ -1,3 +1,4 @@
+serverless-wsgi
 Flask
 dotenv
 requests

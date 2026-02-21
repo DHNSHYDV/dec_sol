@@ -1,0 +1,10 @@
+[build]
+  command = "echo 'Build started'"
+  functions = "netlify/functions"
+  publish = "static"
+
+[[redirects]]
+  from = "/*"
+  to = "/.netlify/functions/handler"
+  status = 200
+  force = true
