@@ -41,6 +41,10 @@ def entry():
 def about():
     return render_template('about.html', user=current_user)
 
+@app.route('/experience')
+def experience():
+    return render_template('experience.html', user=current_user)
+
 @app.route('/api/signup', methods=['POST'])
 def signup():
     data = request.json

@@ -35,38 +35,120 @@ if (container) {
 
     // --- Model Management ---
     const models = {
-        sneaker: { clean: null, loaded: false }
+        sneaker: { clean: null, dirty: null, loaded: false, cleanUrl: '/static/models/shoe_clean.glb', dirtyUrl: '/static/models/shoe_dirty.glb' },
+        curtain: { clean: null, dirty: null, loaded: false, cleanUrl: '/static/models/curtain_clean.glb', dirtyUrl: '/static/models/curtain_dirty.glb' },
+        carpet: { clean: null, dirty: null, loaded: false, cleanUrl: '/static/models/carpet_clean.glb', dirtyUrl: '/static/models/carpet_dirty.glb' }
     };
 
+    let activeCategory = 'sneaker';
+    let restorationValue = 0;
+
     const manager = new THREE.LoadingManager();
-    manager.onLoad = () => window.dispatchEvent(new Event('modelsLoaded'));
+    manager.onLoad = () => {
+        console.log("All models loaded");
+        window.dispatchEvent(new Event('modelsLoaded'));
+    };
     const loader = new THREE.GLTFLoader(manager);
 
-    // Helper to setup transparency
-    const getTargetScale = () => window.innerWidth < 768 ? 0.6 : 1.1;
+    // Helper to setup model
+    const getTargetScale = (cat) => {
+        const isMobile = window.innerWidth < 768;
+        const scales = {
+            sneaker: isMobile ? 0.6 : 1.1,
+            curtain: isMobile ? 0.4 : 0.8,
+            carpet: isMobile ? 0.5 : 1.0
+        };
+        return scales[cat] || 1;
+    };
 
-    const setupModel = (model, startVisible, startOpacity) => {
-        const scale = getTargetScale();
+    const setupModel = (model, cat, startVisible, isClean) => {
+        const scale = getTargetScale(cat);
         model.scale.set(scale, scale, scale);
-        model.position.set(0, -0.8, 0);
+
+        // Vertical offset adjustments
+        const offsets = {
+            sneaker: -0.8,
+            curtain: -1.5,
+            carpet: -0.5
+        };
+        model.position.set(0, offsets[cat] || 0, 0);
         model.visible = startVisible;
 
         model.traverse((child) => {
             if (child.isMesh) {
                 child.material.transparent = true;
-                child.material.opacity = startOpacity;
+                // Important: for fade to work, starting opacity must be set
+                child.material.opacity = isClean ? restorationValue : (1 - restorationValue);
                 child.material.needsUpdate = true;
             }
         });
         scene.add(model);
     };
 
-    // Load Clean Sneaker only
-    loader.load('/static/models/shoe_clean.glb', (gltf) => {
-        models.sneaker.clean = gltf.scene;
-        setupModel(models.sneaker.clean, true, 1);
-        models.sneaker.loaded = true;
+    // Load All Models (Clean and Dirty)
+    Object.keys(models).forEach(cat => {
+        // Load Clean
+        loader.load(models[cat].cleanUrl, (gltf) => {
+            models[cat].clean = gltf.scene;
+            setupModel(models[cat].clean, cat, cat === activeCategory, true);
+            checkLoaded(cat);
+        });
+        // Load Dirty
+        loader.load(models[cat].dirtyUrl, (gltf) => {
+            models[cat].dirty = gltf.scene;
+            setupModel(models[cat].dirty, cat, cat === activeCategory, false);
+            checkLoaded(cat);
+        });
     });
+
+    function checkLoaded(cat) {
+        if (models[cat].clean && models[cat].dirty) {
+            models[cat].loaded = true;
+            // Apply initial dissolve
+            if (cat === activeCategory) window.updateShoeDissolve(restorationValue);
+        }
+    }
+
+    // Dissolve / Wipe Logic
+    window.updateShoeDissolve = (value) => {
+        restorationValue = value;
+        const currentClean = models[activeCategory].clean;
+        const currentDirty = models[activeCategory].dirty;
+
+        if (!currentClean || !currentDirty) return;
+
+        // Simple cross-fade / dissolve
+        currentClean.traverse(child => {
+            if (child.isMesh) child.material.opacity = value;
+        });
+        currentDirty.traverse(child => {
+            if (child.isMesh) child.material.opacity = 1 - value;
+        });
+    };
+
+    // Switching Logic
+    window.switchExperienceCategory = (category) => {
+        if (!models[category].loaded) return;
+
+        // Hide current
+        if (models[activeCategory].clean) models[activeCategory].clean.visible = false;
+        if (models[activeCategory].dirty) models[activeCategory].dirty.visible = false;
+
+        // Show new
+        activeCategory = category;
+        if (models[activeCategory].clean && models[activeCategory].dirty) {
+            models[activeCategory].clean.visible = true;
+            models[activeCategory].dirty.visible = true;
+
+            // Re-apply scale for safety
+            const targetScale = getTargetScale(category);
+            models[activeCategory].clean.scale.set(targetScale, targetScale, targetScale);
+            models[activeCategory].dirty.scale.set(targetScale, targetScale, targetScale);
+
+            // Trigger immediate dissolve update
+            window.updateShoeDissolve(0);
+        }
+    };
 
     // Animation Loop
     const clock = new THREE.Clock();
@@ -75,8 +157,10 @@ if (container) {
         requestAnimationFrame(animate);
         const time = clock.getElapsedTime();
 
-        if (models.sneaker.clean) {
-            models.sneaker.clean.rotation.y = time * 0.2;
+        // Rotate active models
+        if (models[activeCategory].loaded) {
+            if (models[activeCategory].clean) models[activeCategory].clean.rotation.y = time * 0.2;
+            if (models[activeCategory].dirty) models[activeCategory].dirty.rotation.y = time * 0.2;
         }
 
         renderer.render(scene, camera);
@@ -92,17 +176,18 @@ if (container) {
         camera.updateProjectionMatrix();
         renderer.setSize(width, height);
 
-        const newScale = getTargetScale();
-        if (models.sneaker.clean) {
-            models.sneaker.clean.scale.set(newScale, newScale, newScale);
-        }
+        Object.keys(models).forEach(cat => {
+            if (models[cat].loaded) {
+                const newScale = getTargetScale(cat);
+                if (models[cat].clean) models[cat].clean.scale.set(newScale, newScale, newScale);
+                if (models[cat].dirty) models[cat].dirty.scale.set(newScale, newScale, newScale);
+            }
+        });
     });
 
-    // Simplified logic for compatibility if any old scripts call these
+    // Compatibility dummies
     window.enterExperienceMode = () => { };
     window.exitExperienceMode3D = () => { };
-    window.switchExperienceCategory = () => { };
-    window.updateShoeDissolve = () => { };
 } else {
     console.warn("Canvas container not found. 3D scene initialization skipped.");
 }

@@ -331,4 +331,20 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     }
+    // Generic magnetic button effect with null checks
+    document.querySelectorAll('.cta-button').forEach(btn => {
+        btn.addEventListener('mousemove', (e) => {
+            const rect = btn.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+            if (window.gsap) {
+                gsap.to(btn, { x: x * 0.1, y: y * 0.1, duration: 0.3 });
+            }
+        });
+        btn.addEventListener('mouseleave', () => {
+            if (window.gsap) {
+                gsap.to(btn, { x: 0, y: 0, duration: 0.3 });
+            }
+        });
+    });
 });
