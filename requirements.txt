@@ -1,7 +1,5 @@
-serverless-wsgi
 Flask
-dotenv
-requests
-gdown
 flask-sqlalchemy
 flask-login
+requests
+google-auth

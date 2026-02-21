@@ -12,10 +12,30 @@ GOOGLE_CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID', '223602766897-7tup819vu961
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'dev-secret-key-change-in-prod' # Replace with env var in prod
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///dec_sol.db'
+
+if os.environ.get('VERCEL') == '1':
+    # Vercel serverless lambda has read-only filesystem except for /tmp
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/dec_sol.db'
+else:
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///dec_sol.db'
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
+
+# Ensure database tables are created on Vercel cold-starts
+with app.app_context():
+    db.create_all()
+    # Seed Branches if they don't exist
+    if Branch.query.count() == 0:
+        branches = [
+            Branch(name='Manikonda', location='Manikonda Main Road, Hyderabad, 500089'),
+            Branch(name='Kokapet', location='Financial District, Hyderabad, 500075'),
+            Branch(name='Film Nagar', location='Road No.1, Film Nagar, Hyderabad, 500033'),
+        ]
+        db.session.add_all(branches)
+        db.session.commit()
+
 login_manager = LoginManager(app)
 login_manager.login_view = 'entry' # Redirect here if not logged in
 
