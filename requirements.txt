@@ -5,10 +5,3 @@ requests
 gdown
 flask-sqlalchemy
 flask-login
-google-generativeai
-huggingface_hub
-# Optional: for local AI Craft (GLM-OCR) and Voice (Whisper) - Disabled for Netlify build space
-# torch
-# transformers
-# accelerate
-# For Voice: set WHISPER_MODEL in .env (e.g. openai/whisper-small or openai/whisper-large-v3). FFmpeg needed for webm.
