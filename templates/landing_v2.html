@@ -3076,15 +3076,6 @@
 
         // --- Services Page Logic (Independent View) ---
         const servicesSection = document.getElementById('services');
-        const servicesLink = document.getElementById('services-link');
-
-        servicesLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            if (!servicesSection.classList.contains('active')) {
-                // Show services logic handled by universal listener below
-                document.querySelector('.nav-item[href="#services"]').click();
-            }
-        });
 
         // Universal Nav Logic
         const allNavLinks = document.querySelectorAll('.nav-item, .nav-logo');
