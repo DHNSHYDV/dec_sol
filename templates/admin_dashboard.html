@@ -219,35 +219,33 @@
             </div>
         </div>
 
+        {% if users %}
         <div class="section">
-            <h2>Branch Orders</h2>
+            <h2>Signed-up Users</h2>
             <div class="table-responsive">
-                {% if orders %}
                 <table>
                     <thead>
                         <tr>
-                            <th>Order #</th>
-                            <th>Amount</th>
-                            <th>Status</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Joined</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for order in orders %}
+                        {% for user in users %}
                         <tr>
-                            <td>{{ order.order_number or 'N/A' }}</td>
-                            <td>₹{{ order.total_amount }}</td>
-                            <td><span class="badge {{ order.status.lower() }}">{{ order.status }}</span></td>
+                            <td>{{ user.name }}</td>
+                            <td>{{ user.email }}</td>
+                            <td><span class="badge {{ user.role }}">{{ user.role|replace('_', ' ') }}</span></td>
+                            <td>{{ user.created_at.strftime('%Y-%m-%d') if user.created_at else 'N/A' }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
                 </table>
-                {% else %}
-                <div style="padding: 2rem; text-align: center; color: var(--text-light);">
-                    No orders found for this branch.
-                </div>
-                {% endif %}
             </div>
         </div>
+        {% endif %}
 
         <footer>
             <a href="{{ url_for('index') }}" class="back-link">

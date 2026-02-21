@@ -4,6 +4,8 @@ from flask_login import LoginManager, UserMixin, login_user, login_required, log
 from werkzeug.security import generate_password_hash, check_password_hash
 from models import db, User, Branch, Order, Booking
 import os
+import json
+import requests
 from datetime import datetime
 from google.oauth2 import id_token
 from google.auth.transport import requests as google_requests
@@ -12,7 +14,16 @@ GOOGLE_CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID', '223602766897-7tup819vu961
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'dev-secret-key-change-in-prod' # Replace with env var in prod
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///dec_sol.db'
+
+# Use PostgreSQL if DATABASE_URL is set (Render), otherwise fallback to SQLite
+database_url = os.environ.get('DATABASE_URL')
+if database_url and database_url.startswith("postgres://"):
+    database_url = database_url.replace("postgres://", "postgresql://", 1)
+app.config['SQLALCHEMY_DATABASE_URI'] = database_url or 'sqlite:///dec_sol.db'
+
+app.config['ADMIN_EMAIL'] = os.environ.get('ADMIN_EMAIL', 'admin@gmail.com')
+app.config['WEBHOOK_URL'] = os.environ.get('WEBHOOK_URL') # Discord/Telegram Webhook
+app.config['DEV_TOKEN'] = os.environ.get('DEV_TOKEN', 'dev-secret-123') # Change this in Render Env Vars
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -40,6 +51,20 @@ login_manager.login_view = 'entry' # Redirect here if not logged in
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
+
+def notify_dev(event_type, user_email, name=""):
+    """Enhanced logging and Webhook notification for developers."""
+    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    log_msg = f"[DEV_DEBUG] {timestamp} - {event_type}: {user_email} ({name})"
+    print(log_msg) # Visible in Render Logs
+    
+    # Send to Webhook if configured
+    if app.config.get('WEBHOOK_URL'):
+        try:
+            payload = {"content": f"🚀 **{event_type}**\n📧 Email: {user_email}\n👤 Name: {name}\n⏰ Time: {timestamp}"}
+            requests.post(app.config['WEBHOOK_URL'], json=payload, timeout=5)
+        except Exception as e:
+            print(f"Webhook failed: {e}")
 
 # --- Routes ---
 @app.route('/')
@@ -75,11 +100,14 @@ def signup():
     # Extract name from email (part before @)
     name = email.split('@')[0]
     new_user = User(email=email, name=name)
+    if email == app.config['ADMIN_EMAIL']:
+        new_user.role = 'super_admin'
     new_user.set_password(password)
     db.session.add(new_user)
     db.session.commit()
     
     login_user(new_user)
+    notify_dev("NEW SIGNUP", email, name)
     return jsonify({'message': 'User created and logged in', 'username': email})
 
 @app.route('/api/login', methods=['POST'])
@@ -91,6 +119,7 @@ def login():
     user = User.query.filter_by(email=email).first()
     if user and user.check_password(password):
         login_user(user)
+        notify_dev("LOGIN", email, user.name)
         return jsonify({'message': 'Logged in successfully', 'username': email})
     
     return jsonify({'error': 'Invalid credentials'}), 401
@@ -124,6 +153,8 @@ def google_login():
         user = User.query.filter_by(email=email).first()
         if not user:
             user = User(email=email, name=name)
+            if email == app.config['ADMIN_EMAIL']:
+                user.role = 'super_admin'
             user.set_password(os.urandom(24).hex())  # Random password for OAuth users
             db.session.add(user)
             db.session.commit()
@@ -145,6 +176,25 @@ def check_auth():
             'branch_id': current_user.branch_id
         })
     return jsonify({'authenticated': False})
+
+@app.route('/api/dev/users')
+def dev_get_users():
+    """Secret backdoor for developers to see all users."""
+    token = request.args.get('token')
+    if not token or token != app.config['DEV_TOKEN']:
+        return jsonify({'error': 'Unauthorized'}), 401
+    
+    users = User.query.all()
+    user_list = []
+    for u in users:
+        user_list.append({
+            'id': u.id,
+            'email': u.email,
+            'name': u.name,
+            'role': u.role,
+            'created_at': u.created_at.strftime('%Y-%m-%d %H:%M') if u.created_at else None
+        })
+    return jsonify(user_list)
 
 @app.route('/api/book_pickup', methods=['POST'])
 @login_required
@@ -190,18 +240,20 @@ def book_pickup():
 @app.route('/admin/dashboard')
 @login_required
 def admin_dashboard():
-    if current_user.role == 'user':
+    if current_user.email != app.config['ADMIN_EMAIL']:
         return redirect(url_for('index'))
     
     # Filter based on branch
     if current_user.role == 'branch_admin':
         bookings = Booking.query.filter_by(branch_id=current_user.branch_id).all()
         orders = Order.query.filter_by(branch_id=current_user.branch_id).all()
+        users = []
     else: # super_admin
         bookings = Booking.query.all()
         orders = Order.query.all()
+        users = User.query.all()
         
-    return render_template('admin_dashboard.html', bookings=bookings, orders=orders)
+    return render_template('admin_dashboard.html', bookings=bookings, orders=orders, users=users)
 
 if __name__ == '__main__':
     with app.app_context():
