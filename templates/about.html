@@ -55,8 +55,8 @@
             max-width: 1200px;
             height: var(--nav-height);
             background: rgba(15, 15, 17, 0.6);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             border: 1px solid var(--glass-border);
             border-radius: 20px;
             display: flex;
@@ -246,8 +246,8 @@
             right: 0;
             width: 240px;
             background: rgba(15, 15, 17, 0.95);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             border: 1px solid var(--glass-border);
             border-radius: 20px;
             padding: 0.8rem;
@@ -294,6 +294,38 @@
             .profile-trigger {
                 width: 44px;
                 height: 44px;
+            }
+
+            /* Optimization: Reduce backdrop-filter on mobile */
+            .glass-nav,
+            .profile-dropdown-v2,
+            .grid-pattern-card {
+                backdrop-filter: blur(6px) !important;
+                -webkit-backdrop-filter: blur(6px) !important;
+            }
+
+            /* Simplify Video Player on Mobile */
+            .vp-controls {
+                display: none !important;
+            }
+
+            .vp-center-play {
+                display: flex;
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(0.8);
+            }
+
+            .vp-wrapper.playing .vp-center-play {
+                display: none !important;
+                opacity: 0 !important;
+            }
+
+            .vp-title-overlay {
+                padding: 1rem;
+            }
+
+            .vp-title {
+                font-size: 0.9rem;
             }
         }
 
@@ -771,6 +803,7 @@
             align-items: center;
             justify-content: center;
             pointer-events: none;
+            will-change: transform, opacity;
         }
 
         .parallax-img-box {
@@ -900,7 +933,7 @@
                     </svg>
                     <span>Contact</span>
                 </a>
-                <a href="#" class="nav-item premium-link" id="open-premium-btn">
+                <a href="{{ url_for('index') }}#premium" class="nav-item premium-link" id="about-premium-btn">
                     <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                         stroke-linecap="round" stroke-linejoin="round">
                         <path d="m2 4 3 12h14l3-12-6 7-4-3-4 3-6-7z"></path>
@@ -1166,12 +1199,21 @@
                 video.play();
                 playIcon.style.display = "none";
                 pauseIcon.style.display = "block";
-                if (centerPlayBtn) centerPlayBtn.style.display = "none";
             } else {
                 video.pause();
                 playIcon.style.display = "block";
                 pauseIcon.style.display = "none";
+            }
+        };
+
+        const handlePlayState = () => {
+            const container = document.getElementById("vpContainer");
+            if (video.paused) {
+                container.classList.remove("playing");
                 if (centerPlayBtn) centerPlayBtn.style.display = "flex";
+            } else {
+                container.classList.add("playing");
+                if (centerPlayBtn) centerPlayBtn.style.display = "none";
             }
         };
 
@@ -1242,6 +1284,13 @@
             volumeSlider.addEventListener("input", handleVolumeChange);
             progressSlider.addEventListener("input", handleSeek);
             video.addEventListener("timeupdate", handleTimeUpdate);
+            video.addEventListener("play", handlePlayState);
+            video.addEventListener("pause", handlePlayState);
+            video.addEventListener("ended", () => {
+                handlePlayState();
+                playIcon.style.display = "block";
+                pauseIcon.style.display = "none";
+            });
             video.addEventListener("loadedmetadata", () => {
                 durationEl.textContent = formatTime(video.duration);
             });

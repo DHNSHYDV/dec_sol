@@ -17,7 +17,7 @@
 <body>
     <header class="main-header">
         <div class="logo-container">
-            <a href="{{ url_for('home') }}" class="logo-link">
+            <a href="{{ url_for('index') }}" class="logo-link">
                 <img src="{{ url_for('static', filename='images/custom_logo.png') }}"
                     onerror="this.src='{{ url_for('static', filename='images/logo.png') }}';" alt="Featherlite Logo"
                     class="site-logo">
@@ -25,12 +25,12 @@
         </div>
         <nav class="main-nav">
             <ul>
-                <li><a href="{{ url_for('home') }}">Home</a></li>
+                <li><a href="{{ url_for('index') }}">Home</a></li>
                 <li><a href="{{ url_for('about') }}">About</a></li>
                 <li class="nav-item-has-dropdown">
                     <a href="#">Experience <span style="font-size: 0.8em; margin-left: 4px;">▼</span></a>
                     <ul class="nav-dropdown">
-                        <li><a href="{{ url_for('landing_v2') }}">3D Experience</a></li>
+                        <li><a href="{{ url_for('index') }}">3D Experience</a></li>
                         <li><a href="{{ url_for('about') }}">Machinery Tour</a></li>
                     </ul>
                 </li>

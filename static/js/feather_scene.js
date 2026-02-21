@@ -13,7 +13,7 @@ if (container) {
     camera.position.set(0, 0, 5); // Start closer
 
     // Renderer
-    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: 'high-performance' });
     renderer.setSize(window.innerWidth, window.innerHeight);
     // Limit pixel ratio to 2 for performance on high-DPI devices
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));

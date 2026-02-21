@@ -1851,6 +1851,12 @@
             .catalogue-grid {
                 grid-template-columns: 1fr;
             }
+
+            .catalogue-grid,
+            .cat-tab-pill,
+            .cat-card {
+                will-change: transform, opacity;
+            }
         }
     </style>
 </head>
@@ -3290,6 +3296,68 @@
             await fetch('/api/logout', { method: 'POST' });
             window.location.href = '/';
         }
+
+        // --- Hash-based Tab Switching Logic ---
+        function checkHashAndSwitchTab() {
+            const hash = window.location.hash;
+            if (!hash) return;
+
+            const categoryMap = {
+                '#apparel': 'apparel',
+                '#indian': 'indian',
+                '#home-bed': 'home',
+                '#accessories': 'other'
+            };
+
+            const category = categoryMap[hash];
+            if (category) {
+                const servicesSection = document.getElementById('services');
+                const heroSection = document.getElementById('home');
+
+                // If on Home page, handle section switching
+                if (servicesSection && !servicesSection.classList.contains('active')) {
+                    // Logic to show services section
+                    if (window.location.pathname === '/') {
+                        // Close others
+                        if (experienceSection.classList.contains('active')) exitExperienceMode();
+                        premiumModal.classList.remove('active');
+
+                        // Show Services
+                        gsap.to([heroSection, ".video-background"], { duration: 0.5, opacity: 0, pointerEvents: "none" });
+                        servicesSection.classList.add('active');
+                        gsap.fromTo(servicesSection,
+                            { opacity: 0, y: 20, pointerEvents: "none" },
+                            { opacity: 1, y: 0, duration: 0.5, pointerEvents: "all", clearProps: "pointerEvents" }
+                        );
+                    }
+                }
+
+                // Switch the tab
+                const pill = document.querySelector(`.cat-tab-pill[onclick*="'${category}'"]`);
+                if (pill) {
+                    window.switchServiceCategory(category, pill);
+                }
+            }
+        }
+
+        const handleHashModal = () => {
+            if (window.location.hash === '#premium') {
+                const btn = document.getElementById('open-premium-btn');
+                if (btn) {
+                    setTimeout(() => btn.click(), 100);
+                }
+            }
+        };
+
+        window.addEventListener('load', () => {
+            checkHashAndSwitchTab();
+            handleHashModal();
+        });
+        window.addEventListener('hashchange', () => {
+            checkHashAndSwitchTab();
+            handleHashModal();
+        });
+
 
         // Profile Toggle Logic
         const profileTrigger = document.getElementById('profileTrigger');
