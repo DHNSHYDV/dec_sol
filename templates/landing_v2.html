@@ -1737,6 +1737,10 @@
                 padding: 0.9rem 2rem;
             }
 
+            .nav-master-wrapper {
+                top: 0.5rem;
+            }
+
             /* Category Selector for Services - Mobile Adjustment */
             .service-selector {
                 justify-content: flex-start;
@@ -3236,8 +3240,13 @@
         if (carousel) {
             carousel.addEventListener('scroll', () => {
                 const scrollLeft = carousel.scrollLeft;
-                const width = carousel.offsetWidth;
-                const index = Math.round(scrollLeft / width);
+                const maxScrollLeft = carousel.scrollWidth - carousel.offsetWidth;
+
+                // Protect against divide by zero if not scrollable
+                let index = 0;
+                if (maxScrollLeft > 0) {
+                    index = Math.round((scrollLeft / maxScrollLeft) * (dotsList.length - 1));
+                }
 
                 dotsList.forEach((dot, i) => {
                     dot.classList.toggle('active', i === index);

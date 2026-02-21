@@ -51,6 +51,7 @@ if (container) {
     const loader = new THREE.GLTFLoader(manager);
 
     // Helper to setup model
+    // Helper to setup model
     const getTargetScale = (cat) => {
         const isMobile = window.innerWidth < 768;
         const scales = {
@@ -74,9 +75,6 @@ if (container) {
         model.position.set(0, offsets[cat] || 0, 0);
 
         if (cat === 'carpet') {
-            // Adjust so it lies flat on the screen. 
-            // The original object seems to be diagonal. 
-            // Let's force it to look flat by adjusting X and Z.
             model.rotation.set(-Math.PI / 2, 0, Math.PI / 4);
         } else {
             model.rotation.set(0, 0, 0);
@@ -95,29 +93,50 @@ if (container) {
         scene.add(model);
     };
 
-    // Load All Models (Clean and Dirty)
-    Object.keys(models).forEach(cat => {
-        // Load Clean
-        loader.load(models[cat].cleanUrl, (gltf) => {
+    function checkLoaded(cat) {
+        if (models[cat].clean && models[cat].dirty) {
+            models[cat].loaded = true;
+            if (cat === activeCategory) {
+                window.updateShoeDissolve(restorationValue);
+                if (cat === 'sneaker') {
+                    console.log("Sneaker models loaded");
+                    window.dispatchEvent(new Event('modelsLoaded'));
+                } else {
+                    // Hide global loading spinner if it reappeared during lazy load
+                    const loader = document.getElementById('loading-overlay');
+                    if (loader) {
+                        loader.style.opacity = '0';
+                        setTimeout(() => loader.style.display = 'none', 500);
+                    }
+                }
+            }
+        }
+    }
+
+    // Lazy Loader Function
+    function loadCategoryModels(cat) {
+        if (models[cat].loaded || models[cat].cleanUrl === null) return; // Already loaded or loading
+
+        console.log(`Lazy loading: ${cat}`);
+        // Nullify URL to indicate load in progress to prevent duplicate firing
+        const cleanPath = models[cat].cleanUrl;
+        const dirtyPath = models[cat].dirtyUrl;
+        models[cat].cleanUrl = null;
+
+        loader.load(cleanPath, (gltf) => {
             models[cat].clean = gltf.scene;
             setupModel(models[cat].clean, cat, cat === activeCategory, true);
             checkLoaded(cat);
         });
-        // Load Dirty
-        loader.load(models[cat].dirtyUrl, (gltf) => {
+        loader.load(dirtyPath, (gltf) => {
             models[cat].dirty = gltf.scene;
             setupModel(models[cat].dirty, cat, cat === activeCategory, false);
             checkLoaded(cat);
         });
-    });
-
-    function checkLoaded(cat) {
-        if (models[cat].clean && models[cat].dirty) {
-            models[cat].loaded = true;
-            // Apply initial dissolve
-            if (cat === activeCategory) window.updateShoeDissolve(restorationValue);
-        }
     }
+
+    // Initially load ONLY the sneaker
+    loadCategoryModels('sneaker');
 
     // Dissolve / Wipe Logic
     window.updateShoeDissolve = (value) => {
@@ -138,17 +157,33 @@ if (container) {
 
     // Switching Logic
     window.switchExperienceCategory = (category) => {
-        if (!models[category].loaded) return;
-
-        // Hide current
-        if (models[activeCategory].clean) models[activeCategory].clean.visible = false;
-        if (models[activeCategory].dirty) models[activeCategory].dirty.visible = false;
-
-        // Show new
+        if (!models[category]) return;
         activeCategory = category;
-        if (models[activeCategory].clean && models[activeCategory].dirty) {
-            models[activeCategory].clean.visible = true;
-            models[activeCategory].dirty.visible = true;
+
+        // Load models for this category if not already loaded
+        if (!models[category].loaded) {
+            // Show loading spinner while fetching lazy models
+            const loaderOverlay = document.getElementById('loading-overlay');
+            if (loaderOverlay) {
+                loaderOverlay.style.display = 'flex';
+                loaderOverlay.style.opacity = '1';
+                // Remove text so it just shows spinner
+                const loadingText = loaderOverlay.querySelector('.loading-text');
+                if (loadingText) loadingText.textContent = "Loading Model...";
+            }
+            loadCategoryModels(category);
+        }
+
+        // Hide all models
+        Object.keys(models).forEach(cat => {
+            if (models[cat].clean) models[cat].clean.visible = false;
+            if (models[cat].dirty) models[cat].dirty.visible = false;
+        });
+
+        // Show selected category models (if they are loaded)
+        if (models[category].loaded) {
+            if (models[category].clean) models[category].clean.visible = true;
+            if (models[category].dirty) models[category].dirty.visible = true;
 
             // Re-apply original scales without the 0.995 hack
             const targetScale = getTargetScale(category);
@@ -156,12 +191,10 @@ if (container) {
             models[activeCategory].dirty.scale.set(targetScale, targetScale, targetScale);
 
             // Fix Z-fighting by slightly nudging the dirty model backwards relative to the camera
-            // Since camera is at +Z and models are at 0, moving dirty to slightly negative Z helps.
             models[activeCategory].clean.position.z = 0;
             models[activeCategory].dirty.position.z = -0.01;
 
-            // Trigger immediate dissolve update
-            window.updateShoeDissolve(0);
+            window.updateShoeDissolve(restorationValue);
         }
     };
 
