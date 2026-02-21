@@ -3159,18 +3159,19 @@
                 '#accessories': 'other'
             };
 
-            const category = categoryMap[hash];
-            if (category) {
+            const isServicesHash = hash === '#services' || categoryMap[hash];
+            
+            if (isServicesHash) {
                 const servicesSection = document.getElementById('services');
                 const heroSection = document.getElementById('home');
 
                 // If on Home page, handle section switching
                 if (servicesSection && !servicesSection.classList.contains('active')) {
-                    // Logic to show services section
                     if (window.location.pathname === '/') {
                         // Close others
-                        if (experienceSection.classList.contains('active')) exitExperienceMode();
-                        premiumModal.classList.remove('active');
+                        if (typeof experienceSection !== 'undefined' && experienceSection.classList.contains('active')) exitExperienceMode();
+                        const modal = document.getElementById('premium-modal');
+                        if (modal) modal.classList.remove('active');
 
                         // Show Services
                         gsap.to([heroSection, ".video-background"], { duration: 0.5, opacity: 0, pointerEvents: "none" });
@@ -3182,10 +3183,13 @@
                     }
                 }
 
-                // Switch the tab
-                const pill = document.querySelector(`.cat-tab-pill[onclick*="'${category}'"]`);
-                if (pill) {
-                    window.switchServiceCategory(category, pill);
+                const category = categoryMap[hash];
+                if (category) {
+                    // Switch the tab
+                    const pill = document.querySelector(`.cat-tab-pill[onclick*="'${category}'"]`);
+                    if (pill) {
+                        window.switchServiceCategory(category, pill);
+                    }
                 }
             }
         }
