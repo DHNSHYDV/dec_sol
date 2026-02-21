@@ -8,15 +8,5 @@
                 "excludeFiles": "static/**"
             }
         }
-    ],
-    "routes": [
-        {
-            "src": "/static/(.*)",
-            "dest": "/public/$1"
-        },
-        {
-            "src": "/(.*)",
-            "dest": "app.py"
-        }
     ]
 }
