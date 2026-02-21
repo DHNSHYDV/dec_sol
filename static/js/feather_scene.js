@@ -65,13 +65,23 @@ if (container) {
         const scale = getTargetScale(cat);
         model.scale.set(scale, scale, scale);
 
-        // Vertical offset adjustments
+        // Vertical offset adjustments (centered)
         const offsets = {
-            sneaker: -0.8,
-            curtain: -1.5,
-            carpet: -0.5
+            sneaker: -0.2,
+            curtain: -0.2,
+            carpet: 0
         };
         model.position.set(0, offsets[cat] || 0, 0);
+
+        if (cat === 'carpet') {
+            // Adjust so it lies flat on the screen. 
+            // The original object seems to be diagonal. 
+            // Let's force it to look flat by adjusting X and Z.
+            model.rotation.set(-Math.PI / 2, 0, Math.PI / 4);
+        } else {
+            model.rotation.set(0, 0, 0);
+        }
+
         model.visible = startVisible;
 
         model.traverse((child) => {
@@ -140,10 +150,15 @@ if (container) {
             models[activeCategory].clean.visible = true;
             models[activeCategory].dirty.visible = true;
 
-            // Re-apply scale for safety
+            // Re-apply original scales without the 0.995 hack
             const targetScale = getTargetScale(category);
             models[activeCategory].clean.scale.set(targetScale, targetScale, targetScale);
             models[activeCategory].dirty.scale.set(targetScale, targetScale, targetScale);
+
+            // Fix Z-fighting by slightly nudging the dirty model backwards relative to the camera
+            // Since camera is at +Z and models are at 0, moving dirty to slightly negative Z helps.
+            models[activeCategory].clean.position.z = 0;
+            models[activeCategory].dirty.position.z = -0.01;
 
             // Trigger immediate dissolve update
             window.updateShoeDissolve(0);
@@ -157,7 +172,7 @@ if (container) {
         requestAnimationFrame(animate);
         const time = clock.getElapsedTime();
 
-        // Rotate active models
+        // Rotate active models (All use Y rotation. For carpet, since X is 90 deg, local Y axis points to camera, creating a pinwheel spin.)
         if (models[activeCategory].loaded) {
             if (models[activeCategory].clean) models[activeCategory].clean.rotation.y = time * 0.2;
             if (models[activeCategory].dirty) models[activeCategory].dirty.rotation.y = time * 0.2;
