@@ -12,12 +12,7 @@ GOOGLE_CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID', '223602766897-7tup819vu961
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'dev-secret-key-change-in-prod' # Replace with env var in prod
-
-if os.environ.get('VERCEL') == '1':
-    # Vercel serverless lambda has read-only filesystem except for /tmp
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/dec_sol.db'
-else:
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///dec_sol.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///dec_sol.db'
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
