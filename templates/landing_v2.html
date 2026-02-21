@@ -346,7 +346,7 @@
             align-items: center;
             text-align: center;
             padding: 2rem;
-            padding-top: var(--nav-height);
+            padding-top: calc(var(--nav-height) / 2);
         }
 
         h1 {
@@ -877,7 +877,7 @@
             /* Start from top to avoid clipping */
             overflow-y: auto;
             /* Let parent scroll */
-            padding: 10rem 1rem 4rem;
+            padding: 4rem 1rem 4rem;
             /* Increased top padding to push box down */
             opacity: 0;
             pointer-events: none;
