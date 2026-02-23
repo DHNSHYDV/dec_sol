@@ -10,7 +10,8 @@ if (container) {
 
     // Camera
     const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.set(0, 0, 5); // Start closer
+    const cameraDistance = window.innerWidth < 768 ? 6 : 5; // Start slightly further on mobile
+    camera.position.set(0, 0, cameraDistance);
 
     // Renderer
     const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: 'high-performance' });

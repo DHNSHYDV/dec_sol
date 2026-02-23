@@ -7,6 +7,13 @@ document.addEventListener('DOMContentLoaded', () => {
         menuToggle.addEventListener('click', () => {
             nav.classList.toggle('active');
             menuToggle.classList.toggle('active');
+
+            // Prevent scrolling when menu is open
+            if (nav.classList.contains('active')) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = '';
+            }
         });
     }
 
@@ -20,6 +27,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 parent.classList.toggle('active');
             }
         });
+    });
+
+    // Header Scroll Effect
+    const header = document.querySelector('.main-header');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+            header.style.background = document.body.classList.contains('dark-mode')
+                ? 'rgba(18, 18, 18, 0.95)'
+                : 'rgba(255, 255, 255, 0.95)';
+            header.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.1)';
+        } else {
+            header.style.background = document.body.classList.contains('dark-mode')
+                ? 'rgba(18, 18, 18, 0.9)'
+                : 'rgba(255, 255, 255, 0.9)';
+            header.style.boxShadow = 'none';
+        }
     });
 
     // Smooth Scroll for anchor links

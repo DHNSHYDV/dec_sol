@@ -293,47 +293,78 @@
         }
 
         @media (max-width: 768px) {
+            .header {
+                padding: 0.5rem 0.5rem;
+                /* Tighter but consistent */
+                align-items: center;
+            }
+
+            .brand-logo img {
+                height: 30px;
+                /* Smaller logo for mobile header */
+            }
+
+            .brand-logo div {
+                font-size: 0.9rem !important;
+                /* Smaller text */
+            }
+
+            .back-home {
+                padding: 0.6rem 1rem;
+                font-size: 0.75rem;
+            }
+
             .center-content {
-                top: 7rem;
+                top: 6rem;
+                /* Adjusted to sit better below header */
             }
 
             .stage-manager-sidebar {
-                bottom: 2rem;
+                bottom: 1.5rem;
                 top: auto;
                 left: 50%;
                 transform: translateX(-50%);
                 flex-direction: row;
-                gap: 2rem;
+                gap: 1.2rem;
+                /* Tighter gap for smaller screens */
+            }
+
+            .stage-tab {
+                width: 60px;
+                height: 60px;
+                border-radius: 14px;
             }
 
             .footer-controls {
-                bottom: 8rem;
+                bottom: 7rem;
             }
 
             .control-panel {
-                padding: 1rem;
-                gap: 1rem;
-            }
-
-            .slider-container {
+                padding: 0.8rem 1.5rem;
                 gap: 0.8rem;
             }
 
+            .slider-container {
+                gap: 0.6rem;
+            }
+
             .slider-label {
-                font-size: 0.55rem;
+                font-size: 0.5rem;
             }
 
             input[type=range].res-slider {
-                width: 150px;
+                width: 130px;
+                /* Slightly narrower to fit smaller devices */
             }
 
             .exp-title {
-                font-size: 1.5rem;
+                font-size: 1.3rem;
+                /* Scaled down further */
             }
 
             .exp-subtitle {
-                font-size: 0.8rem;
-                padding: 0 1rem;
+                font-size: 0.7rem;
+                padding: 0 2rem;
             }
         }
 

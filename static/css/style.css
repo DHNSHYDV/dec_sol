@@ -289,7 +289,13 @@ body.dark-mode .nav-dropdown a:hover {
     display: flex;
     align-items: center;
     gap: 15px;
-    /* Add spacing between elements */
+}
+
+@media (max-width: 768px) {
+    .header-actions {
+        gap: 8px;
+        /* Slightly tighter on mobile but still breathable */
+    }
 }
 
 .theme-toggle {
@@ -1133,6 +1139,11 @@ body.dark-mode .review-text {
 }
 
 @media (max-width: 768px) {
+    .main-header {
+        padding: 0.8rem 1.5rem;
+        /* Increased horizontal padding */
+    }
+
     .main-nav {
         display: none;
     }
@@ -1143,7 +1154,22 @@ body.dark-mode .review-text {
     }
 
     .hero-title {
-        font-size: 2.5rem;
+        font-size: 2.2rem;
+        /* Scaled down from 2.5rem for safer fit */
+        line-height: 1.2;
+    }
+
+    .hero-tagline {
+        font-size: 0.9rem;
+        /* Scaled down slightly */
+        letter-spacing: 2px;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+        padding: 0.7rem 1.5rem;
+        /* Better touch feel on mobile */
+        font-size: 0.95rem;
     }
 }
 
@@ -1405,7 +1431,8 @@ body.dark-mode .chat-input-area input {
         height: 100vh;
         background: rgba(255, 255, 255, 0.98);
         backdrop-filter: blur(15px);
-        padding-top: 5rem;
+        padding: 6rem 1.5rem 2rem;
+        /* Adjusted padding for better fit */
         transition: right 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
         box-shadow: -5px 0 20px rgba(0, 0, 0, 0.1);
         z-index: 1001;
@@ -1461,13 +1488,17 @@ body.dark-mode .chat-input-area input {
 
     /* --- Hero Section --- */
     .hero-title {
-        font-size: 2.5rem;
-        /* Smaller heading */
+        font-size: 2.2rem;
         padding: 0 1rem;
     }
 
     .hero-tagline {
-        font-size: 1rem;
+        font-size: 0.9rem;
+    }
+
+    .hero-section {
+        padding-top: 50px;
+        /* Tighter padding for mobile hero */
     }
 
     /* --- Filter Toolbar (Products) --- */
