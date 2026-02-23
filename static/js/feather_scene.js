@@ -128,10 +128,19 @@ if (container) {
             models[cat].clean = gltf.scene;
             setupModel(models[cat].clean, cat, cat === activeCategory, true);
             checkLoaded(cat);
+        }, undefined, (error) => {
+            console.error(`Error loading clean model for ${cat}:`, error);
+            // Even on error, mark as "loaded" so fallback/UI can proceed
+            models[cat].clean = new THREE.Group(); // Empty group as fallback
+            checkLoaded(cat);
         });
         loader.load(dirtyPath, (gltf) => {
             models[cat].dirty = gltf.scene;
             setupModel(models[cat].dirty, cat, cat === activeCategory, false);
+            checkLoaded(cat);
+        }, undefined, (error) => {
+            console.error(`Error loading dirty model for ${cat}:`, error);
+            models[cat].dirty = new THREE.Group(); // Empty group as fallback
             checkLoaded(cat);
         });
     }

@@ -282,6 +282,33 @@
             margin-bottom: 1.5rem;
         }
 
+        #skip-loading {
+            position: absolute;
+            bottom: 2rem;
+            color: rgba(255, 255, 255, 0.4);
+            text-decoration: none;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            padding: 0.5rem 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        #skip-loading:hover {
+            color: #fff;
+            border-color: rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        #skip-loading.visible {
+            opacity: 1;
+            pointer-events: all;
+        }
+
         @keyframes spin {
             0% {
                 transform: rotate(0deg);
@@ -387,7 +414,9 @@
 
     <div id="loading-overlay">
         <div class="spinner"></div>
-        <p style="letter-spacing: 3px; font-weight: 300; font-size: 0.8rem;">INITIALIZING 3D ENGINE</p>
+        <p class="loading-text" style="letter-spacing: 3px; font-weight: 300; font-size: 0.8rem;">INITIALIZING 3D ENGINE
+        </p>
+        <a href="#" id="skip-loading" onclick="dismissLoading()">Skip Loading</a>
     </div>
 
     <div id="canvas-container"></div>
@@ -499,10 +528,29 @@
         });
 
         window.addEventListener('modelsLoaded', () => {
-            const loader = document.getElementById('loading-overlay');
-            loader.style.opacity = '0';
-            setTimeout(() => loader.style.display = 'none', 800);
+            dismissLoading();
         });
+
+        function dismissLoading() {
+            const loader = document.getElementById('loading-overlay');
+            if (loader && loader.style.display !== 'none') {
+                loader.style.opacity = '0';
+                setTimeout(() => {
+                    loader.style.display = 'none';
+                }, 800);
+            }
+        }
+
+        // Failsafe Logic
+        setTimeout(() => {
+            const skipBtn = document.getElementById('skip-loading');
+            if (skipBtn) skipBtn.classList.add('visible');
+        }, 7000); // Show skip button after 7 seconds
+
+        setTimeout(() => {
+            console.log("Failsafe: Auto-dismissing loading screen after 20s");
+            dismissLoading();
+        }, 20000); // Auto-dismiss after 20 seconds
 
         // ═══ Beams Background Animation ═══
         let beamsAnimFrame = null;
