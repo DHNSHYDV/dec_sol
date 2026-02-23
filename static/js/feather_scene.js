@@ -58,7 +58,7 @@ if (container) {
         const scales = {
             sneaker: isMobile ? 1.0 : 1.6,
             curtain: isMobile ? 0.7 : 1.2,
-            carpet: isMobile ? 0.8 : 1.4
+            carpet: isMobile ? 0.65 : 1.1
         };
         return scales[cat] || 1;
     };
