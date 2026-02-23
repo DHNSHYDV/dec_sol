@@ -53,7 +53,7 @@
 
         /* ── Section: bg-muted h-screen ── */
         .signup-page {
-            background: var(--muted);
+            background: linear-gradient(135deg, #0a314d 0%, #061b2c 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -63,8 +63,10 @@
 
         /* ── Card: border-muted bg-background … shadow-md ── */
         .signup-card {
-            background: var(--background);
-            border: 1px solid var(--border);
+            background: rgba(15, 15, 17, 0.6);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: var(--radius);
             padding: 3rem 1.5rem;
             width: 100%;
@@ -73,7 +75,7 @@
             flex-direction: column;
             align-items: center;
             gap: 2rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, .4), 0 2px 4px -2px rgba(0, 0, 0, .4);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, .4), 0 20px 40px -2px rgba(0, 0, 0, .5);
         }
 
         /* ── Header ── */

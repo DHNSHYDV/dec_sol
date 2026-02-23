@@ -55,9 +55,9 @@ if (container) {
     const getTargetScale = (cat) => {
         const isMobile = window.innerWidth < 768;
         const scales = {
-            sneaker: isMobile ? 0.6 : 1.1,
-            curtain: isMobile ? 0.4 : 0.8,
-            carpet: isMobile ? 0.5 : 1.0
+            sneaker: isMobile ? 1.0 : 1.6,
+            curtain: isMobile ? 0.7 : 1.2,
+            carpet: isMobile ? 0.8 : 1.4
         };
         return scales[cat] || 1;
     };

@@ -17,12 +17,15 @@
 
     <style>
         :root {
-            --bg-color: #0f0f11;
+            --bg-color: #061b2c;
+            /* Fallback navy blue */
             --text-color: #f3f4f6;
-            --accent-cyan: #22d3ee;
+            --accent-cyan: #3b82f6;
+            /* Bluish from logo */
             --glass-bg: rgba(255, 255, 255, 0.03);
             --glass-border: rgba(255, 255, 255, 0.08);
-            --nav-height: 80px;
+            --nav-height: 100px;
+            /* Increased nav height */
         }
 
         * {
@@ -33,6 +36,7 @@
 
         body {
             background-color: var(--bg-color);
+            background: linear-gradient(135deg, #0a314d 0%, #061b2c 100%);
             color: var(--text-color);
             font-family: 'Inter', sans-serif;
             overflow-x: hidden;
@@ -60,7 +64,7 @@
             z-index: -5;
             opacity: 0.5;
             /* Dim so text is readable */
-            filter: contrast(1.1) brightness(0.6) grayscale(100%);
+            filter: contrast(1.1) brightness(0.6);
             /* Stylized charcoal look */
             transition: opacity 1s ease;
         }
@@ -79,7 +83,7 @@
             display: flex;
             align-items: center;
             gap: 1.2rem;
-            z-index: 1000;
+            z-index: 3000;
             width: 95%;
             max-width: 1300px;
             justify-content: center;
@@ -110,8 +114,8 @@
         }
 
         .nav-logo img {
-            height: 50px;
-            /* Adjust based on logo aspect ratio */
+            height: 80px;
+            /* Increased logo size */
             width: auto;
             object-fit: contain;
             /* Optional: Add a subtle drop shadow if the logo needs it */
@@ -201,7 +205,7 @@
             }
 
             .nav-logo img {
-                height: 40px;
+                height: 60px;
             }
 
             .brand-name {
@@ -622,6 +626,30 @@
             color: #9ca3af;
         }
 
+
+        @keyframes pulse-blue {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4);
+            }
+
+            70% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+            }
+
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+            }
+        }
+
+        .premium-content {
+            border: 2px solid var(--accent-cyan) !important;
+            box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.5), 0 0 40px rgba(59, 130, 246, 0.1);
+        }
+
+
         /* --- Pickup Modal --- */
         #pickup-modal {
             position: fixed;
@@ -629,7 +657,7 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: rgba(15, 15, 17, 0.95);
+            background: linear-gradient(135deg, rgba(10, 49, 77, 0.95) 0%, rgba(6, 27, 44, 0.95) 100%);
             backdrop-filter: blur(20px);
             z-index: 2000;
             display: flex;
@@ -867,18 +895,15 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: rgba(15, 15, 17, 0.95);
+            background: linear-gradient(135deg, rgba(10, 49, 77, 0.95) 0%, rgba(6, 27, 44, 0.95) 100%);
             backdrop-filter: blur(20px);
-            z-index: 2000;
-            /* Increased to stay above glass-nav which is 1000 */
+            z-index: 2500;
+            /* Higher than Services/Contact (1500) but below nav (3000) */
             display: flex;
             justify-content: center;
-            align-items: flex-start;
-            /* Start from top to avoid clipping */
+            align-items: center;
             overflow-y: auto;
-            /* Let parent scroll */
-            padding: 4rem 1rem 4rem;
-            /* Increased top padding to push box down */
+            padding: 1.5rem 1rem;
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.4s ease;
@@ -890,18 +915,19 @@
         }
 
         .premium-content {
-            width: 90%;
+            width: 95%;
+            /* Wider for better content fit */
             max-width: 1000px;
             background: #18181b;
             /* Solid dark background */
             border: 1px solid rgba(255, 255, 255, 0.15);
             /* Slightly brighter border */
             border-radius: 24px;
-            padding: 3rem;
+            padding: 1.5rem;
+            /* Further reduced padding */
             position: relative;
             transform: translateY(20px);
             transition: transform 0.4s ease;
-            /* Removed internal scroll to let parent handle it */
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
             /* Deep shadow for pop */
         }
@@ -912,23 +938,27 @@
 
         .premium-header {
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 1rem;
+            /* Reduced margin */
         }
 
         .premium-title {
             font-family: 'Montserrat', sans-serif;
-            font-size: 2rem;
+            font-size: 1.75rem;
+            /* Reduced font size */
             font-weight: 800;
             color: #fbbf24;
             /* Gold */
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.25rem;
+            /* Reduced margin */
             text-transform: uppercase;
             letter-spacing: 0.05em;
         }
 
         .premium-subtitle {
             color: #9ca3af;
-            font-size: 1rem;
+            font-size: 0.9rem;
+            /* Reduced font size */
             max-width: 600px;
             margin: 0 auto;
         }
@@ -936,7 +966,8 @@
         /* Table Styling */
         .pricing-table-container {
             overflow-x: auto;
-            margin-bottom: 2rem;
+            margin-bottom: 1rem;
+            /* Reduced margin */
             border-radius: 12px;
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
@@ -950,7 +981,8 @@
 
         .pricing-table th,
         .pricing-table td {
-            padding: 1rem;
+            padding: 0.6rem;
+            /* Further reduced padding */
             text-align: center;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
@@ -1086,9 +1118,12 @@
         .privileges-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
-            margin-top: 2rem;
-            padding-top: 2rem;
+            gap: 1rem;
+            /* Reduced gap */
+            margin-top: 1rem;
+            /* Reduced margin */
+            padding-top: 1rem;
+            /* Reduced padding */
             border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
 
@@ -1130,16 +1165,6 @@
             transform: rotate(90deg);
         }
 
-        .nav-item.premium-link {
-            color: #fbbf24;
-            border: 1px solid rgba(251, 191, 36, 0.2);
-            background: rgba(251, 191, 36, 0.05);
-        }
-
-        .nav-item.premium-link:hover {
-            background: rgba(251, 191, 36, 0.1);
-            box-shadow: 0 0 15px rgba(251, 191, 36, 0.2);
-        }
 
         /* --- Services/Catalogue Section (Refined) --- */
         #services {
@@ -1148,17 +1173,20 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: linear-gradient(135deg, #0f0f11 0%, #1a1a1d 100%);
-            z-index: 150;
+            background: linear-gradient(135deg, #0a314d 0%, #061b2c 100%);
+            z-index: 1500;
+            /* Stay above content but below premium modal */
             padding: 8rem 2rem 4rem;
             overflow-y: auto;
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            display: block;
+            display: none;
+            /* Hidden by default - no gap */
         }
 
         #services.active {
+            display: block;
             opacity: 1;
             pointer-events: all;
         }
@@ -1457,11 +1485,14 @@
 
         .disclaimer {
             text-align: center;
-            color: #6b7280;
-            font-size: 0.8rem;
+            color: #f3f4f6;
+            font-weight: 700;
+            font-size: 0.9rem;
             margin-top: 3rem;
             font-style: italic;
-            opacity: 0.7;
+            opacity: 1;
+            width: 100%;
+            display: block;
         }
 
         /* Responsive Adjustments */
@@ -1744,8 +1775,16 @@
             /* Category Selector for Services - Mobile Adjustment */
             .service-selector {
                 justify-content: flex-start;
-                padding-bottom: 2rem;
+                padding: 0 1rem 2rem;
                 gap: 0.8rem;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+                width: 100%;
+            }
+
+            .service-selector::-webkit-scrollbar {
+                display: none;
             }
 
             .cat-tab-pill {
@@ -1839,13 +1878,6 @@
             color: #fff;
         }
 
-        .disclaimer {
-            text-align: center;
-            color: #6b7280;
-            font-size: 0.8rem;
-            margin-top: 3rem;
-            font-style: italic;
-        }
 
         @media (max-width: 768px) {
             .section-title {
@@ -1860,6 +1892,237 @@
             .cat-tab-pill,
             .cat-card {
                 will-change: transform, opacity;
+            }
+        }
+
+        /* ═══════════════════════════════════
+           Contact Section — Animated Tabs
+        ═══════════════════════════════════ */
+        #contact {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, #0a314d 0%, #061b2c 100%);
+            z-index: 1500;
+            padding: 8rem 2rem 4rem;
+            overflow-y: auto;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            display: none;
+        }
+
+        #contact.active {
+            display: flex;
+            opacity: 1;
+            pointer-events: all;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .contact-wrapper {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .contact-header {
+            text-align: center;
+        }
+
+        .contact-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 3rem;
+            font-weight: 800;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            background: linear-gradient(135deg, #fff 0%, #9ca3af 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .contact-subtitle {
+            color: #6b7280;
+            font-size: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Tab Pill Bar */
+        .branch-tab-bar {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            background: rgba(17, 17, 17, 0.6);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 6px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .branch-tab-btn {
+            position: relative;
+            padding: 0.45rem 1.2rem;
+            font-size: 0.88rem;
+            font-weight: 500;
+            color: #9ca3af;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: color 0.3s ease;
+            z-index: 1;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .branch-tab-btn.active {
+            color: #ffffff;
+        }
+
+        .branch-tab-indicator {
+            position: absolute;
+            background: rgba(17, 17, 17, 0.85);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(8px);
+            border-radius: 10px;
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Tab Content Panel */
+        .branch-tab-panel {
+            width: 100%;
+            background: rgba(17, 17, 17, 0.6);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 18px;
+            padding: 2rem 2.5rem;
+            min-height: 260px;
+            display: flex;
+            align-items: center;
+        }
+
+        .branch-content {
+            width: 100%;
+            display: none;
+            animation: tabFadeIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        .branch-content.active {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2.5rem;
+            align-items: center;
+        }
+
+        @keyframes tabFadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.96) translateX(-10px);
+                filter: blur(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1) translateX(0);
+                filter: blur(0px);
+            }
+        }
+
+        .branch-map {
+            width: 100%;
+            height: 220px;
+            border-radius: 14px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.03);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .branch-map iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            filter: grayscale(80%) invert(90%) hue-rotate(180deg);
+            border-radius: 14px;
+        }
+
+        .branch-info {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+
+        .branch-name {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #fff;
+            margin: 0;
+        }
+
+        .branch-detail-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            color: #d1d5db;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .branch-detail-icon {
+            flex-shrink: 0;
+            width: 18px;
+            height: 18px;
+            color: #fbbf24;
+            margin-top: 2px;
+        }
+
+        .branch-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.6rem 1.4rem;
+            background: linear-gradient(135deg, #fbbf24, #d97706);
+            color: #000;
+            font-weight: 700;
+            font-size: 0.85rem;
+            border-radius: 10px;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            margin-top: 0.5rem;
+            width: fit-content;
+        }
+
+        .branch-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(251, 191, 36, 0.35);
+        }
+
+        @media (max-width: 768px) {
+            .branch-content.active {
+                grid-template-columns: 1fr;
+            }
+
+            .contact-title {
+                font-size: 2rem;
+            }
+
+            .branch-tab-panel {
+                padding: 1.5rem;
             }
         }
     </style>
@@ -1910,7 +2173,7 @@
                     </svg>
                     <span>About us</span>
                 </a>
-                <a href="#contact" class="nav-item">
+                <a href="#contact" class="nav-item" id="contact-link">
                     <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                         stroke-linecap="round" stroke-linejoin="round">
                         <rect width="20" height="16" x="2" y="4" rx="2"></rect>
@@ -2034,943 +2297,1121 @@
                 {% endif %}
             </div>
         </section>
+    </main>
 
-        <!-- Experience Section (Overlay) -->
-        <section id="experience" class="experience-section">
-            <button class="back-btn" onclick="exitExperienceMode()">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                    stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="19" y1="12" x2="5" y2="12"></line>
-                    <polyline points="12 19 5 12 12 5"></polyline>
-                </svg>
-                Back to Studio
-            </button>
+    <!-- Experience Section (Overlay) -->
+    <section id="experience" class="experience-section">
+        <button class="back-btn" onclick="exitExperienceMode()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            Back to Studio
+        </button>
 
-            <div class="exp-content">
-                <h2 class="exp-title" id="experience-title">3D Showcase</h2>
-                <p class="exp-subtitle">Premium care for your most valued possessions.</p>
-            </div>
-        </section>
+        <div class="exp-content">
+            <h2 class="exp-title" id="experience-title">3D Showcase</h2>
+            <p class="exp-subtitle">Premium care for your most valued possessions.</p>
+        </div>
+    </section>
 
-        <!-- Services / Price List Section -->
-        <section id="services">
-            <h2 class="section-title">Our Services</h2>
-            <p class="section-subtitle">Comprehensive care for your wardrobe and home. Professional dry cleaning and
-                steam ironing services.</p>
+    <!-- Services / Price List Section -->
+    <section id="services">
+        <h2 class="section-title">Our Services</h2>
+        <p class="section-subtitle">Comprehensive care for your wardrobe and home. Professional dry cleaning and
+            steam ironing services.</p>
 
-            <div class="service-selector">
-                <div class="cat-tab-pill active" onclick="switchServiceCategory('apparel', this)">Apparel</div>
-                <div class="cat-tab-pill" onclick="switchServiceCategory('indian', this)">Indian Wear</div>
-                <div class="cat-tab-pill" onclick="switchServiceCategory('home', this)">Home & Bed</div>
-                <div class="cat-tab-pill" onclick="switchServiceCategory('other', this)">Accessories</div>
-            </div>
+        <div class="service-selector">
+            <div class="cat-tab-pill active" onclick="switchServiceCategory('apparel', this)">Apparel</div>
+            <div class="cat-tab-pill" onclick="switchServiceCategory('indian', this)">Indian Wear</div>
+            <div class="cat-tab-pill" onclick="switchServiceCategory('home', this)">Home & Bed</div>
+            <div class="cat-tab-pill" onclick="switchServiceCategory('other', this)">Accessories</div>
+        </div>
 
-            <div class="catalogue-grid" data-active-category="apparel">
-
-
-
+        <div class="catalogue-grid" data-active-category="apparel">
 
 
-                <!-- Top Wear -->
-                <div class="cat-card apparel-card">
-                    <h3 class="cat-title">
-                        <span style="display: flex; align-items: center; gap: 10px;">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                                <path
-                                    d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z" />
-                            </svg>
-                            Top Wear
-                        </span>
-                        <span class="currency-ind">(Pricing in INR ₹)</span>
-                    </h3>
-                    <div class="table-responsive">
-                        <table class="cat-table">
-                            <tr>
-                                <th>Item</th>
-                                <th>Dry Clean</th>
-                                <th>Steam Iron</th>
-                            </tr>
-                            <tr>
-                                <td>T-shirt</td>
-                                <td>118/-</td>
-                                <td>45/-</td>
-                            </tr>
-                            <tr>
-                                <td>Shirt</td>
-                                <td>118/-</td>
-                                <td>55/-</td>
-                            </tr>
-                            <tr>
-                                <td>Cotton Ladies Top</td>
-                                <td>199/-</td>
-                                <td>59/-</td>
-                            </tr>
-                            <tr>
-                                <td>Short Dress</td>
-                                <td>189/-</td>
-                                <td>119/-</td>
-                            </tr>
-                            <tr>
-                                <td>Long Dress</td>
-                                <td>249/-</td>
-                                <td>149/-</td>
-                            </tr>
-                            <tr>
-                                <td>Long Dress Formal</td>
-                                <td>499/-</td>
-                                <td>199/-</td>
-                            </tr>
-                            <tr>
-                                <td>Sweater/cardigan</td>
-                                <td>249/-</td>
-                                <td>79/-</td>
-                            </tr>
-                            <tr>
-                                <td>Sports Jacket/blazer</td>
-                                <td>305/-</td>
-                                <td>149/-</td>
-                            </tr>
-                            <tr>
-                                <td>Leather Jacket (W/M)</td>
-                                <td>999/1299</td>
-                                <td>—</td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
 
-                <!-- Bottom Wear -->
-                <div class="cat-card apparel-card">
-                    <h3 class="cat-title">
-                        <span style="display: flex; align-items: center; gap: 10px;">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="m21 13-1.5-6.5a4 4 0 0 0-8 0L10 13" />
-                                <path d="M3 13v8c0 1.1.9 2 2 2h2a2 2 0 0 0 2-2v-3" />
-                                <path d="M21 13v8c0 1.1-.9 2-2 2h-2a2 2 0 0 1-2-2v-3" />
-                                <path d="M7 21h10" />
-                                <path d="M12 21v-8" />
-                            </svg>
-                            Bottom Wear
-                        </span>
-                        <span class="currency-ind">(Pricing in INR ₹)</span>
-                    </h3>
-                    <div class="table-responsive">
-                        <table class="cat-table">
-                            <tr>
-                                <th>Item</th>
-                                <th>Dry Clean</th>
-                                <th>Steam Iron</th>
-                            </tr>
-                            <tr>
-                                <td>Shorts/skirt</td>
-                                <td>118/-</td>
-                                <td>79/-</td>
-                            </tr>
-                            <tr>
-                                <td>Long Skirt</td>
-                                <td>249/-</td>
-                                <td>149/-</td>
-                            </tr>
-                            <tr>
-                                <td>Jeans</td>
-                                <td>189/-</td>
-                                <td>79/-</td>
-                            </tr>
-                            <tr>
-                                <td>Trouser Casual/Formal</td>
-                                <td>189/-</td>
-                                <td>79/-</td>
-                            </tr>
-                            <tr>
-                                <td>Leather Trouser</td>
-                                <td>349/-</td>
-                                <td>—</td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
 
-                <!-- Kids Wear -->
-                <div class="cat-card apparel-card">
-                    <h3 class="cat-title">
-                        <span style="display: flex; align-items: center; gap: 10px;">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M9 12h6" />
-                                <path d="M10 16h4" />
-                                <path d="M12 3a7 7 0 0 0-7 7v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4a7 7 0 0 0-7-7z" />
-                                <path d="M9 7v1" />
-                                <path d="M15 7v1" />
-                            </svg>
-                            Kids Wear
-                        </span>
-                        <span class="currency-ind">(Pricing in INR ₹)</span>
-                    </h3>
-                    <div class="table-responsive">
-                        <table class="cat-table">
-                            <tr>
-                                <th>Item</th>
-                                <th>Dry Clean</th>
-                                <th>Steam Iron</th>
-                            </tr>
-                            <tr>
-                                <td>Shirt</td>
-                                <td>89/-</td>
-                                <td>39/-</td>
-                            </tr>
-                            <tr>
-                                <td>Pant</td>
-                                <td>99/-</td>
-                                <td>59/-</td>
-                            </tr>
-                            <tr>
-                                <td>Sweater</td>
-                                <td>109/-</td>
-                                <td>39/-</td>
-                            </tr>
-                            <tr>
-                                <td>Blazer</td>
-                                <td>249/-</td>
-                                <td>129/-</td>
-                            </tr>
-                            <tr>
-                                <td>Baby gown</td>
-                                <td>349/-</td>
-                                <td>249/-</td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
 
-                <!-- Bags & Shoes -->
-                <div class="cat-card other-card">
-                    <h3 class="cat-title">
-                        <span style="display: flex; align-items: center; gap: 10px;">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M6 20h12l-2-11H8z" />
-                                <path d="M6 20a4 4 0 0 1-4-4V8h22v8a4 4 0 0 1-4 4" />
-                                <path d="M12 13h.01" />
-                            </svg>
-                            Bags & Shoes
-                        </span>
-                        <span class="currency-ind">(Pricing in INR ₹)</span>
-                    </h3>
-                    <div class="table-responsive">
-                        <table class="cat-table">
-                            <tr>
-                                <th>Item</th>
-                                <th>Dry Clean</th>
-                            </tr>
-                            <tr>
-                                <td>Fabric Hand Bag</td>
-                                <td>299/-</td>
-                            </tr>
-                            <tr>
-                                <td>Leather Hand Bag</td>
-                                <td>449/-</td>
-                            </tr>
-                            <tr>
-                                <td>Sports Shoes</td>
-                                <td>356/-</td>
-                            </tr>
-                            <tr>
-                                <td>Leather Shoes</td>
-                                <td>599/-</td>
-                            </tr>
-                            <tr>
-                                <td>Kids Shoes</td>
-                                <td>249/-</td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- Accessories -->
-                <div class="cat-card other-card">
-                    <h3 class="cat-title">
-                        <span style="display: flex; align-items: center; gap: 10px;">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M12 2a3 3 0 0 0-3 3v14a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3" />
-                                <path d="M12 17a2 2 0 0 0 0-4 2 2 0 0 0 0 4" />
-                            </svg>
-                            Accessories
-                        </span>
-                        <span class="currency-ind">(Pricing in INR ₹)</span>
-                    </h3>
-                    <div class="table-responsive">
-                        <table class="cat-table">
-                            <tr>
-                                <th>Item</th>
-                                <th>Price</th>
-                            </tr>
-                            <tr>
-                                <td>Scarf</td>
-                                <td>99/-</td>
-                            </tr>
-                            <tr>
-                                <td>Neck Tie</td>
-                                <td>118/-</td>
-                            </tr>
-                            <tr>
-                                <td>Shawl</td>
-                                <td>149/-</td>
-                            </tr>
-                            <tr>
-                                <td>Socks (Pair)</td>
-                                <td>69/-</td>
-                            </tr>
-                            <tr>
-                                <td>Cap</td>
-                                <td>105/-</td>
-                            </tr>
-                            <tr>
-                                <td>Soft Toy (S/M/L)</td>
-                                <td>249/499/699</td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- Curtains & Carpets -->
-                <div class="cat-card home-card">
-                    <h3 class="cat-title">
-                        <span style="display: flex; align-items: center; gap: 10px;">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M3 21h18" />
-                                <path d="M5 21V7a8 8 0 0 1 14 0v14" />
-                            </svg>
-                            Curtains & Carpets
-                        </span>
-                        <span class="currency-ind">(Pricing in INR ₹)</span>
-                    </h3>
-                    <div class="table-responsive">
-                        <table class="cat-table">
-                            <tr>
-                                <th>Item</th>
-                                <th>Dry Clean</th>
-                                <th>Iron</th>
-                            </tr>
-                            <tr>
-                                <td>Single Layer</td>
-                                <td>15/-</td>
-                                <td>8/-</td>
-                            </tr>
-                            <tr>
-                                <td>Double Layer</td>
-                                <td>25/-</td>
-                                <td>10/-</td>
-                            </tr>
-                            <tr>
-                                <td>Heavy Fabric</td>
-                                <td>30/-</td>
-                                <td>12/-</td>
-                            </tr>
-                            <tr>
-                                <td>Carpet</td>
-                                <td>72/-</td>
-                                <td>—</td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- Indian Wear (Wide) -->
-                <div class="cat-card indian-wear-card">
-                    <h3 class="cat-title">
-                        <span style="display: flex; align-items: center; gap: 10px;">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                                <circle cx="12" cy="12" r="10" />
-                                <path d="M2.05 12h19.9" />
-                                <path d="M12 2.05v19.9" />
-                                <path d="m4.93 4.93 14.14 14.14" />
-                                <path d="m4.93 19.07 14.14-14.14" />
-                            </svg>
-                            Indian Wear
-                        </span>
-                        <span class="currency-ind">(Pricing in INR ₹)</span>
-                    </h3>
-                    <div class="table-responsive">
-                        <table class="cat-table">
-                            <tr>
-                                <th>Item</th>
-                                <th>Cotton</th>
-                                <th>Special</th>
-                                <th>Ornml</th>
-                                <th>Iron</th>
-                            </tr>
-                            <tr>
-                                <td>Blouse</td>
-                                <td>159/-</td>
-                                <td>209/-</td>
-                                <td>259/-</td>
-                                <td>50/-</td>
-                            </tr>
-                            <tr>
-                                <td>Sarees</td>
-                                <td>305/-</td>
-                                <td>349/-</td>
-                                <td>499/-</td>
-                                <td>149/-</td>
-                            </tr>
-                            <tr>
-                                <td>Short Kurta</td>
-                                <td>179/-</td>
-                                <td>199/-</td>
-                                <td>249/-</td>
-                                <td>99/-</td>
-                            </tr>
-                            <tr>
-                                <td>Long Kurta</td>
-                                <td>199/-</td>
-                                <td>249/-</td>
-                                <td>349/-</td>
-                                <td>119/-</td>
-                            </tr>
-                            <tr>
-                                <td>Kameez</td>
-                                <td>249/-</td>
-                                <td>299/-</td>
-                                <td>349/-</td>
-                                <td>149/-</td>
-                            </tr>
-                            <tr>
-                                <td>Dupatta</td>
-                                <td>109/-</td>
-                                <td>169/-</td>
-                                <td>199/-</td>
-                                <td>59/-</td>
-                            </tr>
-                            <tr>
-                                <td>Salwar/Chudidar</td>
-                                <td>199/-</td>
-                                <td>249/-</td>
-                                <td>309/-</td>
-                                <td>55/-</td>
-                            </tr>
-                            <tr>
-                                <td>Lehenga</td>
-                                <td>449/-</td>
-                                <td>549/-</td>
-                                <td>699/-</td>
-                                <td>149/-</td>
-                            </tr>
-                            <tr>
-                                <td>Sherwani</td>
-                                <td>599/-</td>
-                                <td>799/-</td>
-                                <td>999/-</td>
-                                <td>199/-</td>
-                            </tr>
-                            <tr>
-                                <td>Bridal Dress</td>
-                                <td>1149/-</td>
-                                <td>2019/-</td>
-                                <td>3019/-</td>
-                                <td>349/-</td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- Home Linen -->
-                <div class="cat-card linen-card">
-                    <h3 class="cat-title">
-                        <span style="display: flex; align-items: center; gap: 10px;">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M3 6h18" />
-                                <path d="M5 6v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6" />
-                                <path d="M10 6V4a2 2 0 0 1 2-2h0a2 2 0 0 1 2 2v2" />
-                            </svg>
-                            Home Linen
-                        </span>
-                        <span class="currency-ind">(Pricing in INR ₹)</span>
-                    </h3>
+            <!-- Top Wear -->
+            <div class="cat-card apparel-card">
+                <h3 class="cat-title">
+                    <span style="display: flex; align-items: center; gap: 10px;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path
+                                d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z" />
+                        </svg>
+                        Top Wear
+                    </span>
+                    <span class="currency-ind">(Pricing in INR ₹)</span>
+                </h3>
+                <div class="table-responsive">
                     <table class="cat-table">
                         <tr>
                             <th>Item</th>
-                            <th>S</th>
-                            <th>M</th>
-                            <th>L</th>
+                            <th>Dry Clean</th>
+                            <th>Steam Iron</th>
                         </tr>
                         <tr>
-                            <td>Cushion</td>
+                            <td>T-shirt</td>
+                            <td>118/-</td>
+                            <td>45/-</td>
+                        </tr>
+                        <tr>
+                            <td>Shirt</td>
+                            <td>118/-</td>
+                            <td>55/-</td>
+                        </tr>
+                        <tr>
+                            <td>Cotton Ladies Top</td>
+                            <td>199/-</td>
+                            <td>59/-</td>
+                        </tr>
+                        <tr>
+                            <td>Short Dress</td>
+                            <td>189/-</td>
+                            <td>119/-</td>
+                        </tr>
+                        <tr>
+                            <td>Long Dress</td>
+                            <td>249/-</td>
+                            <td>149/-</td>
+                        </tr>
+                        <tr>
+                            <td>Long Dress Formal</td>
+                            <td>499/-</td>
+                            <td>199/-</td>
+                        </tr>
+                        <tr>
+                            <td>Sweater/cardigan</td>
+                            <td>249/-</td>
+                            <td>79/-</td>
+                        </tr>
+                        <tr>
+                            <td>Sports Jacket/blazer</td>
+                            <td>305/-</td>
+                            <td>149/-</td>
+                        </tr>
+                        <tr>
+                            <td>Leather Jacket (W/M)</td>
+                            <td>999/1299</td>
+                            <td>—</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Bottom Wear -->
+            <div class="cat-card apparel-card">
+                <h3 class="cat-title">
+                    <span style="display: flex; align-items: center; gap: 10px;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m21 13-1.5-6.5a4 4 0 0 0-8 0L10 13" />
+                            <path d="M3 13v8c0 1.1.9 2 2 2h2a2 2 0 0 0 2-2v-3" />
+                            <path d="M21 13v8c0 1.1-.9 2-2 2h-2a2 2 0 0 1-2-2v-3" />
+                            <path d="M7 21h10" />
+                            <path d="M12 21v-8" />
+                        </svg>
+                        Bottom Wear
+                    </span>
+                    <span class="currency-ind">(Pricing in INR ₹)</span>
+                </h3>
+                <div class="table-responsive">
+                    <table class="cat-table">
+                        <tr>
+                            <th>Item</th>
+                            <th>Dry Clean</th>
+                            <th>Steam Iron</th>
+                        </tr>
+                        <tr>
+                            <td>Shorts/skirt</td>
+                            <td>118/-</td>
+                            <td>79/-</td>
+                        </tr>
+                        <tr>
+                            <td>Long Skirt</td>
+                            <td>249/-</td>
+                            <td>149/-</td>
+                        </tr>
+                        <tr>
+                            <td>Jeans</td>
+                            <td>189/-</td>
+                            <td>79/-</td>
+                        </tr>
+                        <tr>
+                            <td>Trouser Casual/Formal</td>
+                            <td>189/-</td>
+                            <td>79/-</td>
+                        </tr>
+                        <tr>
+                            <td>Leather Trouser</td>
+                            <td>349/-</td>
+                            <td>—</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Kids Wear -->
+            <div class="cat-card apparel-card">
+                <h3 class="cat-title">
+                    <span style="display: flex; align-items: center; gap: 10px;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M9 12h6" />
+                            <path d="M10 16h4" />
+                            <path d="M12 3a7 7 0 0 0-7 7v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4a7 7 0 0 0-7-7z" />
+                            <path d="M9 7v1" />
+                            <path d="M15 7v1" />
+                        </svg>
+                        Kids Wear
+                    </span>
+                    <span class="currency-ind">(Pricing in INR ₹)</span>
+                </h3>
+                <div class="table-responsive">
+                    <table class="cat-table">
+                        <tr>
+                            <th>Item</th>
+                            <th>Dry Clean</th>
+                            <th>Steam Iron</th>
+                        </tr>
+                        <tr>
+                            <td>Shirt</td>
+                            <td>89/-</td>
+                            <td>39/-</td>
+                        </tr>
+                        <tr>
+                            <td>Pant</td>
+                            <td>99/-</td>
+                            <td>59/-</td>
+                        </tr>
+                        <tr>
+                            <td>Sweater</td>
+                            <td>109/-</td>
+                            <td>39/-</td>
+                        </tr>
+                        <tr>
+                            <td>Blazer</td>
+                            <td>249/-</td>
+                            <td>129/-</td>
+                        </tr>
+                        <tr>
+                            <td>Baby gown</td>
+                            <td>349/-</td>
+                            <td>249/-</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Bags & Shoes -->
+            <div class="cat-card other-card">
+                <h3 class="cat-title">
+                    <span style="display: flex; align-items: center; gap: 10px;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M6 20h12l-2-11H8z" />
+                            <path d="M6 20a4 4 0 0 1-4-4V8h22v8a4 4 0 0 1-4 4" />
+                            <path d="M12 13h.01" />
+                        </svg>
+                        Bags & Shoes
+                    </span>
+                    <span class="currency-ind">(Pricing in INR ₹)</span>
+                </h3>
+                <div class="table-responsive">
+                    <table class="cat-table">
+                        <tr>
+                            <th>Item</th>
+                            <th>Dry Clean</th>
+                        </tr>
+                        <tr>
+                            <td>Fabric Hand Bag</td>
+                            <td>299/-</td>
+                        </tr>
+                        <tr>
+                            <td>Leather Hand Bag</td>
+                            <td>449/-</td>
+                        </tr>
+                        <tr>
+                            <td>Sports Shoes</td>
+                            <td>356/-</td>
+                        </tr>
+                        <tr>
+                            <td>Leather Shoes</td>
+                            <td>599/-</td>
+                        </tr>
+                        <tr>
+                            <td>Kids Shoes</td>
+                            <td>249/-</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Accessories -->
+            <div class="cat-card other-card">
+                <h3 class="cat-title">
+                    <span style="display: flex; align-items: center; gap: 10px;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2a3 3 0 0 0-3 3v14a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3" />
+                            <path d="M12 17a2 2 0 0 0 0-4 2 2 0 0 0 0 4" />
+                        </svg>
+                        Accessories
+                    </span>
+                    <span class="currency-ind">(Pricing in INR ₹)</span>
+                </h3>
+                <div class="table-responsive">
+                    <table class="cat-table">
+                        <tr>
+                            <th>Item</th>
+                            <th>Price</th>
+                        </tr>
+                        <tr>
+                            <td>Scarf</td>
+                            <td>99/-</td>
+                        </tr>
+                        <tr>
+                            <td>Neck Tie</td>
+                            <td>118/-</td>
+                        </tr>
+                        <tr>
+                            <td>Shawl</td>
+                            <td>149/-</td>
+                        </tr>
+                        <tr>
+                            <td>Socks (Pair)</td>
+                            <td>69/-</td>
+                        </tr>
+                        <tr>
+                            <td>Cap</td>
+                            <td>105/-</td>
+                        </tr>
+                        <tr>
+                            <td>Soft Toy (S/M/L)</td>
+                            <td>249/499/699</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Curtains & Carpets -->
+            <div class="cat-card home-card">
+                <h3 class="cat-title">
+                    <span style="display: flex; align-items: center; gap: 10px;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 21h18" />
+                            <path d="M5 21V7a8 8 0 0 1 14 0v14" />
+                        </svg>
+                        Curtains & Carpets
+                    </span>
+                    <span class="currency-ind">(Pricing in INR ₹)</span>
+                </h3>
+                <div class="table-responsive">
+                    <table class="cat-table">
+                        <tr>
+                            <th>Item</th>
+                            <th>Dry Clean</th>
+                            <th>Iron</th>
+                        </tr>
+                        <tr>
+                            <td>Single Layer</td>
+                            <td>15/-</td>
+                            <td>8/-</td>
+                        </tr>
+                        <tr>
+                            <td>Double Layer</td>
+                            <td>25/-</td>
+                            <td>10/-</td>
+                        </tr>
+                        <tr>
+                            <td>Heavy Fabric</td>
+                            <td>30/-</td>
+                            <td>12/-</td>
+                        </tr>
+                        <tr>
+                            <td>Carpet</td>
+                            <td>72/-</td>
+                            <td>—</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Indian Wear (Wide) -->
+            <div class="cat-card indian-wear-card">
+                <h3 class="cat-title">
+                    <span style="display: flex; align-items: center; gap: 10px;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10" />
+                            <path d="M2.05 12h19.9" />
+                            <path d="M12 2.05v19.9" />
+                            <path d="m4.93 4.93 14.14 14.14" />
+                            <path d="m4.93 19.07 14.14-14.14" />
+                        </svg>
+                        Indian Wear
+                    </span>
+                    <span class="currency-ind">(Pricing in INR ₹)</span>
+                </h3>
+                <div class="table-responsive">
+                    <table class="cat-table">
+                        <tr>
+                            <th>Item</th>
+                            <th>Cotton</th>
+                            <th>Special</th>
+                            <th>Ornml</th>
+                            <th>Iron</th>
+                        </tr>
+                        <tr>
+                            <td>Blouse</td>
+                            <td>159/-</td>
+                            <td>209/-</td>
+                            <td>259/-</td>
+                            <td>50/-</td>
+                        </tr>
+                        <tr>
+                            <td>Sarees</td>
+                            <td>305/-</td>
+                            <td>349/-</td>
+                            <td>499/-</td>
+                            <td>149/-</td>
+                        </tr>
+                        <tr>
+                            <td>Short Kurta</td>
+                            <td>179/-</td>
+                            <td>199/-</td>
+                            <td>249/-</td>
+                            <td>99/-</td>
+                        </tr>
+                        <tr>
+                            <td>Long Kurta</td>
+                            <td>199/-</td>
+                            <td>249/-</td>
+                            <td>349/-</td>
+                            <td>119/-</td>
+                        </tr>
+                        <tr>
+                            <td>Kameez</td>
                             <td>249/-</td>
                             <td>299/-</td>
                             <td>349/-</td>
+                            <td>149/-</td>
                         </tr>
                         <tr>
-                            <td>Pillow</td>
-                            <td>269/-</td>
-                            <td>305/-</td>
-                            <td>369/-</td>
-                        </tr>
-                        <tr>
-                            <td>Pillow Cover</td>
-                            <td>105/-</td>
+                            <td>Dupatta</td>
+                            <td>109/-</td>
                             <td>169/-</td>
-                            <td>209/-</td>
-                        </tr>
-                        <tr>
-                            <td>Cushion Cover</td>
-                            <td>105/-</td>
-                            <td>149/-</td>
                             <td>199/-</td>
+                            <td>59/-</td>
                         </tr>
                         <tr>
-                            <td>Towel</td>
-                            <td>89/-</td>
-                            <td>105/-</td>
-                            <td>149/-</td>
-                        </tr>
-                        <tr>
-                            <td>Bath Robe</td>
-                            <td>—</td>
-                            <td>—</td>
-                            <td>220/-</td>
-                        </tr>
-                    </table>
-                </div>
-
-                <!-- Bed Sheets -->
-                <div class="cat-card bed-card">
-                    <h3 class="cat-title">
-                        <span style="display: flex; align-items: center; gap: 10px;">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M2 4v16" />
-                                <path d="M2 8h18a2 2 0 0 1 2 2v10" />
-                                <path d="M2 17h20" />
-                                <path d="M6 8v9" />
-                            </svg>
-                            Bed Sheets
-                        </span>
-                        <span class="currency-ind">(Pricing in INR ₹)</span>
-                    </h3>
-                    <table class="cat-table">
-                        <tr>
-                            <th>Item</th>
-                            <th>Sgl</th>
-                            <th>Dbl</th>
-                        </tr>
-                        <tr>
-                            <td>Bed Sheet</td>
-                            <td>149/-</td>
-                            <td>199/-</td>
-                        </tr>
-                        <tr>
-                            <td>Fitted Sheet</td>
+                            <td>Salwar/Chudidar</td>
                             <td>199/-</td>
                             <td>249/-</td>
+                            <td>309/-</td>
+                            <td>55/-</td>
                         </tr>
                         <tr>
-                            <td>Cotton Quilt Cov</td>
-                            <td>349/-</td>
-                            <td>499/-</td>
-                        </tr>
-                        <tr>
-                            <td>Special Bed Cov</td>
-                            <td>349/-</td>
-                            <td>499/-</td>
-                        </tr>
-                        <tr>
-                            <td>Quilt / Duvet</td>
-                            <td>349/-</td>
+                            <td>Lehenga</td>
+                            <td>449/-</td>
                             <td>549/-</td>
+                            <td>699/-</td>
+                            <td>149/-</td>
                         </tr>
                         <tr>
-                            <td>Blanket</td>
+                            <td>Sherwani</td>
+                            <td>599/-</td>
+                            <td>799/-</td>
+                            <td>999/-</td>
+                            <td>199/-</td>
+                        </tr>
+                        <tr>
+                            <td>Bridal Dress</td>
+                            <td>1149/-</td>
+                            <td>2019/-</td>
+                            <td>3019/-</td>
                             <td>349/-</td>
-                            <td>549/-</td>
                         </tr>
                     </table>
                 </div>
-
-
-
-
             </div>
-            <p class="disclaimer">All Prices Are Basic & Exclusive Of Taxes. Terms And Conditions Apply.</p>
-        </section>
+
+            <!-- Home Linen -->
+            <div class="cat-card linen-card">
+                <h3 class="cat-title">
+                    <span style="display: flex; align-items: center; gap: 10px;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 6h18" />
+                            <path d="M5 6v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6" />
+                            <path d="M10 6V4a2 2 0 0 1 2-2h0a2 2 0 0 1 2 2v2" />
+                        </svg>
+                        Home Linen
+                    </span>
+                    <span class="currency-ind">(Pricing in INR ₹)</span>
+                </h3>
+                <table class="cat-table">
+                    <tr>
+                        <th>Item</th>
+                        <th>S</th>
+                        <th>M</th>
+                        <th>L</th>
+                    </tr>
+                    <tr>
+                        <td>Cushion</td>
+                        <td>249/-</td>
+                        <td>299/-</td>
+                        <td>349/-</td>
+                    </tr>
+                    <tr>
+                        <td>Pillow</td>
+                        <td>269/-</td>
+                        <td>305/-</td>
+                        <td>369/-</td>
+                    </tr>
+                    <tr>
+                        <td>Pillow Cover</td>
+                        <td>105/-</td>
+                        <td>169/-</td>
+                        <td>209/-</td>
+                    </tr>
+                    <tr>
+                        <td>Cushion Cover</td>
+                        <td>105/-</td>
+                        <td>149/-</td>
+                        <td>199/-</td>
+                    </tr>
+                    <tr>
+                        <td>Towel</td>
+                        <td>89/-</td>
+                        <td>105/-</td>
+                        <td>149/-</td>
+                    </tr>
+                    <tr>
+                        <td>Bath Robe</td>
+                        <td>—</td>
+                        <td>—</td>
+                        <td>220/-</td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- Bed Sheets -->
+            <div class="cat-card bed-card">
+                <h3 class="cat-title">
+                    <span style="display: flex; align-items: center; gap: 10px;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M2 4v16" />
+                            <path d="M2 8h18a2 2 0 0 1 2 2v10" />
+                            <path d="M2 17h20" />
+                            <path d="M6 8v9" />
+                        </svg>
+                        Bed Sheets
+                    </span>
+                    <span class="currency-ind">(Pricing in INR ₹)</span>
+                </h3>
+                <table class="cat-table">
+                    <tr>
+                        <th>Item</th>
+                        <th>Sgl</th>
+                        <th>Dbl</th>
+                    </tr>
+                    <tr>
+                        <td>Bed Sheet</td>
+                        <td>149/-</td>
+                        <td>199/-</td>
+                    </tr>
+                    <tr>
+                        <td>Fitted Sheet</td>
+                        <td>199/-</td>
+                        <td>249/-</td>
+                    </tr>
+                    <tr>
+                        <td>Cotton Quilt Cov</td>
+                        <td>349/-</td>
+                        <td>499/-</td>
+                    </tr>
+                    <tr>
+                        <td>Special Bed Cov</td>
+                        <td>349/-</td>
+                        <td>499/-</td>
+                    </tr>
+                    <tr>
+                        <td>Quilt / Duvet</td>
+                        <td>349/-</td>
+                        <td>549/-</td>
+                    </tr>
+                    <tr>
+                        <td>Blanket</td>
+                        <td>349/-</td>
+                        <td>549/-</td>
+                    </tr>
+                </table>
+            </div>
 
 
 
-        <!-- Pickup Scheduling Modal -->
-        <div id="pickup-modal">
-            <div class="pickup-content">
-                <button class="pickup-close-btn" id="pickup-close" aria-label="Close modal">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                        stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                        <line x1="6" y1="6" x2="18" y2="18"></line>
-                    </svg>
-                </button>
 
-                <!-- ═══ STEP 1: Branch Selection ═══ -->
-                <div id="pickup-step-branch" class="pickup-step active">
-                    <div class="pickup-header">
-                        <h2 class="pickup-title">Choose a Branch</h2>
-                        <p class="pickup-subtitle">Select the nearest Feather Lite outlet.</p>
+        </div>
+        <p class="disclaimer">All Prices Are Basic & Exclusive Of Taxes. Terms And Conditions Apply.</p>
+    </section>
+
+
+    <!-- ═══ Contact / Branches Section ═══ -->
+    <section id="contact">
+        <div class="contact-wrapper">
+
+            <div class="contact-header">
+                <h2 class="contact-title">Our Branches</h2>
+                <p class="contact-subtitle">Visit us at a location near you.</p>
+            </div>
+
+            <!-- Tab Bar -->
+            <div class="branch-tab-bar" id="branchTabBar">
+                <div class="branch-tab-indicator" id="branchIndicator"></div>
+                <button class="branch-tab-btn active" data-tab="branch1">Film Nagar</button>
+                <button class="branch-tab-btn" data-tab="branch2">Manikonda</button>
+                <button class="branch-tab-btn" data-tab="branch3">Kokapet</button>
+            </div>
+
+            <!-- Tab Panel -->
+            <div class="branch-tab-panel">
+
+                <!-- Branch 1 -->
+                <div class="branch-content active" id="branch1">
+                    <div class="branch-map">
+                        <iframe
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3806.3!2d78.4867!3d17.3850!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTfCsDIzJzA2LjAiTiA3OMKwMjknMTIuMCJF!5e0!3m2!1sen!2sin!4v1234567890"
+                            allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
                     </div>
-                    <div class="branch-cards">
-                        <div class="branch-card" data-branch-id="1" data-branch-name="Manikonda" data-lat="17.4068228"
-                            data-lng="78.3741116"
-                            data-address="Opp Lanco Hills Road, Sri Laxmi Nagar Colony, Manikonda, Hyderabad 500089">
-                            <div class="branch-info">
-                                <h3 class="branch-name">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                                        <circle cx="12" cy="10" r="3" />
-                                    </svg>
-                                    Manikonda
-                                </h3>
-                                <p class="branch-address">Opp Lanco Hills Road, Sri Laxmi Nagar Colony</p>
-                            </div>
-                            <div class="branch-actions">
-                                <button type="button" class="branch-dir-btn"
-                                    onclick="getDirections(17.4068228, 78.3741116, 'ChIJd9HbMTKVbDsRCvWyd3cIBdc'); event.stopPropagation();"
-                                    title="Get Directions">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <polygon points="3 11 22 2 13 21 11 13 3 11" />
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="branch-card" data-branch-id="2" data-branch-name="Kokapet" data-lat="17.3869657"
-                            data-lng="78.3409458" data-address="Featherlite Laundry Studio Kokapet, Hyderabad 500075">
-                            <div class="branch-info">
-                                <h3 class="branch-name">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                                        <circle cx="12" cy="10" r="3" />
-                                    </svg>
-                                    Kokapet
-                                </h3>
-                                <p class="branch-address">Featherlite Laundry Studio, Kokapet</p>
-                            </div>
-                            <div class="branch-actions">
-                                <button type="button" class="branch-dir-btn"
-                                    onclick="getDirections(17.3869657, 78.3409458, null); event.stopPropagation();"
-                                    title="Get Directions">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <polygon points="3 11 22 2 13 21 11 13 3 11" />
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="branch-card" data-branch-id="3" data-branch-name="Film Nagar" data-lat="17.4138958"
-                            data-lng="78.4080465"
-                            data-address="Featherlite Laundry Studio, Film Nagar, Hyderabad 500033">
-                            <div class="branch-info">
-                                <h3 class="branch-name">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                                        <circle cx="12" cy="10" r="3" />
-                                    </svg>
-                                    Film Nagar
-                                </h3>
-                                <p class="branch-address">Featherlite Laundry Studio, Film Nagar</p>
-                            </div>
-                            <div class="branch-actions">
-                                <button type="button" class="branch-dir-btn"
-                                    onclick="getDirections(17.4138958, 78.4080465, 'ChIJC4T2TACXbDsRDAgicm5T6uo'); event.stopPropagation();"
-                                    title="Get Directions">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <polygon points="3 11 22 2 13 21 11 13 3 11" />
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ═══ STEP 2: Date & Time ═══ -->
-                <div id="pickup-step-schedule" class="pickup-step">
-                    <div class="pickup-header">
-                        <button type="button" class="pickup-back-btn" id="pickup-back" title="Back to branches">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    <div class="branch-info">
+                        <h3 class="branch-name">Film Nagar</h3>
+                        <div class="branch-detail-row">
+                            <svg class="branch-detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <polyline points="15 18 9 12 15 6" />
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                                <circle cx="12" cy="10" r="3" />
                             </svg>
-                        </button>
-                        <h2 class="pickup-title">Schedule Pickup</h2>
-                        <p class="pickup-subtitle">at <span id="selected-branch-name"
-                                style="color:#fff;font-weight:600;"></span></p>
-                    </div>
-                    <form id="pickup-form">
-                        <div class="pickup-form-group">
-                            <label class="pickup-label" for="pickup-date">Pickup Date</label>
-                            <input type="date" id="pickup-date" class="pickup-input" required>
+                            <span>Plot No. 22 C-D, Rd No. 16, Film Nagar, beside Ambedkar Statue, Jubilee Hills,
+                                Hyderabad, Telangana 500096</span>
                         </div>
-                        <div class="pickup-form-group">
-                            <label class="pickup-label" for="pickup-time">Preferred Time</label>
-                            <select id="pickup-time" class="pickup-input" required disabled>
-                                <option value="" disabled selected>Select a Date First</option>
-                                <option value="09:00">09:00 AM - 11:00 AM</option>
-                                <option value="11:00">11:00 AM - 01:00 PM</option>
-                                <option value="13:00">01:00 PM - 03:00 PM</option>
-                                <option value="15:00">03:00 PM - 05:00 PM</option>
-                                <option value="17:00">05:00 PM - 07:00 PM</option>
-                                <option value="19:00">07:00 PM - 09:00 PM</option>
-                            </select>
+                        <div class="branch-detail-row">
+                            <svg class="branch-detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path
+                                    d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.93 3.42 2 2 0 0 1 3.35 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 8.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
+                            </svg>
+                            <span>+91 96424 64642</span>
                         </div>
-                        <input type="hidden" id="pickup-branch-id" value="">
-                        <button type="submit" class="pickup-submit">Confirm Schedule</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <!-- Premium Modal -->
-        <div id="premium-modal">
-            <div class="premium-content">
-                <!-- Close Button Removed as requested -->
-
-                <div class="premium-header">
-                    <h2 class="premium-title">Exclusive Membership Plans</h2>
-                    <p class="premium-subtitle">Thoughtfully designed plans that make laundry effortless, faster, and
-                        more affordable — so your garments always look their best.</p>
-                </div>
-
-                <div class="pricing-table-container">
-                    <!-- Desktop Table Visibility logic handled via CSS -->
-                    <table class="pricing-table">
-                        <thead>
-                            <tr>
-                                <th>Details</th>
-                                <th class="th-silver">Silver</th>
-                                <th class="th-gold">Gold</th>
-                                <th class="th-platinum">Platinum</th>
-                                <th class="th-diamond">Diamond</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>What You Pay</td>
-                                <td>10,000/-</td>
-                                <td>20,000/-</td>
-                                <td>30,000/-</td>
-                                <td>50,000/-</td>
-                            </tr>
-                            <tr>
-                                <td>What You Get</td>
-                                <td>11,000/-</td>
-                                <td>23,000/-</td>
-                                <td>36,000/-</td>
-                                <td>61,000/-</td>
-                            </tr>
-                            <tr>
-                                <td>Gift Card (Home Linen)</td>
-                                <td>—</td>
-                                <td>500/-</td>
-                                <td>750/-</td>
-                                <td>1,000/-</td>
-                            </tr>
-                            <tr>
-                                <td>Free Laundry Basket</td>
-                                <td>x1</td>
-                                <td>x1</td>
-                                <td>x1</td>
-                                <td>x2</td>
-                            </tr>
-                            <tr>
-                                <td>Free Quick Delivery Coupons</td>
-                                <td>1</td>
-                                <td>2</td>
-                                <td>3</td>
-                                <td>3</td>
-                            </tr>
-                            <tr>
-                                <td>Savings Of</td>
-                                <td>2,000/-</td>
-                                <td>5,000/-</td>
-                                <td>12,000/-</td>
-                                <td>15,000/-</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- Mobile Pricing Cards -->
-                <div class="pricing-cards-mobile" id="mobile-carousel">
-                    <!-- Silver Card -->
-                    <div class="price-card glow-silver" style="border-top: 4px solid #e5e7eb;">
-                        <div class="card-header">
-                            <span class="card-plan-name th-silver">Silver</span>
-                            <span class="card-price">10,000/-</span>
+                        <div class="branch-detail-row">
+                            <svg class="branch-detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect width="20" height="16" x="2" y="4" rx="2" />
+                                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                            </svg>
+                            <span>featherlitlaundry@gmail.com</span>
                         </div>
-                        <div class="card-details">
-                            <div class="detail-item">
-                                <span class="detail-label">Get Value</span>
-                                <span class="detail-value">11,000/-</span>
-                            </div>
-                            <div class="detail-item">
-                                <span class="detail-label">Savings</span>
-                                <span class="detail-value">2,000/-</span>
-                            </div>
-                            <div class="detail-item">
-                                <span class="detail-label">Linen GC</span>
-                                <span class="detail-value">—</span>
-                            </div>
-                            <div class="detail-item">
-                                <span class="detail-label">Baskets</span>
-                                <span class="detail-value">x1</span>
-                            </div>
-                            <div class="detail-item">
-                                <span class="detail-label">Q-Delivery</span>
-                                <span class="detail-value">1 Coupon</span>
-                            </div>
+                        <div class="branch-detail-row">
+                            <svg class="branch-detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10" />
+                                <polyline points="12 6 12 12 16 14" />
+                            </svg>
+                            <span>Mon – Sat: 9:00 AM – 9:00 PM</span>
                         </div>
-                    </div>
-
-                    <!-- Gold Card -->
-                    <div class="price-card glow-gold" style="border-top: 4px solid #fbbf24;">
-                        <div class="card-header">
-                            <span class="card-plan-name th-gold">Gold</span>
-                            <span class="card-price">20,000/-</span>
-                        </div>
-                        <div class="card-details">
-                            <div class="detail-item">
-                                <span class="detail-label">Get Value</span>
-                                <span class="detail-value">23,000/-</span>
-                            </div>
-                            <div class="detail-item">
-                                <span class="detail-label">Savings</span>
-                                <span class="detail-value">5,000/-</span>
-                            </div>
-                            <div class="detail-item">
-                                <span class="detail-label">Linen GC</span>
-                                <span class="detail-value">500/-</span>
-                            </div>
-                            <div class="detail-item">
-                                <span class="detail-label">Baskets</span>
-                                <span class="detail-value">x1</span>
-                            </div>
-                            <div class="detail-item">
-                                <span class="detail-label">Q-Delivery</span>
-                                <span class="detail-value">2 Coupons</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Platinum Card -->
-                    <div class="price-card glow-platinum" style="border-top: 4px solid #94a3b8;">
-                        <div class="card-header">
-                            <span class="card-plan-name th-platinum">Platinum</span>
-                            <span class="card-price">30,000/-</span>
-                        </div>
-                        <div class="card-details">
-                            <div class="detail-item">
-                                <span class="detail-label">Get Value</span>
-                                <span class="detail-value">36,000/-</span>
-                            </div>
-                            <div class="detail-item">
-                                <span class="detail-label">Savings</span>
-                                <span class="detail-value">12,000/-</span>
-                            </div>
-                            <div class="detail-item">
-                                <span class="detail-label">Linen GC</span>
-                                <span class="detail-value">750/-</span>
-                            </div>
-                            <div class="detail-item">
-                                <span class="detail-label">Baskets</span>
-                                <span class="detail-value">x1</span>
-                            </div>
-                            <div class="detail-item">
-                                <span class="detail-label">Q-Delivery</span>
-                                <span class="detail-value">3 Coupons</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Diamond Card -->
-                    <div class="price-card glow-diamond" style="border-top: 4px solid #38bdf8;">
-                        <div class="card-header">
-                            <span class="card-plan-name th-diamond">Diamond</span>
-                            <span class="card-price">50,000/-</span>
-                        </div>
-                        <div class="card-details">
-                            <div class="detail-item">
-                                <span class="detail-label">Get Value</span>
-                                <span class="detail-value">61,000/-</span>
-                            </div>
-                            <div class="detail-item">
-                                <span class="detail-label">Savings</span>
-                                <span class="detail-value">15,000/-</span>
-                            </div>
-                            <div class="detail-item">
-                                <span class="detail-label">Linen GC</span>
-                                <span class="detail-value">1,000/-</span>
-                            </div>
-                            <div class="detail-item">
-                                <span class="detail-label">Baskets</span>
-                                <span class="detail-value">x2</span>
-                            </div>
-                            <div class="detail-item">
-                                <span class="detail-label">Q-Delivery</span>
-                                <span class="detail-value">3 Coupons</span>
-                            </div>
-                        </div>
+                        <a href="tel:+919642464642" class="branch-cta">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path
+                                    d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.93 3.42 2 2 0 0 1 3.35 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 8.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
+                            </svg>
+                            Call Branch
+                        </a>
                     </div>
                 </div>
 
-                <div class="pricing-dots" id="carousel-dots">
-                    <div class="dot active"></div>
-                    <div class="dot"></div>
-                    <div class="dot"></div>
-                    <div class="dot"></div>
+                <!-- Branch 2 -->
+                <div class="branch-content" id="branch2">
+                    <div class="branch-map">
+                        <iframe
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3806.3!2d78.4967!3d17.3950!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTfCsDIzJzA2LjAiTiA3OMKwMjknMTIuMCJF!5e0!3m2!1sen!2sin!4v1234567891"
+                            allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                    </div>
+                    <div class="branch-info">
+                        <h3 class="branch-name">Manikonda</h3>
+                        <div class="branch-detail-row">
+                            <svg class="branch-detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                                <circle cx="12" cy="10" r="3" />
+                            </svg>
+                            <span>Opposite Lanco Hills Road, Sri Laxmi Nagar Colony, Manikonda, Hyderabad, Telangana
+                                500089</span>
+                        </div>
+                        <div class="branch-detail-row">
+                            <svg class="branch-detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path
+                                    d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.93 3.42 2 2 0 0 1 3.35 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 8.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
+                            </svg>
+                            <span>+91 75694 62635</span>
+                        </div>
+                        <div class="branch-detail-row">
+                            <svg class="branch-detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect width="20" height="16" x="2" y="4" rx="2" />
+                                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                            </svg>
+                            <span>featherlitlaundry@gmail.com</span>
+                        </div>
+                        <div class="branch-detail-row">
+                            <svg class="branch-detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10" />
+                                <polyline points="12 6 12 12 16 14" />
+                            </svg>
+                            <span>Mon – Sat: 9:00 AM – 9:00 PM</span>
+                        </div>
+                        <a href="tel:+917569462635" class="branch-cta">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path
+                                    d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.93 3.42 2 2 0 0 1 3.35 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 8.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
+                            </svg>
+                            Call Branch
+                        </a>
+                    </div>
                 </div>
 
-                <div class="premium-header" style="text-align: left; margin-bottom: 1rem;">
-                    <h3 style="font-family: 'Montserrat'; font-size: 1.2rem; margin-bottom: 0;">MEMBER PRIVILEGES</h3>
+                <!-- Branch 3 -->
+                <div class="branch-content" id="branch3">
+                    <div class="branch-map">
+                        <iframe
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3806.3!2d78.5067!3d17.4050!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTfCsDIzJzA2LjAiTiA3OMKwMjknMTIuMCJF!5e0!3m2!1sen!2sin!4v1234567892"
+                            allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                    </div>
+                    <div class="branch-info">
+                        <h3 class="branch-name">Kokapet</h3>
+                        <div class="branch-detail-row">
+                            <svg class="branch-detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                                <circle cx="12" cy="10" r="3" />
+                            </svg>
+                            <span>Ground Floor, Shop 20, Raichandani Business Bay, Opp. Rajapushpa Regalia, Narsingi,
+                                Hyderabad, Telangana 500075</span>
+                        </div>
+                        <div class="branch-detail-row">
+                            <svg class="branch-detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path
+                                    d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.93 3.42 2 2 0 0 1 3.35 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 8.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
+                            </svg>
+                            <span>+91 79814 35547</span>
+                        </div>
+                        <div class="branch-detail-row">
+                            <svg class="branch-detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect width="20" height="16" x="2" y="4" rx="2" />
+                                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                            </svg>
+                            <span>featherlitlaundry@gmail.com</span>
+                        </div>
+                        <div class="branch-detail-row">
+                            <svg class="branch-detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10" />
+                                <polyline points="12 6 12 12 16 14" />
+                            </svg>
+                            <span>Mon – Sat: 9:00 AM – 9:00 PM</span>
+                        </div>
+                        <a href="tel:+917981435547" class="branch-cta">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path
+                                    d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.93 3.42 2 2 0 0 1 3.35 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 8.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
+                            </svg>
+                            Call Branch
+                        </a>
+                    </div>
                 </div>
 
-                <div class="privileges-grid">
-                    <div class="privilege-item">
-                        <svg class="privilege-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="m5 12 5 5 15-15" />
-                        </svg>
-                        <span>Special discounts on every order</span>
+            </div><!-- /.branch-tab-panel -->
+        </div><!-- /.contact-wrapper -->
+    </section>
+
+
+    <div id="pickup-modal">
+        <div class="pickup-content">
+            <button class="pickup-close-btn" id="pickup-close" aria-label="Close modal">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+
+            <!-- ═══ STEP 1: Branch Selection ═══ -->
+            <div id="pickup-step-branch" class="pickup-step active">
+                <div class="pickup-header">
+                    <h2 class="pickup-title">Choose a Branch</h2>
+                    <p class="pickup-subtitle">Select the nearest Feather Lite outlet.</p>
+                </div>
+                <div class="branch-cards">
+                    <div class="branch-card" data-branch-id="1" data-branch-name="Manikonda" data-lat="17.4068228"
+                        data-lng="78.3741116"
+                        data-address="Opp Lanco Hills Road, Sri Laxmi Nagar Colony, Manikonda, Hyderabad 500089">
+                        <div class="branch-info">
+                            <h3 class="branch-name">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                                    <circle cx="12" cy="10" r="3" />
+                                </svg>
+                                Manikonda
+                            </h3>
+                            <p class="branch-address">Opp Lanco Hills Road, Sri Laxmi Nagar Colony</p>
+                        </div>
+                        <div class="branch-actions">
+                            <button type="button" class="branch-dir-btn"
+                                onclick="getDirections(17.4068228, 78.3741116, 'ChIJd9HbMTKVbDsRCvWyd3cIBdc'); event.stopPropagation();"
+                                title="Get Directions">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polygon points="3 11 22 2 13 21 11 13 3 11" />
+                                </svg>
+                            </button>
+                        </div>
                     </div>
-                    <div class="privilege-item">
-                        <svg class="privilege-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="m5 12 5 5 15-15" />
-                        </svg>
-                        <span>Priority pickup & doorstep delivery</span>
+                    <div class="branch-card" data-branch-id="2" data-branch-name="Kokapet" data-lat="17.3869657"
+                        data-lng="78.3409458" data-address="Featherlite Laundry Studio Kokapet, Hyderabad 500075">
+                        <div class="branch-info">
+                            <h3 class="branch-name">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                                    <circle cx="12" cy="10" r="3" />
+                                </svg>
+                                Kokapet
+                            </h3>
+                            <p class="branch-address">Featherlite Laundry Studio, Kokapet</p>
+                        </div>
+                        <div class="branch-actions">
+                            <button type="button" class="branch-dir-btn"
+                                onclick="getDirections(17.3869657, 78.3409458, null); event.stopPropagation();"
+                                title="Get Directions">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polygon points="3 11 22 2 13 21 11 13 3 11" />
+                                </svg>
+                            </button>
+                        </div>
                     </div>
-                    <div class="privilege-item">
-                        <svg class="privilege-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="m5 12 5 5 15-15" />
-                        </svg>
-                        <span>Preferential pricing on premium services</span>
-                    </div>
-                    <div class="privilege-item">
-                        <svg class="privilege-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="m5 12 5 5 15-15" />
-                        </svg>
-                        <span>Faster turnaround for urgent garments</span>
+                    <div class="branch-card" data-branch-id="3" data-branch-name="Film Nagar" data-lat="17.4138958"
+                        data-lng="78.4080465" data-address="Featherlite Laundry Studio, Film Nagar, Hyderabad 500033">
+                        <div class="branch-info">
+                            <h3 class="branch-name">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                                    <circle cx="12" cy="10" r="3" />
+                                </svg>
+                                Film Nagar
+                            </h3>
+                            <p class="branch-address">Featherlite Laundry Studio, Film Nagar</p>
+                        </div>
+                        <div class="branch-actions">
+                            <button type="button" class="branch-dir-btn"
+                                onclick="getDirections(17.4138958, 78.4080465, 'ChIJC4T2TACXbDsRDAgicm5T6uo'); event.stopPropagation();"
+                                title="Get Directions">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polygon points="3 11 22 2 13 21 11 13 3 11" />
+                                </svg>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
+
+            <!-- ═══ STEP 2: Date & Time ═══ -->
+            <div id="pickup-step-schedule" class="pickup-step">
+                <div class="pickup-header">
+                    <button type="button" class="pickup-back-btn" id="pickup-back" title="Back to branches">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="15 18 9 12 15 6" />
+                        </svg>
+                    </button>
+                    <h2 class="pickup-title">Schedule Pickup</h2>
+                    <p class="pickup-subtitle">at <span id="selected-branch-name"
+                            style="color:#fff;font-weight:600;"></span></p>
+                </div>
+                <form id="pickup-form">
+                    <div class="pickup-form-group">
+                        <label class="pickup-label" for="pickup-date">Pickup Date</label>
+                        <input type="date" id="pickup-date" class="pickup-input" required>
+                    </div>
+                    <div class="pickup-form-group">
+                        <label class="pickup-label" for="pickup-time">Preferred Time</label>
+                        <select id="pickup-time" class="pickup-input" required disabled>
+                            <option value="" disabled selected>Select a Date First</option>
+                            <option value="09:00">09:00 AM - 11:00 AM</option>
+                            <option value="11:00">11:00 AM - 01:00 PM</option>
+                            <option value="13:00">01:00 PM - 03:00 PM</option>
+                            <option value="15:00">03:00 PM - 05:00 PM</option>
+                            <option value="17:00">05:00 PM - 07:00 PM</option>
+                            <option value="19:00">07:00 PM - 09:00 PM</option>
+                        </select>
+                    </div>
+                    <input type="hidden" id="pickup-branch-id" value="">
+                    <button type="submit" class="pickup-submit">Confirm Schedule</button>
+                </form>
+            </div>
         </div>
-        </section>
-    </main>
+    </div>
+
+    <!-- Premium Modal -->
+    <div id="premium-modal">
+        <div class="premium-content">
+            <button class="close-premium" onclick="togglePremium(false)">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+
+            <div class="premium-header">
+                <h2 class="premium-title">Exclusive Membership Plans</h2>
+                <p class="premium-subtitle">Thoughtfully designed plans that make laundry effortless, faster, and
+                    more affordable — so your garments always look their best.</p>
+            </div>
+
+
+            <div class="pricing-table-container">
+                <!-- Desktop Table Visibility logic handled via CSS -->
+                <table class="pricing-table">
+                    <thead>
+                        <tr>
+                            <th>Details</th>
+                            <th class="th-silver">Silver</th>
+                            <th class="th-gold">Gold</th>
+                            <th class="th-platinum">Platinum</th>
+                            <th class="th-diamond">Diamond</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>What You Pay</td>
+                            <td>10,000/-</td>
+                            <td>20,000/-</td>
+                            <td>30,000/-</td>
+                            <td>50,000/-</td>
+                        </tr>
+                        <tr>
+                            <td>What You Get</td>
+                            <td>11,000/-</td>
+                            <td>23,000/-</td>
+                            <td>36,000/-</td>
+                            <td>61,000/-</td>
+                        </tr>
+                        <tr>
+                            <td>Gift Card (Home Linen)</td>
+                            <td>—</td>
+                            <td>500/-</td>
+                            <td>750/-</td>
+                            <td>1,000/-</td>
+                        </tr>
+                        <tr>
+                            <td>Free Laundry Basket</td>
+                            <td>x1</td>
+                            <td>x1</td>
+                            <td>x1</td>
+                            <td>x2</td>
+                        </tr>
+                        <tr>
+                            <td>Free Quick Delivery Coupons</td>
+                            <td>1</td>
+                            <td>2</td>
+                            <td>3</td>
+                            <td>3</td>
+                        </tr>
+                        <tr>
+                            <td>Savings Of</td>
+                            <td>2,000/-</td>
+                            <td>5,000/-</td>
+                            <td>12,000/-</td>
+                            <td>15,000/-</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Mobile Pricing Cards -->
+            <div class="pricing-cards-mobile" id="mobile-carousel">
+                <!-- Silver Card -->
+                <div class="price-card glow-silver" style="border-top: 4px solid #e5e7eb;">
+                    <div class="card-header">
+                        <span class="card-plan-name th-silver">Silver</span>
+                        <span class="card-price">10,000/-</span>
+                    </div>
+                    <div class="card-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Get Worth</span>
+                            <span class="detail-value">11,000/-</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Basket</span>
+                            <span class="detail-value">x1</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Delivery</span>
+                            <span class="detail-value">1 Coupon</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Savings</span>
+                            <span class="detail-value">2,000/-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gold Card -->
+                <div class="price-card glow-gold" style="border-top: 4px solid #fbbf24;">
+                    <div class="card-header">
+                        <span class="card-plan-name th-gold">Gold</span>
+                        <span class="card-price">20,000/-</span>
+                    </div>
+                    <div class="card-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Get Worth</span>
+                            <span class="detail-value">23,000/-</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Basket</span>
+                            <span class="detail-value">x1</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Gift Card</span>
+                            <span class="detail-value">500/-</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Savings</span>
+                            <span class="detail-value">5,000/-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Platinum Card -->
+                <div class="price-card glow-platinum" style="border-top: 4px solid #94a3b8;">
+                    <div class="card-header">
+                        <span class="card-plan-name th-platinum">Platinum</span>
+                        <span class="card-price">30,000/-</span>
+                    </div>
+                    <div class="card-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Get Worth</span>
+                            <span class="detail-value">36,000/-</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Basket</span>
+                            <span class="detail-value">x1</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Gift Card</span>
+                            <span class="detail-value">750/-</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Savings</span>
+                            <span class="detail-value">12,000/-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Diamond Card -->
+                <div class="price-card glow-diamond" style="border-top: 4px solid #22d3ee;">
+                    <div class="card-header">
+                        <span class="card-plan-name th-diamond">Diamond</span>
+                        <span class="card-price">50,000/-</span>
+                    </div>
+                    <div class="card-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Get Worth</span>
+                            <span class="detail-value">61,000/-</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Basket</span>
+                            <span class="detail-value">x2</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Gift Card</span>
+                            <span class="detail-value">1,000/-</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Savings</span>
+                            <span class="detail-value">15,000/-</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Removed mobile dots as requested by visual state -->
+
+            <div class="privileges-grid">
+                <div class="privilege-item">
+                    <svg class="privilege-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                    Special discounts on every order
+                </div>
+                <div class="privilege-item">
+                    <svg class="privilege-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                    Priority pickup & doorstep delivery
+                </div>
+                <div class="privilege-item">
+                    <svg class="privilege-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                    Preferential pricing on premium services
+                </div>
+                <div class="privilege-item">
+                    <svg class="privilege-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                    Faster turnaround for urgent garments
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+    </section>
+
+    <!-- Google Reviews Section -->
+    <section class="reviews-section"
+        style="padding: 4rem 2rem; display: flex; flex-direction: column; align-items: center; text-align: center;">
+
+        <!-- Elfsight Google Reviews | Untitled Google Reviews -->
+        <script src="https://elfsightcdn.com/platform.js" async></script>
+        <div class="elfsight-app-b19616a7-bbc2-4712-b491-cf3c1638e93a" data-elfsight-app-lazy
+            style="width: 100%; max-width: 1200px;"></div>
+    </section>
 
     <!-- Scripts -->
     <!-- Three.js -->
@@ -2988,19 +3429,35 @@
         // CMS/Text Animations
         gsap.registerPlugin(ScrollTrigger);
 
+        // --- Early Hash Detection & State Management ---
+        const sectionHashes = ['#services', '#contact', '#premium', '#apparel', '#indian', '#home-bed', '#accessories'];
+        const currentHash = window.location.hash;
+        const hasSectionHash = sectionHashes.includes(currentHash) || currentHash.startsWith('#service-');
+
         const tl = gsap.timeline({ defaults: { duration: 1.2, ease: "power4.out" } });
 
-        // Nav Entrance
-        tl.to(".nav-master-wrapper", { opacity: 1, y: 0, duration: 1 }, 0.2);
+        if (hasSectionHash) {
+            // Immediate state for section deep-links
+            gsap.set(".nav-master-wrapper", { autoAlpha: 1, y: 0 });
+            gsap.set(["#home", ".video-background"], { autoAlpha: 0 });
+            // IMPORTANT: Ensure hero children are visible even if intro is skipped
+            gsap.set([".hero-title", ".subtitle", ".cta-container"], { autoAlpha: 1, y: 0 });
+        } else {
+            // Standard Intro Animations
+            tl.to(".nav-master-wrapper", { autoAlpha: 1, y: 0, duration: 1 }, 0.2);
+            tl.to(".hero-title", { autoAlpha: 1, y: 0 }, 0.4)
+                .to(".subtitle", { autoAlpha: 1, y: 0 }, 0.6)
+                .to(".cta-container", { autoAlpha: 1, y: 0 }, 0.8);
+        }
 
-        // Hero Text Stagger
-        tl.to(".hero-title", { opacity: 1, y: 0 }, 0.4)
-            .to(".subtitle", { opacity: 1, y: 0 }, 0.6)
-            .to(".cta-container", { opacity: 1, y: 0 }, 0.8);
-
-        // --- Experience Mode Logic ---
-        const experienceSection = document.getElementById('experience');
+        // --- Key Sections & Overlays ---
         const heroSection = document.getElementById('home');
+        const servicesSection = document.getElementById('services');
+        const contactSection = document.getElementById('contact');
+        const experienceSection = document.getElementById('experience');
+        const premiumModal = document.getElementById('premium-modal');
+        const openPremiumBtn = document.getElementById('open-premium-btn');
+        const allNavLinks = document.querySelectorAll('.nav-item, .nav-logo');
         const enterBtn = document.getElementById('enter-studio-btn');
 
         // Visual feedback for loading
@@ -3018,7 +3475,7 @@
                 document.body.style.overflow = 'hidden';
 
                 // 2. Fade out Hero content & Nav & Video
-                gsap.to([heroSection, ".nav-master-wrapper", ".video-background"], { duration: 0.5, opacity: 0, pointerEvents: "none" });
+                gsap.to([heroSection, ".nav-master-wrapper", ".video-background"], { duration: 0.5, autoAlpha: 0 });
 
                 // 3. Show Experience Overlay & Title
                 if (experienceSection) experienceSection.classList.add('active');
@@ -3032,7 +3489,7 @@
         // Exit Experience Mode
         window.exitExperienceMode = function () {
             document.body.style.overflow = '';
-            gsap.to([heroSection, ".nav-master-wrapper"], { duration: 0.5, opacity: 1, pointerEvents: "all" });
+            gsap.to([heroSection, ".nav-master-wrapper"], { duration: 0.5, autoAlpha: 1 });
             gsap.to(".video-background", { duration: 0.5, opacity: 0.5 });
             experienceSection.classList.remove('active');
             gsap.to(".exp-content", { duration: 0.3, opacity: 0, y: -20 });
@@ -3062,73 +3519,135 @@
         });
 
         // --- Premium Modal Logic ---
-        const premiumModal = document.getElementById('premium-modal');
-        const openPremiumBtn = document.getElementById('open-premium-btn');
+        // premiumModal and openPremiumBtn already defined at top
 
-        openPremiumBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            premiumModal.classList.add('active');
-            gsap.fromTo(".premium-content", { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power2.out" });
-        });
+        window.togglePremium = function (show) {
+            if (!premiumModal) return;
+
+            if (show) {
+                // Close other overlays
+                if (servicesSection && servicesSection.classList.contains('active')) {
+                    servicesSection.classList.remove('active');
+                    servicesSection.style.display = 'none';
+                }
+                if (contactSection && contactSection.classList.contains('active')) {
+                    contactSection.classList.remove('active');
+                    contactSection.style.display = 'none';
+                }
+                if (typeof exitExperienceMode === 'function' && experienceSection && experienceSection.classList.contains('active')) {
+                    exitExperienceMode();
+                }
+
+                // Hide Hero
+                if (heroSection) {
+                    gsap.to([heroSection, ".video-background"], { duration: 0.5, autoAlpha: 0 });
+                }
+
+                premiumModal.classList.add('active');
+                gsap.fromTo(".premium-content",
+                    { y: 30, autoAlpha: 0 },
+                    { y: 0, autoAlpha: 1, duration: 0.5, ease: "power2.out" }
+                );
+            } else {
+                premiumModal.classList.remove('active');
+                // Restore Hero if no other overlay is active
+                const noOverlaysActive = (!servicesSection || !servicesSection.classList.contains('active')) &&
+                    (!contactSection || !contactSection.classList.contains('active')) &&
+                    (!experienceSection || !experienceSection.classList.contains('active'));
+
+                if (noOverlaysActive && heroSection) {
+                    gsap.to([heroSection, ".video-background"], { duration: 0.5, autoAlpha: 1 });
+                }
+            }
+        };
+
+        if (openPremiumBtn) {
+            openPremiumBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                togglePremium(true);
+            });
+        }
 
 
         // --- Services Page Logic (Independent View) ---
-        const servicesSection = document.getElementById('services');
+        // (servicesSection already defined at top)
 
-        // Universal Nav Logic
-        const allNavLinks = document.querySelectorAll('.nav-item, .nav-logo');
+        // Universal Nav Logic (already defined allNavLinks at top)
 
         allNavLinks.forEach(link => {
             link.addEventListener('click', (e) => {
                 const targetHref = link.getAttribute('href');
 
-                // If it's the premium button, let the other logic handle it (or handle it here)
+                // 1. Handle Premium Button
                 if (link.id === 'open-premium-btn') return;
 
-                // If it is the Services link
-                if (targetHref === '#services') {
-                    // Logic handled by specific listener below or merge it here.
-                    // Let's merge it:
+                // 2. Handle Hash-based sections
+                if (targetHref.startsWith('#')) {
                     e.preventDefault();
-                    if (!servicesSection.classList.contains('active')) {
-                        // Close others
-                        if (experienceSection.classList.contains('active')) exitExperienceMode();
-                        premiumModal.classList.remove('active');
 
-                        // Show Services
-                        gsap.to([heroSection, ".video-background"], { duration: 0.5, opacity: 0, pointerEvents: "none" });
-                        servicesSection.classList.add('active');
-                        gsap.fromTo(servicesSection,
-                            { opacity: 0, y: 20, pointerEvents: "none" },
-                            { opacity: 1, y: 0, duration: 0.5, pointerEvents: "all", clearProps: "pointerEvents" }
-                        );
+                    // Exit Experience Mode
+                    if (experienceSection && experienceSection.classList.contains('active')) exitExperienceMode();
+
+                    // Close Premium Modal
+                    if (premiumModal) premiumModal.classList.remove('active');
+
+                    if (targetHref === '#services') {
+                        if (servicesSection && !servicesSection.classList.contains('active')) {
+                            if (contactSection && contactSection.classList.contains('active')) {
+                                contactSection.classList.remove('active');
+                                contactSection.style.display = 'none';
+                            }
+                            gsap.to([heroSection, ".video-background"], { duration: 0.5, autoAlpha: 0 });
+                            servicesSection.classList.add('active');
+                            servicesSection.style.display = 'block';
+                            gsap.fromTo(servicesSection,
+                                { autoAlpha: 0, y: 20 },
+                                { autoAlpha: 1, y: 0, duration: 0.5, clearProps: "y" }
+                            );
+                        }
+                    } else if (targetHref === '#contact') {
+                        if (contactSection && !contactSection.classList.contains('active')) {
+                            if (servicesSection && servicesSection.classList.contains('active')) {
+                                servicesSection.classList.remove('active');
+                                servicesSection.style.display = 'none';
+                            }
+                            gsap.to([heroSection, ".video-background"], { duration: 0.5, autoAlpha: 0 });
+                            contactSection.classList.add('active');
+                            contactSection.style.display = 'flex';
+                            gsap.fromTo(contactSection,
+                                { autoAlpha: 0, y: 20 },
+                                { autoAlpha: 1, y: 0, duration: 0.5, clearProps: "y" }
+                            );
+                        }
+                    } else if (targetHref === '#' || targetHref === '#home') {
+                        if (servicesSection && servicesSection.classList.contains('active')) {
+                            servicesSection.classList.remove('active');
+                            gsap.to(servicesSection, { autoAlpha: 0, y: 20, duration: 0.5, onComplete: () => { servicesSection.style.display = 'none'; } });
+                        }
+                        if (contactSection && contactSection.classList.contains('active')) {
+                            contactSection.classList.remove('active');
+                            gsap.to(contactSection, { autoAlpha: 0, y: 20, duration: 0.5, onComplete: () => { contactSection.style.display = 'none'; } });
+                        }
+                        // Explicitly reveal everything for home
+                        gsap.to([heroSection, ".video-background"], { duration: 0.5, autoAlpha: 1 });
+                        gsap.set([".hero-title", ".subtitle", ".cta-container"], { autoAlpha: 1, y: 0 });
                     }
-                    return;
+                    history.pushState(null, null, targetHref);
+                } else {
+                    // Regular Links
+                    if (contactSection && contactSection.classList.contains('active')) {
+                        contactSection.classList.remove('active');
+                        contactSection.style.display = 'none';
+                    }
+                    if (servicesSection && servicesSection.classList.contains('active')) {
+                        servicesSection.classList.remove('active');
+                        servicesSection.style.display = 'none';
+                    }
                 }
-
-                // For all other links (Home, About, Contact), Close Overlays
-                if (servicesSection.classList.contains('active')) {
-                    servicesSection.classList.remove('active');
-
-                    // Animate Services OUT
-                    gsap.to(servicesSection, {
-                        opacity: 0,
-                        y: 20,
-                        duration: 0.5,
-                        pointerEvents: "none",
-                        clearProps: "transform"
-                    });
-
-                    // restore hero
-                    gsap.to([heroSection, ".video-background"], { duration: 0.5, opacity: 1, pointerEvents: "all" });
-                    // Restore Video Opacity if needed
-                    gsap.to(".video-background", { duration: 0.5, opacity: 0.5 });
-                }
-
-                if (experienceSection.classList.contains('active')) exitExperienceMode();
-                premiumModal.classList.remove('active');
             });
         });
+
+
 
         // Logout function
         async function logoutUser() {
@@ -3145,14 +3664,15 @@
                 '#apparel': 'apparel',
                 '#indian': 'indian',
                 '#home-bed': 'home',
-                '#accessories': 'other'
+                '#accessories': 'other',
+                '#contact': 'contact'
             };
 
-            const isServicesHash = hash === '#services' || categoryMap[hash];
+            const isServicesHash = hash === '#services' || (categoryMap[hash] && hash !== '#contact');
+            const isContactHash = hash === '#contact';
 
             if (isServicesHash) {
-                const servicesSection = document.getElementById('services');
-                const heroSection = document.getElementById('home');
+                // (servicesSection and heroSection already defined at top)
 
                 // If on Home page, handle section switching
                 if (servicesSection && !servicesSection.classList.contains('active')) {
@@ -3163,17 +3683,17 @@
                         if (modal) modal.classList.remove('active');
 
                         // Show Services
-                        gsap.to([heroSection, ".video-background"], { duration: 0.5, opacity: 0, pointerEvents: "none" });
+                        gsap.to([heroSection, ".video-background"], { duration: 0.5, autoAlpha: 0 }); // Consistently use autoAlpha
                         servicesSection.classList.add('active');
+                        servicesSection.style.display = 'block'; // Ensure display is set
                         gsap.fromTo(servicesSection,
-                            { opacity: 0, y: 20, pointerEvents: "none" },
-                            { opacity: 1, y: 0, duration: 0.5, pointerEvents: "all", clearProps: "pointerEvents" }
+                            { autoAlpha: 0, y: 20 },
+                            { autoAlpha: 1, y: 0, duration: 0.5, clearProps: "y" }
                         );
                     }
                 }
-
                 const category = categoryMap[hash];
-                if (category) {
+                if (category && category !== 'contact') {
                     // Switch the tab
                     const pill = document.querySelector(`.cat-tab-pill[onclick*="'${category}'"]`);
                     if (pill) {
@@ -3181,13 +3701,22 @@
                     }
                 }
             }
+
+            if (isContactHash) {
+                const contactLink = document.getElementById('contact-link');
+                if (contactLink) {
+                    setTimeout(() => contactLink.click(), 100);
+                }
+            }
         }
 
         const handleHashModal = () => {
             if (window.location.hash === '#premium') {
-                const btn = document.getElementById('open-premium-btn');
-                if (btn) {
-                    setTimeout(() => btn.click(), 100);
+                if (typeof togglePremium === 'function') {
+                    togglePremium(true);
+                } else {
+                    const btn = document.getElementById('open-premium-btn');
+                    if (btn) setTimeout(() => btn.click(), 100);
                 }
             }
         };
@@ -3418,9 +3947,19 @@
         };
 
         const today = new Date();
-        const todayString = getLocalDateString(today);
+        const minDate = new Date(today);
+        minDate.setDate(today.getDate() + 1); // Min 24hr (tomorrow)
 
-        if (pickupDateInput) pickupDateInput.setAttribute('min', todayString);
+        const maxDate = new Date(today);
+        maxDate.setDate(today.getDate() + 3); // Max 3 days
+
+        const minDateString = getLocalDateString(minDate);
+        const maxDateString = getLocalDateString(maxDate);
+
+        if (pickupDateInput) {
+            pickupDateInput.setAttribute('min', minDateString);
+            pickupDateInput.setAttribute('max', maxDateString);
+        }
 
         const resetPickupForm = () => {
             if (pickupForm) pickupForm.reset();
@@ -3516,7 +4055,10 @@
                 pickupTimeSelect.disabled = false;
                 const selectedDate = e.target.value;
                 const now = new Date();
-                if (selectedDate === todayString) {
+
+                // Since min is tomorrow, we don't strictly need today restrictions anymore, 
+                // but let's keep logic robust if they change min back to today.
+                if (selectedDate === getLocalDateString(now)) {
                     const currentHour = now.getHours();
                     Array.from(pickupTimeSelect.options).forEach(option => {
                         if (option.value === "") return;
@@ -3569,6 +4111,57 @@
                 }
             });
         }
+
+        // ═══════════════════════════════════════
+        //  Contact / Branch Tabs Logic
+        // ═══════════════════════════════════════
+        // Navigation logic now consolidated in universal nav loop above
+
+        // ─── Animated Branch Tabs ───
+        const tabBar = document.getElementById('branchTabBar');
+        const indicator = document.getElementById('branchIndicator');
+        const tabBtns = document.querySelectorAll('.branch-tab-btn');
+
+        function moveIndicator(btn) {
+            if (!indicator || !tabBar) return;
+            const barRect = tabBar.getBoundingClientRect();
+            const btnRect = btn.getBoundingClientRect();
+            indicator.style.left = (btnRect.left - barRect.left) + 'px';
+            indicator.style.top = (btnRect.top - barRect.top) + 'px';
+            indicator.style.width = btnRect.width + 'px';
+            indicator.style.height = btnRect.height + 'px';
+        }
+
+        function switchBranchTab(targetId) {
+            // update buttons
+            tabBtns.forEach(btn => btn.classList.toggle('active', btn.dataset.tab === targetId));
+            // update content: remove active from all
+            document.querySelectorAll('.branch-content').forEach(c => {
+                c.classList.remove('active');
+            });
+            // add active to target (triggers keyframe animation)
+            const target = document.getElementById(targetId);
+            if (target) {
+                // force reflow to restart animation
+                target.style.animation = 'none';
+                target.offsetHeight; // reflow
+                target.style.animation = '';
+                target.classList.add('active');
+            }
+            // move indicator
+            const activeBtn = document.querySelector(`.branch-tab-btn[data-tab="${targetId}"]`);
+            if (activeBtn) moveIndicator(activeBtn);
+        }
+
+        // Initialize indicator position
+        window.addEventListener('load', () => {
+            const firstActive = document.querySelector('.branch-tab-btn.active');
+            if (firstActive) moveIndicator(firstActive);
+        });
+
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => switchBranchTab(btn.dataset.tab));
+        });
 
     </script>
 </body>
