@@ -11,7 +11,8 @@
     --card-bg: #fcfcfc;
     --font-heading: 'Playfair Display', serif;
     --font-body: 'Outfit', sans-serif;
-    --transition-speed: 0.4s;
+    --transition-speed: 0.3s;
+    --transition-smooth: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 body.dark-mode {
@@ -142,7 +143,7 @@ a {
     color: white;
     border-radius: 8px;
     font-weight: 600;
-    transition: all 0.3s ease;
+    transition: all var(--transition-speed) var(--transition-smooth);
     border: none;
     cursor: pointer;
     text-align: center;
@@ -437,9 +438,10 @@ body.dark-mode .nav-dropdown a:hover {
 
 .hero-title {
     font-family: var(--font-heading);
-    font-size: 4rem;
+    font-size: clamp(2.5rem, 8vw, 4rem);
     margin-bottom: 1rem;
     color: var(--accent-color);
+    line-height: 1.1;
 }
 
 .hero-tagline {

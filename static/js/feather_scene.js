@@ -43,6 +43,7 @@ if (container) {
 
     let activeCategory = 'sneaker';
     let restorationValue = 0;
+    let targetRestorationValue = 0; // For smooth interpolation
 
     const manager = new THREE.LoadingManager();
     manager.onLoad = () => {
@@ -82,13 +83,17 @@ if (container) {
         }
 
         model.visible = startVisible;
+        model.renderOrder = isClean ? 2 : 1; // Clean on top for transparency
 
         model.traverse((child) => {
             if (child.isMesh) {
-                child.material.transparent = true;
-                // Important: for fade to work, starting opacity must be set
-                child.material.opacity = isClean ? restorationValue : (1 - restorationValue);
-                child.material.needsUpdate = true;
+                const materials = Array.isArray(child.material) ? child.material : [child.material];
+                materials.forEach(mat => {
+                    mat.transparent = true;
+                    mat.opacity = isClean ? restorationValue : (1 - restorationValue);
+                    mat.depthWrite = !isClean; // Disable depth write for the top layer if it's transparent
+                    mat.needsUpdate = true;
+                });
             }
         });
         scene.add(model);
@@ -148,20 +153,35 @@ if (container) {
     // Initially load ONLY the sneaker
     loadCategoryModels('sneaker');
 
-    // Dissolve / Wipe Logic
+    // Dissolve / Wipe Logic (Consolidated)
     window.updateShoeDissolve = (value) => {
+        targetRestorationValue = parseFloat(value);
+        // Force an immediate update for models that are already loaded
+        if (Math.abs(restorationValue - targetRestorationValue) < 0.01) {
+            window.updateDissolveMaterials(targetRestorationValue);
+        }
+    };
+
+    window.updateDissolveMaterials = (value) => {
         restorationValue = value;
         const currentClean = models[activeCategory].clean;
         const currentDirty = models[activeCategory].dirty;
 
         if (!currentClean || !currentDirty) return;
 
-        // Simple cross-fade / dissolve
-        currentClean.traverse(child => {
-            if (child.isMesh) child.material.opacity = value;
-        });
-        currentDirty.traverse(child => {
-            if (child.isMesh) child.material.opacity = 1 - value;
+        [currentClean, currentDirty].forEach((model, idx) => {
+            const isClean = idx === 0;
+            model.traverse(child => {
+                if (child.isMesh) {
+                    const materials = Array.isArray(child.material) ? child.material : [child.material];
+                    materials.forEach(mat => {
+                        mat.transparent = true;
+                        mat.opacity = isClean ? value : (1 - value);
+                        // If fully opaque or fully transparent, toggling depthWrite helps performance/depth sorting
+                        mat.depthWrite = isClean ? (value > 0.95) : (value < 0.05);
+                    });
+                }
+            });
         });
     };
 
@@ -200,11 +220,11 @@ if (container) {
             models[activeCategory].clean.scale.set(targetScale, targetScale, targetScale);
             models[activeCategory].dirty.scale.set(targetScale, targetScale, targetScale);
 
-            // Fix Z-fighting by slightly nudging the dirty model backwards relative to the camera
-            models[activeCategory].clean.position.z = 0;
-            models[activeCategory].dirty.position.z = -0.01;
+            // Ensure Z-fighting is avoided by sorting and small bias
+            models[activeCategory].clean.renderOrder = 2;
+            models[activeCategory].dirty.renderOrder = 1;
 
-            window.updateShoeDissolve(restorationValue);
+            window.updateDissolveMaterials(restorationValue);
         }
     };
 
@@ -213,12 +233,25 @@ if (container) {
 
     function animate() {
         requestAnimationFrame(animate);
-        const time = clock.getElapsedTime();
 
-        // Rotate active models (All use Y rotation. For carpet, since X is 90 deg, local Y axis points to camera, creating a pinwheel spin.)
+        // Skip rendering if document is hidden to save battery/resources
+        if (document.hidden) return;
+
+        const time = clock.getElapsedTime();
+        const delta = clock.getDelta();
+
+        // Smoothly interpolate restoration value (Lerp)
+        if (Math.abs(restorationValue - targetRestorationValue) > 0.001) {
+            const lerpFactor = 8 * delta; // Slightly faster for responsiveness
+            const newValue = restorationValue + (targetRestorationValue - restorationValue) * Math.min(lerpFactor, 1);
+            window.updateDissolveMaterials(newValue);
+        }
+
+        // Rotate active models
         if (models[activeCategory].loaded) {
-            if (models[activeCategory].clean) models[activeCategory].clean.rotation.y = time * 0.2;
-            if (models[activeCategory].dirty) models[activeCategory].dirty.rotation.y = time * 0.2;
+            const rotationSpeed = 0.2;
+            if (models[activeCategory].clean) models[activeCategory].clean.rotation.y = time * rotationSpeed;
+            if (models[activeCategory].dirty) models[activeCategory].dirty.rotation.y = time * rotationSpeed;
         }
 
         renderer.render(scene, camera);

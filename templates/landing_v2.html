@@ -355,8 +355,8 @@
 
         h1 {
             font-family: 'Inter', sans-serif;
-            font-size: 5rem;
-            /* Larger impact */
+            font-size: clamp(2.5rem, 10vw, 5rem);
+            /* Fluid typography */
             font-style: normal;
             font-weight: 800;
             margin-bottom: 1.5rem;
@@ -368,7 +368,7 @@
         }
 
         p.subtitle {
-            font-size: 1.25rem;
+            font-size: clamp(1rem, 4vw, 1.25rem);
             color: #d1d5db;
             margin-bottom: 3.5rem;
             max-width: 650px;
