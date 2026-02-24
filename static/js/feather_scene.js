@@ -182,7 +182,7 @@ if (container) {
             const targetOpacity = isClean ? value : (1 - value);
 
             // Visibility optimization: hide if completely transparent
-            model.visible = (targetOpacity > 0.001);
+            model.visible = (targetOpacity > 0.01);
 
             model.traverse(child => {
                 if (child.isMesh) {
@@ -190,13 +190,14 @@ if (container) {
                     materials.forEach(mat => {
                         mat.transparent = true;
                         mat.opacity = targetOpacity;
-                        // For the top layer (clean), disable depthWrite when it's partially transparent 
-                        // to allow the dirty layer underneath to show through.
-                        // When it's fully opaque (value > 0.99), enable depthWrite for optimal rendering.
+
+                        // Robust depth handling:
+                        // Top layer (clean) should only write to depth when it's fully opaque.
+                        // Bottom layer (dirty) should write to depth when clean isn't fully covering it.
                         if (isClean) {
-                            mat.depthWrite = (value > 0.99);
+                            mat.depthWrite = (targetOpacity > 0.95);
                         } else {
-                            mat.depthWrite = (value < 0.01);
+                            mat.depthWrite = (targetOpacity > 0.05);
                         }
                     });
                 }
@@ -256,12 +257,14 @@ if (container) {
         // Skip rendering if document is hidden to save battery/resources
         if (document.hidden) return;
 
-        const time = clock.getElapsedTime();
-        const delta = clock.getDelta();
+        // USE getDelta() FIRST to avoid it being near zero if called after getElapsedTime()
+        const delta = Math.min(clock.getDelta(), 0.1); // Cap delta to prevent huge jumps
+        const time = clock.elapsedTime; // Use the property to avoid re-triggering deltas
 
         // Smoothly interpolate restoration value (Lerp)
         if (Math.abs(restorationValue - targetRestorationValue) > 0.001) {
-            const lerpFactor = 8 * delta; // Slightly faster for responsiveness
+            const lerpSpeed = 10; // Fixed speed multiplier
+            const lerpFactor = lerpSpeed * delta;
             const newValue = restorationValue + (targetRestorationValue - restorationValue) * Math.min(lerpFactor, 1);
             window.updateDissolveMaterials(newValue);
         }
