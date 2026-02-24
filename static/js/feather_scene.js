@@ -87,11 +87,19 @@ if (container) {
 
         model.traverse((child) => {
             if (child.isMesh) {
+                // CLONE material to prevent shared state between clean and dirty models
+                if (Array.isArray(child.material)) {
+                    child.material = child.material.map(m => m.clone());
+                } else {
+                    child.material = child.material.clone();
+                }
+
                 const materials = Array.isArray(child.material) ? child.material : [child.material];
                 materials.forEach(mat => {
                     mat.transparent = true;
                     mat.opacity = isClean ? restorationValue : (1 - restorationValue);
-                    mat.depthWrite = !isClean; // Disable depth write for the top layer if it's transparent
+                    mat.depthWrite = true; // Default to true
+                    mat.alphaMode = 'BLEND';
                     mat.needsUpdate = true;
                 });
             }
@@ -171,14 +179,25 @@ if (container) {
 
         [currentClean, currentDirty].forEach((model, idx) => {
             const isClean = idx === 0;
+            const targetOpacity = isClean ? value : (1 - value);
+
+            // Visibility optimization: hide if completely transparent
+            model.visible = (targetOpacity > 0.001);
+
             model.traverse(child => {
                 if (child.isMesh) {
                     const materials = Array.isArray(child.material) ? child.material : [child.material];
                     materials.forEach(mat => {
                         mat.transparent = true;
-                        mat.opacity = isClean ? value : (1 - value);
-                        // If fully opaque or fully transparent, toggling depthWrite helps performance/depth sorting
-                        mat.depthWrite = isClean ? (value > 0.95) : (value < 0.05);
+                        mat.opacity = targetOpacity;
+                        // For the top layer (clean), disable depthWrite when it's partially transparent 
+                        // to allow the dirty layer underneath to show through.
+                        // When it's fully opaque (value > 0.99), enable depthWrite for optimal rendering.
+                        if (isClean) {
+                            mat.depthWrite = (value > 0.99);
+                        } else {
+                            mat.depthWrite = (value < 0.01);
+                        }
                     });
                 }
             });
