@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <title>Featherlite | Professional Chaos, Meet Pristine Care</title>
 
     <!-- Fonts -->
@@ -13,7 +14,7 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@400;500;600;700;800;900&display=swap"
         rel="stylesheet">
     <meta name="description" content="Feather Lite Laundry Studio - Professional care for your wardrobe and home.">
-    <link rel="preload" href="{{ url_for('static', filename='videos/hero_bg.mp4') }}" as="video" type="video/mp4">
+    <!-- Hero video loads metadata only for fast initial page load -->
 
     <style>
         :root {
@@ -216,7 +217,6 @@
                 width: 95%;
                 padding: 0 1rem;
                 height: 70px;
-                top: 1rem;
                 position: relative;
             }
 
@@ -230,7 +230,10 @@
             }
 
             .brand-tagline {
-                display: none;
+                display: block;
+                font-size: 0.6rem;
+                letter-spacing: 0.12em;
+                margin-top: 2px;
             }
             
             .mobile-menu-toggle {
@@ -241,38 +244,47 @@
                 z-index: 3001; /* Above the links */
             }
 
-            /* Premium Hamburger Animation */
+            /* Hamburger: 3 clean lines */
             .hamburger-box {
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
                 width: 24px;
-                height: 24px;
+                height: 20px;
                 position: absolute;
                 top: 50%;
                 left: 50%;
                 transform: translate(-50%, -50%);
             }
 
-            .hamburger-inner, .hamburger-inner::before, .hamburger-inner::after {
+            .hamburger-line {
+                display: block;
                 width: 24px;
                 height: 2px;
                 background-color: #94a3b8;
-                position: absolute;
-                border-radius: 4px;
+                border-radius: 2px;
                 transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             }
 
-            .hamburger-inner { top: 50%; transform: translateY(-50%); }
-            .hamburger-inner::before { content: ""; top: -8px; }
-            .hamburger-inner::after { content: ""; top: 8px; }
-
-            .mobile-menu-toggle.active .hamburger-inner { background-color: transparent; }
-            .mobile-menu-toggle.active .hamburger-inner::before { transform: translateY(8px) rotate(45deg); background-color: #fff; }
-            .mobile-menu-toggle.active .hamburger-inner::after { transform: translateY(-8px) rotate(-45deg); background-color: #fff; }
+            .mobile-menu-toggle.active .hamburger-line:nth-child(1) {
+                transform: translateY(9px) rotate(45deg);
+                background-color: #fff;
+            }
+            .mobile-menu-toggle.active .hamburger-line:nth-child(2) {
+                opacity: 0;
+            }
+            .mobile-menu-toggle.active .hamburger-line:nth-child(3) {
+                transform: translateY(-9px) rotate(-45deg);
+                background-color: #fff;
+            }
 
             .nav-links {
                 position: absolute;
-                top: -10px; /* Start higher for 3D effect */
-                right: -10px;
+                top: calc(100% + 8px);
+                right: 0;
+                left: auto;
                 width: 260px;
+                z-index: 3001;
                 background: linear-gradient(135deg, rgba(15, 15, 17, 0.98) 0%, rgba(10, 10, 12, 0.95) 100%);
                 backdrop-filter: blur(30px) saturate(180%);
                 -webkit-backdrop-filter: blur(30px) saturate(180%);
@@ -280,7 +292,7 @@
                 border-radius: 24px;
                 flex-direction: column;
                 align-items: stretch;
-                padding: 4rem 1.2rem 1.5rem; /* Space for the 'X' button area */
+                padding: 4rem 1.2rem 1.5rem;
                 gap: 0.6rem;
                 
                 /* Animation fluid 3D setup */
@@ -310,11 +322,33 @@
             }
 
             /* Stagger Link Animations */
-            .nav-links.active .nav-item:nth-child(1) { transition-delay: 0.1s; }
-            .nav-links.active .nav-item:nth-child(2) { transition-delay: 0.15s; }
-            .nav-links.active .nav-item:nth-child(3) { transition-delay: 0.2s; }
-            .nav-links.active .nav-item:nth-child(4) { transition-delay: 0.25s; }
-            .nav-links.active .nav-item:nth-child(5) { transition-delay: 0.3s; }
+            .nav-links.active .nav-item:nth-child(2) { transition-delay: 0.1s; }
+            .nav-links.active .nav-item:nth-child(3) { transition-delay: 0.15s; }
+            .nav-links.active .nav-item:nth-child(4) { transition-delay: 0.2s; }
+            .nav-links.active .nav-item:nth-child(5) { transition-delay: 0.25s; }
+            .nav-links.active .nav-item:nth-child(6) { transition-delay: 0.3s; }
+            /* Close (X) button at top right - show only on mobile */
+            .mobile-nav-close {
+                display: flex;
+                position: absolute;
+                top: 0.75rem;
+                right: 0.75rem;
+                width: 40px;
+                height: 40px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: rgba(255, 255, 255, 0.08);
+                border: 1px solid rgba(255, 255, 255, 0.12);
+                border-radius: 50%;
+                color: #94a3b8;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+            .mobile-nav-close:hover {
+                color: #fff;
+                background: rgba(255, 255, 255, 0.15);
+            }
         }
 
         .nav-item {
@@ -346,6 +380,11 @@
             gap: 0.5rem;
         }
 
+        /* Mobile close: hidden on desktop */
+        .mobile-nav-close {
+            display: none;
+        }
+
         /* Circular Profile Next to Navigation */
         .profile-container-v2 {
             position: relative;
@@ -374,6 +413,61 @@
             background: rgba(255, 255, 255, 0.1);
             border-color: rgba(255, 255, 255, 0.3);
             transform: translateY(-2px);
+        }
+
+        /* Profile icon: normal appearance */
+        .profile-trigger .nav-icon,
+        .profile-trigger svg {
+            width: 22px !important;
+            height: 22px !important;
+            flex-shrink: 0;
+            object-fit: contain;
+        }
+
+        /* Backdrop: blur entire background when profile dropdown is open - smooth transition */
+        .profile-dropdown-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.25);
+            backdrop-filter: blur(0px);
+            -webkit-backdrop-filter: blur(0px);
+            z-index: 1000;
+            visibility: hidden;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease-out, visibility 0.5s, backdrop-filter 0.5s ease-out;
+            -webkit-transition: opacity 0.5s ease-out, visibility 0.5s, -webkit-backdrop-filter 0.5s ease-out;
+        }
+
+        .profile-dropdown-backdrop.active {
+            visibility: visible;
+            opacity: 1;
+            pointer-events: auto;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+        }
+
+        /* Backdrop: blur entire background when mobile nav menu is open - smooth transition */
+        .mobile-nav-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.25);
+            backdrop-filter: blur(0px);
+            -webkit-backdrop-filter: blur(0px);
+            z-index: 2998;
+            visibility: hidden;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease-out, visibility 0.5s, backdrop-filter 0.5s ease-out;
+            -webkit-transition: opacity 0.5s ease-out, visibility 0.5s, -webkit-backdrop-filter 0.5s ease-out;
+        }
+
+        .mobile-nav-backdrop.active {
+            visibility: visible;
+            opacity: 1;
+            pointer-events: auto;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
         }
 
         .profile-dropdown-v2 {
@@ -422,14 +516,34 @@
         }
 
         @media (max-width: 768px) {
+            /* Sync profile with hero brand bar: same height and vertical alignment */
+            .nav-master-wrapper {
+                overflow: visible !important;
+                align-items: center;
+                gap: 0.75rem;
+            }
+
+            .glass-nav {
+                flex: 1;
+            }
+
             .profile-container-v2 {
-                top: 1rem;
-                right: 1rem;
+                position: relative;
+                flex-shrink: 0;
+                align-self: center;
             }
 
             .profile-trigger {
                 width: 44px;
                 height: 44px;
+            }
+
+            /* Profile dropdown: fix mobile alignment */
+            .profile-dropdown-v2 {
+                right: 0 !important;
+                left: auto !important;
+                width: min(240px, calc(100vw - 2rem)) !important;
+                transform-origin: top right !important;
             }
         }
 
@@ -1761,16 +1875,18 @@
 
             /* Premium Modal Mobile Optimization */
             #premium-modal {
-                padding: 10rem 1rem 2rem;
-                /* Increased from 6rem to clear navbar */
+                align-items: flex-start;
+                padding: 5rem 1rem 3rem;
+                justify-content: flex-start;
             }
 
             .premium-content {
-                padding: 1.5rem;
+                padding: 3rem 1.5rem 2rem;
                 width: 100%;
                 max-width: 100%;
                 border-radius: 20px;
-                margin: 0;
+                margin: 0 auto;
+                flex-shrink: 0;
             }
 
             /* About Section Responsive adjustments */
@@ -1931,11 +2047,15 @@
             }
 
             .close-premium {
-                top: 0.75rem;
-                right: 0.75rem;
-                background: rgba(255, 255, 255, 0.1);
+                position: fixed;
+                top: 1.25rem;
+                right: 1.25rem;
+                z-index: 2501;
+                background: rgba(255, 255, 255, 0.15);
                 border-radius: 50%;
-                padding: 0.4rem;
+                padding: 0.5rem;
+                width: 44px;
+                height: 44px;
             }
 
             /* Experience Studio Mobile Refinements */
@@ -2308,16 +2428,16 @@
 <body>
 
     <!-- Background Video -->
-    <video autoplay muted playsinline class="video-background">
-        <!-- Assume file is named hero_bg.mp4 in static/videos -->
+    <video autoplay muted playsinline class="video-background" preload="metadata">
         <source src="{{ url_for('static', filename='videos/hero_bg.mp4') }}" type="video/mp4">
     </video>
 
 
     <!-- Navigation Wrapper -->
     <div class="nav-master-wrapper" id="navMaster">
+        <div class="mobile-nav-backdrop" id="mobileNavBackdrop" aria-hidden="true"></div>
         <nav class="glass-nav">
-            <a href="#" class="nav-logo" aria-label="Home">
+            <a href="{{ url_for('index') }}" class="nav-logo" aria-label="Home">
                 <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Featherlite Logo" loading="eager">
                 <div class="logo-text">
                     <div class="brand-name">Feather Lite</div>
@@ -2325,6 +2445,9 @@
                 </div>
             </a>
             <div class="nav-links" id="navLinks">
+                <button class="mobile-nav-close" id="mobileNavClose" type="button" aria-label="Close menu">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
                 <a href="#home" class="nav-item">
                     <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                         stroke-linecap="round" stroke-linejoin="round">
@@ -2333,7 +2456,7 @@
                     </svg>
                     <span>Home</span>
                 </a>
-                <a href="#services" class="nav-item" id="services-link">
+                <a href="{{ url_for('services') }}" class="nav-item" id="services-link">
                     <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                         stroke-linecap="round" stroke-linejoin="round">
                         <path
@@ -2350,7 +2473,7 @@
                     </svg>
                     <span>About us</span>
                 </a>
-                <a href="#contact" class="nav-item" id="contact-link">
+                <a href="{{ url_for('branches') }}" class="nav-item" id="contact-link">
                     <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                         stroke-linecap="round" stroke-linejoin="round">
                         <rect width="20" height="16" x="2" y="4" rx="2"></rect>
@@ -2369,12 +2492,15 @@
             </div>
             <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle Menu">
                 <span class="hamburger-box">
-                    <span class="hamburger-inner"></span>
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
                 </span>
             </button>
         </nav>
 
         <!-- Profile Menu (Next to Nav) -->
+        <div class="profile-dropdown-backdrop" id="profileDropdownBackdrop" aria-hidden="true"></div>
         <div class="profile-container-v2">
             <button class="profile-trigger" id="profileTrigger" aria-label="Profile Menu">
                 {% if current_user.is_authenticated %}
@@ -3807,30 +3933,39 @@
         // Profile Toggle Logic
         const profileTrigger = document.getElementById('profileTrigger');
         const profileDropdown = document.getElementById('profileDropdown');
+        const profileBackdrop = document.getElementById('profileDropdownBackdrop');
 
         if (profileTrigger && profileDropdown) {
-            profileTrigger.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-
+            const toggleProfile = (e) => {
+                if (e) { e.preventDefault(); e.stopPropagation(); }
                 const isActive = profileDropdown.style.display === 'flex';
                 profileDropdown.style.display = isActive ? 'none' : 'flex';
+                if (profileBackdrop) profileBackdrop.classList.toggle('active', !isActive);
+                if (profileBackdrop) profileBackdrop.setAttribute('aria-hidden', isActive ? 'true' : 'false');
 
                 if (!isActive) {
-                    gsap.fromTo(profileDropdown,
-                        { opacity: 0, y: 10 },
-                        { opacity: 1, y: 0, duration: 0.3, ease: "power2.out" }
-                    );
+                    profileDropdown.style.opacity = '0';
+                    profileDropdown.style.transform = 'translateY(10px)';
+                    gsap.to(profileDropdown, { opacity: 1, y: 0, duration: 0.3, ease: "power2.out", clearProps: "transform" });
                 }
-            });
+            };
+            profileTrigger.addEventListener('click', toggleProfile);
 
+            const closeProfile = () => {
+                if (profileDropdown.style.display === 'flex') {
+                    profileDropdown.style.display = 'none';
+                    if (profileBackdrop) profileBackdrop.classList.remove('active');
+                    if (profileBackdrop) profileBackdrop.setAttribute('aria-hidden', 'true');
+                }
+            };
+            if (profileBackdrop) profileBackdrop.addEventListener('click', closeProfile);
             document.addEventListener('click', (e) => {
                 if (profileDropdown.style.display === 'flex' &&
                     !profileDropdown.contains(e.target) &&
-                    !profileTrigger.contains(e.target)) {
-                    profileDropdown.style.display = 'none';
-                }
+                    !profileTrigger.contains(e.target)) closeProfile();
             });
+            const mobileToggle = document.getElementById('mobileMenuToggle');
+            if (mobileToggle) mobileToggle.addEventListener('click', () => setTimeout(closeProfile, 0));
         }
 
         // --- Creative Mobile Enhancements Logic ---
@@ -4194,24 +4329,30 @@
         function initMobileMenu() {
             const mobileToggle = document.getElementById('mobileMenuToggle');
             const navLinks = document.getElementById('navLinks');
+            const mobileBackdrop = document.getElementById('mobileNavBackdrop');
             if(mobileToggle && navLinks) {
+                function setMenuOpen(open) {
+                    navLinks.classList.toggle('active', open);
+                    mobileToggle.classList.toggle('active', open);
+                    if (mobileBackdrop) {
+                        mobileBackdrop.classList.toggle('active', open);
+                        mobileBackdrop.setAttribute('aria-hidden', open ? 'false' : 'true');
+                    }
+                }
                 mobileToggle.addEventListener('click', (e) => {
-                    navLinks.classList.toggle('active');
-                    mobileToggle.classList.toggle('active');
+                    setMenuOpen(!navLinks.classList.contains('active'));
                     e.stopPropagation();
                 });
                 document.addEventListener('click', (e) => {
                     if(!navLinks.contains(e.target) && !mobileToggle.contains(e.target)) {
-                        navLinks.classList.remove('active');
-                        mobileToggle.classList.remove('active');
+                        setMenuOpen(false);
                     }
                 });
-                // Also close menu on link click
-                navLinks.querySelectorAll('a').forEach(link => {
-                    link.addEventListener('click', () => {
-                        navLinks.classList.remove('active');
-                        mobileToggle.classList.remove('active');
-                    });
+                if (mobileBackdrop) mobileBackdrop.addEventListener('click', () => setMenuOpen(false));
+                const mobileClose = document.getElementById('mobileNavClose');
+                if (mobileClose) mobileClose.addEventListener('click', () => setMenuOpen(false));
+                navLinks.querySelectorAll('a.nav-item').forEach(link => {
+                    link.addEventListener('click', () => setMenuOpen(false));
                 });
             }
         }

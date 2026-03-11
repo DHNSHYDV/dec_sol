@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <title>About Us | Featherlite</title>
     <!-- Core Brand CSS mirroring landing_v2.html -->
     <link
@@ -180,7 +181,6 @@
                 width: 95%;
                 padding: 0 1rem;
                 height: 70px;
-                top: 1rem;
                 position: relative;
             }
 
@@ -194,7 +194,10 @@
             }
 
             .brand-tagline {
-                display: none;
+                display: block;
+                font-size: 0.6rem;
+                letter-spacing: 0.12em;
+                margin-top: 2px;
             }
             
             .mobile-menu-toggle {
@@ -205,38 +208,47 @@
                 z-index: 3001;
             }
 
-            /* Premium Hamburger Animation */
+            /* Hamburger: 3 clean lines */
             .hamburger-box {
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
                 width: 24px;
-                height: 24px;
+                height: 20px;
                 position: absolute;
                 top: 50%;
                 left: 50%;
                 transform: translate(-50%, -50%);
             }
 
-            .hamburger-inner, .hamburger-inner::before, .hamburger-inner::after {
+            .hamburger-line {
+                display: block;
                 width: 24px;
                 height: 2px;
                 background-color: #94a3b8;
-                position: absolute;
-                border-radius: 4px;
+                border-radius: 2px;
                 transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             }
 
-            .hamburger-inner { top: 50%; transform: translateY(-50%); }
-            .hamburger-inner::before { content: ""; top: -8px; }
-            .hamburger-inner::after { content: ""; top: 8px; }
-
-            .mobile-menu-toggle.active .hamburger-inner { background-color: transparent; }
-            .mobile-menu-toggle.active .hamburger-inner::before { transform: translateY(8px) rotate(45deg); background-color: #fff; }
-            .mobile-menu-toggle.active .hamburger-inner::after { transform: translateY(-8px) rotate(-45deg); background-color: #fff; }
+            .mobile-menu-toggle.active .hamburger-line:nth-child(1) {
+                transform: translateY(9px) rotate(45deg);
+                background-color: #fff;
+            }
+            .mobile-menu-toggle.active .hamburger-line:nth-child(2) {
+                opacity: 0;
+            }
+            .mobile-menu-toggle.active .hamburger-line:nth-child(3) {
+                transform: translateY(-9px) rotate(-45deg);
+                background-color: #fff;
+            }
 
             .nav-links {
                 position: absolute;
-                top: -10px;
-                right: -10px;
+                top: calc(100% + 8px);
+                right: 0;
+                left: auto;
                 width: 260px;
+                z-index: 3001;
                 background: linear-gradient(135deg, rgba(15, 15, 17, 0.98) 0%, rgba(10, 10, 12, 0.95) 100%);
                 backdrop-filter: blur(30px) saturate(180%);
                 -webkit-backdrop-filter: blur(30px) saturate(180%);
@@ -273,11 +285,32 @@
             }
 
             /* Stagger Link Animations */
-            .nav-links.active .nav-item:nth-child(1) { transition-delay: 0.1s; }
-            .nav-links.active .nav-item:nth-child(2) { transition-delay: 0.15s; }
-            .nav-links.active .nav-item:nth-child(3) { transition-delay: 0.2s; }
-            .nav-links.active .nav-item:nth-child(4) { transition-delay: 0.25s; }
-            .nav-links.active .nav-item:nth-child(5) { transition-delay: 0.3s; }
+            .nav-links.active .nav-item:nth-child(2) { transition-delay: 0.1s; }
+            .nav-links.active .nav-item:nth-child(3) { transition-delay: 0.15s; }
+            .nav-links.active .nav-item:nth-child(4) { transition-delay: 0.2s; }
+            .nav-links.active .nav-item:nth-child(5) { transition-delay: 0.25s; }
+            .nav-links.active .nav-item:nth-child(6) { transition-delay: 0.3s; }
+            .mobile-nav-close {
+                display: flex;
+                position: absolute;
+                top: 0.75rem;
+                right: 0.75rem;
+                width: 40px;
+                height: 40px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: rgba(255, 255, 255, 0.08);
+                border: 1px solid rgba(255, 255, 255, 0.12);
+                border-radius: 50%;
+                color: #94a3b8;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+            .mobile-nav-close:hover {
+                color: #fff;
+                background: rgba(255, 255, 255, 0.15);
+            }
         }
 
         .nav-item {
@@ -309,6 +342,11 @@
             gap: 0.5rem;
         }
 
+        /* Mobile close: hidden on desktop */
+        .mobile-nav-close {
+            display: none;
+        }
+
         /* Circular Profile Next to Navigation */
         .profile-container-v2 {
             position: relative;
@@ -337,6 +375,61 @@
             background: rgba(255, 255, 255, 0.1);
             border-color: rgba(255, 255, 255, 0.3);
             transform: translateY(-2px);
+        }
+
+        /* Profile icon: normal appearance, no distortion */
+        .profile-trigger .nav-icon,
+        .profile-trigger svg {
+            width: 22px !important;
+            height: 22px !important;
+            flex-shrink: 0;
+            object-fit: contain;
+        }
+
+        /* Backdrop: blur entire background when profile dropdown is open - smooth transition */
+        .profile-dropdown-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.25);
+            backdrop-filter: blur(0px);
+            -webkit-backdrop-filter: blur(0px);
+            z-index: 1000;
+            visibility: hidden;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease-out, visibility 0.5s, backdrop-filter 0.5s ease-out;
+            -webkit-transition: opacity 0.5s ease-out, visibility 0.5s, -webkit-backdrop-filter 0.5s ease-out;
+        }
+
+        .profile-dropdown-backdrop.active {
+            visibility: visible;
+            opacity: 1;
+            pointer-events: auto;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+        }
+
+        /* Backdrop: blur entire background when mobile nav menu is open - smooth transition */
+        .mobile-nav-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.25);
+            backdrop-filter: blur(0px);
+            -webkit-backdrop-filter: blur(0px);
+            z-index: 2998;
+            visibility: hidden;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease-out, visibility 0.5s, backdrop-filter 0.5s ease-out;
+            -webkit-transition: opacity 0.5s ease-out, visibility 0.5s, -webkit-backdrop-filter 0.5s ease-out;
+        }
+
+        .mobile-nav-backdrop.active {
+            visibility: visible;
+            opacity: 1;
+            pointer-events: auto;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
         }
 
         .profile-dropdown-v2 {
@@ -385,14 +478,56 @@
         }
 
         @media (max-width: 768px) {
+            /* Sync profile with hero brand bar: same height and vertical alignment */
+            .nav-master-wrapper {
+                overflow: visible !important;
+                align-items: center;
+                gap: 0.75rem;
+            }
+
+            .glass-nav {
+                flex: 1;
+            }
+
             .profile-container-v2 {
-                top: 1rem;
-                right: 1rem;
+                position: relative;
+                flex-shrink: 0;
+                align-self: center;
             }
 
             .profile-trigger {
                 width: 44px;
                 height: 44px;
+            }
+
+            /* Profile dropdown: fix mobile alignment */
+            .profile-dropdown-v2 {
+                right: 0 !important;
+                left: auto !important;
+                width: min(240px, calc(100vw - 2rem)) !important;
+                transform-origin: top right !important;
+            }
+
+            /* Premium Modal Mobile: fix close overlay, prevent box stuck at bottom */
+            #premium-modal {
+                align-items: flex-start;
+                padding: 5rem 1rem 3rem;
+                justify-content: flex-start;
+            }
+            .premium-content {
+                padding: 3rem 1.5rem 2rem;
+                margin: 0 auto;
+                flex-shrink: 0;
+            }
+            .close-premium {
+                position: fixed;
+                top: 1.25rem;
+                right: 1.25rem;
+                z-index: 2501;
+                background: rgba(255, 255, 255, 0.15);
+                width: 44px;
+                height: 44px;
+                padding: 0.5rem;
             }
 
             /* Optimization: Reduce backdrop-filter on mobile */
@@ -459,6 +594,7 @@
                 text-align: center;
                 font-size: 1rem !important;
             }
+
         }
 
 
@@ -1016,7 +1152,920 @@
             height: 15vh;
             width: 15vw;
         }
-    </style>
+
+        /* Reviews Section - after Machinery */
+        .reviews-section {
+            padding: 6rem 2rem 5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .reviews-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+        .reviews-subtitle {
+            font-size: 1rem;
+            color: #94a3b8;
+            margin-bottom: 3rem;
+        }
+        .reviews-wrapper {
+            width: 100%;
+            min-height: 100px;
+        }
+        .reviews-fallback {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            width: 100%;
+            max-width: 1000px;
+            margin-top: 2rem;
+        }
+        .review-card {
+            background: rgba(30, 30, 35, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-align: left;
+        }
+        .review-stars {
+            color: #fbbf24;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            margin-bottom: 0.75rem;
+        }
+        .review-text {
+            color: #e5e7eb;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+        .review-meta {
+            color: #94a3b8;
+            font-size: 0.85rem;
+        }
+        @media (max-width: 768px) {
+            .reviews-section { padding: 4rem 1.5rem 4rem; }
+            .reviews-title { font-size: 1.8rem; }
+            .reviews-fallback { grid-template-columns: 1fr; }
+        }
+
+        /* --- Services/Catalogue Section (Refined) --- */
+        #services {
+            position: relative;
+            width: 100%;
+            background: transparent;
+            padding: 8rem 2rem 4rem;
+            overflow: visible;
+        }
+
+        .section-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: #fff;
+            text-align: center;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            background: linear-gradient(to right, #fff, #9ca3af);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: #9ca3af;
+            text-align: center;
+            margin-bottom: 5rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            font-weight: 300;
+            letter-spacing: 0.05em;
+        }
+
+        .catalogue-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2.5rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding-bottom: 4rem;
+        }
+
+        @media (max-width: 1024px) {
+            .catalogue-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .cat-card {
+            background: rgba(30, 30, 35, 0.4);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 2.5rem;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+        }
+
+        .cat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at top right, rgba(34, 211, 238, 0.05), transparent 60%);
+            pointer-events: none;
+        }
+
+        .cat-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(34, 211, 238, 0.3);
+            box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.6);
+            background: rgba(30, 30, 35, 0.6);
+        }
+
+        .cat-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 1rem;
+        }
+
+        .currency-ind {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--accent-cyan);
+            background: rgba(34, 211, 238, 0.1);
+            padding: 0.3rem 0.6rem;
+            border-radius: 50px;
+            letter-spacing: 0;
+            text-transform: none;
+            white-space: nowrap;
+            flex-shrink: 0;
+            margin-left: auto;
+        }
+
+        .cat-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            font-size: 0.95rem;
+            color: #e5e7eb;
+        }
+
+        .cat-table th {
+            text-align: right;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: #9ca3af;
+            padding: 1rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            white-space: nowrap;
+        }
+
+        .cat-table th:first-child {
+            text-align: left;
+            padding-left: 0.5rem;
+        }
+
+        .cat-table th:last-child {
+            padding-right: 0.5rem;
+        }
+
+        .cat-table td {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            transition: color 0.2s;
+        }
+
+        .cat-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .cat-table td:first-child {
+            font-weight: 500;
+            color: #d1d5db;
+            text-align: left;
+            padding-left: 0.5rem;
+        }
+
+        .cat-table td:not(:first-child) {
+            text-align: right;
+            font-family: 'Inconsolata', monospace;
+            font-weight: 600;
+            color: #f3f4f6;
+            letter-spacing: 0.02em;
+        }
+
+        .indian-wear-card .cat-table th,
+        .indian-wear-card .cat-table td {
+            text-align: center;
+        }
+
+        .indian-wear-card .cat-table th:first-child,
+        .indian-wear-card .cat-table td:first-child {
+            text-align: left;
+        }
+
+        .cat-table tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+            color: #fff;
+        }
+
+        .cat-table tr:hover td:not(:first-child) {
+            color: var(--accent-cyan);
+        }
+
+        .service-selector {
+            display: flex;
+            overflow-x: auto;
+            gap: 1rem;
+            padding: 0.5rem 0.5rem 2.5rem;
+            margin-top: -1rem;
+            margin-bottom: 2rem;
+            justify-content: center;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .service-selector::-webkit-scrollbar {
+            display: none;
+        }
+
+        .cat-tab-pill {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 130px;
+            width: max-content !important;
+            height: 48px;
+            color: #fff;
+            border-radius: 5px;
+            padding: 10px 25px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: inset 2px 2px 2px 0px rgba(255, 255, 255, .5),
+                7px 7px 20px 0px rgba(0, 0, 0, .1),
+                4px 4px 5px 0px rgba(0, 0, 0, .1);
+            outline: none;
+            flex-shrink: 0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.05);
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            white-space: nowrap;
+        }
+
+        .cat-tab-pill:hover,
+        .cat-tab-pill.active {
+            background: rgb(6, 14, 131);
+            background: linear-gradient(0deg, rgba(6, 14, 131, 1) 0%, rgba(12, 25, 180, 1) 100%);
+            border: none;
+            padding: 11px 26px;
+            color: #fff;
+        }
+
+        .cat-tab-pill:hover {
+            background: rgb(0, 3, 255);
+            background: linear-gradient(0deg, rgb(0, 17, 255) 0%, rgba(2, 126, 251, 1) 100%);
+        }
+
+        /* Grid Filtering */
+        .catalogue-grid[data-active-category] .cat-card {
+            display: none;
+        }
+
+        .catalogue-grid[data-active-category="apparel"] .apparel-card,
+        .catalogue-grid[data-active-category="indian"] .indian-wear-card,
+        .catalogue-grid[data-active-category="home"] .home-card,
+        .catalogue-grid[data-active-category="home"] .linen-card,
+        .catalogue-grid[data-active-category="home"] .bed-card,
+        .catalogue-grid[data-active-category="other"] .other-card {
+            display: block;
+        }
+
+        .disclaimer {
+            text-align: center;
+            color: #f3f4f6;
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-top: 3rem;
+            font-style: italic;
+            opacity: 1;
+            width: 100%;
+            display: block;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .section-title {
+                font-size: 2.2rem;
+            }
+
+            .catalogue-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .cat-card {
+                padding: 1.5rem;
+            }
+
+            .cat-table th,
+            .cat-table td {
+                padding: 0.75rem 0.5rem;
+            }
+
+            .table-responsive {
+                width: 100%;
+                overflow-x: visible;
+                margin-bottom: 1rem;
+            }
+        }
+            /* --- Pickup Modal --- */
+        #pickup-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, rgba(10, 49, 77, 0.95) 0%, rgba(6, 27, 44, 0.95) 100%);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            z-index: 2000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        #pickup-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .pickup-content {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 2.5rem;
+            width: 90%;
+            max-width: 500px;
+            transform: translateY(20px) scale(0.95);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            position: relative;
+        }
+
+        #pickup-modal.active .pickup-content {
+            transform: translateY(0) scale(1);
+        }
+
+        .pickup-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .pickup-title {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 1.8rem;
+            color: #fff;
+            margin-bottom: 0.5rem;
+        }
+
+        .pickup-subtitle {
+            font-size: 0.95rem;
+            color: #9ca3af;
+        }
+
+        .pickup-form-group {
+            margin-bottom: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .pickup-label {
+            font-size: 0.9rem;
+            color: #e5e7eb;
+            font-weight: 500;
+        }
+
+        .pickup-input {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #fff;
+            padding: 0.8rem 1rem;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s;
+            color-scheme: dark;
+        }
+
+        .pickup-input:focus {
+            border-color: rgba(34, 211, 238, 0.4);
+        }
+
+        .pickup-submit {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, rgba(34, 211, 238, 0.2) 0%, rgba(34, 211, 238, 0.1) 100%);
+            border: 1px solid rgba(34, 211, 238, 0.3);
+            color: #fff;
+            border-radius: 12px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 1rem;
+        }
+
+        .pickup-submit:hover {
+            background: rgba(34, 211, 238, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .pickup-close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: #9ca3af;
+            cursor: pointer;
+            padding: 0.5rem;
+            transition: color 0.3s;
+        }
+
+        .pickup-close-btn:hover {
+            color: #fff;
+        }
+
+        /* --- Pickup Modal Steps --- */
+        .pickup-step {
+            display: none;
+        }
+
+        .pickup-step.active {
+            display: block;
+        }
+
+        .branch-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .branch-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .branch-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(34, 211, 238, 0.3);
+            transform: translateX(4px);
+        }
+
+        .branch-card.selected {
+            border-color: var(--accent-cyan);
+            background: rgba(34, 211, 238, 0.1);
+        }
+
+        .branch-info {
+            flex: 1;
+        }
+
+        .branch-name {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .branch-address {
+            font-size: 0.8rem;
+            color: #9ca3af;
+            padding-left: 1.5rem;
+        }
+
+        .branch-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-left: 0.5rem;
+        }
+
+        .branch-dir-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(59, 130, 246, 0.15);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            color: #60a5fa;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .branch-dir-btn:hover {
+            background: rgba(59, 130, 246, 0.3);
+            transform: scale(1.1);
+        }
+
+        .pickup-back-btn {
+            position: absolute;
+            left: 1rem;
+            top: 1rem;
+            background: none;
+            border: none;
+            color: #9ca3af;
+            cursor: pointer;
+            padding: 0.5rem;
+            transition: color 0.2s;
+        }
+
+        .pickup-back-btn:hover {
+            color: #fff;
+        }
+
+        /* --- Premium Modal --- */
+        #premium-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, rgba(10, 49, 77, 0.95) 0%, rgba(6, 27, 44, 0.95) 100%);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            z-index: 2500;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-y: auto;
+            padding: 1.5rem 1rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        #premium-modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .premium-content {
+            width: 95%;
+            max-width: 1000px;
+            background: #18181b;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 24px;
+            padding: 1.5rem;
+            position: relative;
+            transform: translateY(20px);
+            transition: transform 0.4s ease;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+        }
+
+        #premium-modal.active .premium-content {
+            transform: translateY(0);
+        }
+
+        .premium-header {
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .premium-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: #fbbf24;
+            margin-bottom: 0.25rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .premium-subtitle {
+            color: #9ca3af;
+            font-size: 0.9rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .pricing-table-container {
+            overflow-x: auto;
+            margin-bottom: 1rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        table.pricing-table {
+            width: 100%;
+            border-collapse: collapse;
+            color: #f3f4f6;
+            font-size: 0.9rem;
+        }
+
+        .pricing-table th,
+        .pricing-table td {
+            padding: 0.6rem;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .pricing-table th {
+            background: rgba(255, 255, 255, 0.05);
+            font-weight: 700;
+            text-transform: uppercase;
+            font-family: 'Montserrat', sans-serif;
+            letter-spacing: 0.05em;
+        }
+
+        .pricing-table th:first-child,
+        .pricing-table td:first-child {
+            text-align: left;
+            font-weight: 600;
+            color: #d1d5db;
+        }
+
+        .privileges-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .privilege-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #d1d5db;
+            font-size: 0.9rem;
+        }
+
+        .privilege-icon {
+            color: #22d3ee;
+            flex-shrink: 0;
+        }
+
+        .close-premium {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #d1d5db;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .close-premium:hover {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            border-color: rgba(239, 68, 68, 0.3);
+            transform: rotate(90deg);
+        }
+
+        /* --- Contact Section --- */
+        #contact {
+            position: relative;
+            width: 100%;
+            padding: 8rem 2rem 4rem;
+            background: transparent;
+        }
+
+        .contact-wrapper {
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .contact-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 3rem;
+            font-weight: 800;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            background: linear-gradient(135deg, #fff 0%, #9ca3af 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+        }
+
+        .branch-tab-bar {
+            display: flex;
+            gap: 0.5rem;
+            background: rgba(17, 17, 17, 0.6);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 6px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            position: relative;
+        }
+
+        .branch-tab-btn {
+            position: relative;
+            padding: 0.45rem 1.2rem;
+            font-size: 0.88rem;
+            font-weight: 500;
+            color: #9ca3af;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: color 0.3s ease;
+            z-index: 1;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .branch-tab-btn.active {
+            color: #ffffff;
+        }
+
+        .branch-tab-indicator {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.05); /* Subtly different from bar */
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+            border-radius: 10px;
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .branch-tab-panel {
+            width: 100%;
+            background: rgba(17, 17, 17, 0.4);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 18px;
+            padding: 2rem 2.5rem;
+            min-height: 260px;
+        }
+
+        .branch-content {
+            display: none;
+            width: 100%;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 2rem;
+        }
+
+        .branch-content.active {
+            display: flex;
+            animation: tabFadeIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        @keyframes tabFadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.96) translateX(-10px);
+                filter: blur(8px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateX(0);
+                filter: blur(0px);
+            }
+        }
+
+        .branch-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+            max-width: 500px;
+        }
+
+        .branch-name {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #fff;
+            margin: 0;
+        }
+
+        .branch-detail-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            color: #d1d5db;
+            font-size: 1rem;
+        }
+
+        .branch-detail-icon {
+            flex-shrink: 0;
+            width: 18px;
+            height: 18px;
+            color: #fbbf24;
+        }
+
+        .branch-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.6rem 1.4rem;
+            background: linear-gradient(135deg, #fbbf24, #d97706);
+            color: #000;
+            font-weight: 700;
+            font-size: 0.85rem;
+            border-radius: 10px;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .branch-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(251, 191, 36, 0.35);
+        }
+
+        @media (max-width: 768px) {
+            #contact {
+                padding: 4rem 1rem;
+            }
+            .contact-title {
+                font-size: 2.2rem;
+            }
+            .branch-tab-bar {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .branch-tab-panel {
+                padding: 1.5rem;
+            }
+        }
+        </style>
     <!-- Add Lenis and GSAP ScrollTrigger if not present -->
     <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
@@ -1026,8 +2075,9 @@
 <body>
 
     <div class="nav-master-wrapper" id="navMaster">
+        <div class="mobile-nav-backdrop" id="mobileNavBackdrop" aria-hidden="true"></div>
         <nav class="glass-nav">
-            <a href="#" class="nav-logo" aria-label="Home">
+            <a href="{{ url_for('index') }}" class="nav-logo" aria-label="Home">
                 <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Featherlite Logo" loading="eager">
                 <div class="logo-text">
                     <div class="brand-name">Feather Lite</div>
@@ -1035,6 +2085,9 @@
                 </div>
             </a>
             <div class="nav-links" id="navLinks">
+                <button class="mobile-nav-close" id="mobileNavClose" type="button" aria-label="Close menu">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
                 <a href="{{ url_for('index') }}" class="nav-item">
                     <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                         stroke-linecap="round" stroke-linejoin="round">
@@ -1043,7 +2096,7 @@
                     </svg>
                     <span>Home</span>
                 </a>
-                <a href="/#services" class="nav-item" id="services-link">
+                <a href="{{ url_for('services') }}" class="nav-item" id="services-link">
                     <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                         stroke-linecap="round" stroke-linejoin="round">
                         <path
@@ -1060,7 +2113,7 @@
                     </svg>
                     <span>About us</span>
                 </a>
-                <a href="/#contact" class="nav-item">
+                <a href="{{ url_for('branches') }}" class="nav-item" id="contact-link">
                     <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                         stroke-linecap="round" stroke-linejoin="round">
                         <rect width="20" height="16" x="2" y="4" rx="2"></rect>
@@ -1068,7 +2121,7 @@
                     </svg>
                     <span>Contact</span>
                 </a>
-                <a href="/#premium" class="nav-item premium-link" id="about-premium-btn">
+                <a href="#premium" class="nav-item premium-link" id="about-premium-btn">
                     <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                         stroke-linecap="round" stroke-linejoin="round">
                         <path d="m2 4 3 12h14l3-12-6 7-4-3-4 3-6-7z"></path>
@@ -1079,12 +2132,15 @@
             </div>
             <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle Menu">
                 <span class="hamburger-box">
-                    <span class="hamburger-inner"></span>
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
                 </span>
             </button>
         </nav>
 
         <!-- Profile Menu (Next to Nav) -->
+        <div class="profile-dropdown-backdrop" id="profileDropdownBackdrop" aria-hidden="true"></div>
         <div class="profile-container-v2">
             <button class="profile-trigger" id="profileTrigger" aria-label="Profile Menu">
                 <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
@@ -1289,17 +2345,31 @@
                 </div>
             </div>
         </div>
+    <!-- Google Reviews Section (visible after Machinery on all devices) -->
+    <section class="reviews-section" id="reviews">
+        <h2 class="reviews-title">What Our Customers Say</h2>
+        <p class="reviews-subtitle">Real reviews from Google</p>
+        <div class="reviews-wrapper">
+            <!-- To add Elfsight widget: Create at elfsight.com, get your embed code, paste the div here and remove reviews-fallback -->
+            <script src="https://static.elfsight.com/platform/platform.js" data-use-service-core defer></script>
         </div>
-    </section>
-
-    <!-- Google Reviews Section -->
-    <section class="reviews-section"
-        style="padding: 4rem 2rem; display: flex; flex-direction: column; align-items: center; text-align: center;">
-
-        <!-- Elfsight Google Reviews | Untitled Google Reviews -->
-        <script src="https://elfsightcdn.com/platform.js" async></script>
-        <div class="elfsight-app-b19616a7-bbc2-4712-b491-cf3c1638e93a" data-elfsight-app-lazy
-            style="width: 100%; max-width: 1200px;"></div>
+        <div class="reviews-fallback" id="reviewsFallback">
+            <div class="review-card">
+                <div class="review-stars">★★★★★</div>
+                <p class="review-text">"Excellent service! My clothes came back looking brand new. Highly recommend Feather Lite for dry cleaning."</p>
+                <div class="review-meta">— Priya S., Google</div>
+            </div>
+            <div class="review-card">
+                <div class="review-stars">★★★★★</div>
+                <p class="review-text">"Quick pickup and delivery. Professional and trustworthy. Will definitely use again."</p>
+                <div class="review-meta">— Rahul M., Google</div>
+            </div>
+            <div class="review-card">
+                <div class="review-stars">★★★★★</div>
+                <p class="review-text">"Best laundry service in Hyderabad. Fair prices and top quality work."</p>
+                <div class="review-meta">— Anitha K., Google</div>
+            </div>
+        </div>
     </section>
 
     <!-- Custom Video Player Logic & Page Animations (Vanilla JS conversion) -->
@@ -1455,24 +2525,30 @@
         function initMobileMenu() {
             const mobileToggle = document.getElementById('mobileMenuToggle');
             const navLinks = document.getElementById('navLinks');
+            const mobileBackdrop = document.getElementById('mobileNavBackdrop');
             if(mobileToggle && navLinks) {
+                function setMenuOpen(open) {
+                    navLinks.classList.toggle('active', open);
+                    mobileToggle.classList.toggle('active', open);
+                    if (mobileBackdrop) {
+                        mobileBackdrop.classList.toggle('active', open);
+                        mobileBackdrop.setAttribute('aria-hidden', open ? 'false' : 'true');
+                    }
+                }
                 mobileToggle.addEventListener('click', (e) => {
-                    navLinks.classList.toggle('active');
-                    mobileToggle.classList.toggle('active');
+                    setMenuOpen(!navLinks.classList.contains('active'));
                     e.stopPropagation();
                 });
                 document.addEventListener('click', (e) => {
                     if(!navLinks.contains(e.target) && !mobileToggle.contains(e.target)) {
-                        navLinks.classList.remove('active');
-                        mobileToggle.classList.remove('active');
+                        setMenuOpen(false);
                     }
                 });
-                // Also close menu on link click
-                navLinks.querySelectorAll('a').forEach(link => {
-                    link.addEventListener('click', () => {
-                        navLinks.classList.remove('active');
-                        mobileToggle.classList.remove('active');
-                    });
+                if (mobileBackdrop) mobileBackdrop.addEventListener('click', () => setMenuOpen(false));
+                const mobileClose = document.getElementById('mobileNavClose');
+                if (mobileClose) mobileClose.addEventListener('click', () => setMenuOpen(false));
+                navLinks.querySelectorAll('a.nav-item').forEach(link => {
+                    link.addEventListener('click', () => setMenuOpen(false));
                 });
             }
         }
@@ -1481,30 +2557,39 @@
         // Profile Toggle Logic
         const profileTrigger = document.getElementById('profileTrigger');
         const profileDropdown = document.getElementById('profileDropdown');
+        const profileBackdrop = document.getElementById('profileDropdownBackdrop');
 
         if (profileTrigger && profileDropdown) {
-            profileTrigger.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-
+            const toggleProfile = (e) => {
+                if (e) { e.preventDefault(); e.stopPropagation(); }
                 const isActive = profileDropdown.style.display === 'flex';
                 profileDropdown.style.display = isActive ? 'none' : 'flex';
+                if (profileBackdrop) profileBackdrop.classList.toggle('active', !isActive);
+                if (profileBackdrop) profileBackdrop.setAttribute('aria-hidden', isActive ? 'true' : 'false');
 
                 if (!isActive) {
-                    gsap.fromTo(profileDropdown,
-                        { opacity: 0, y: 10 },
-                        { opacity: 1, y: 0, duration: 0.3, ease: "power2.out" }
-                    );
+                    profileDropdown.style.opacity = '0';
+                    profileDropdown.style.transform = 'translateY(10px)';
+                    gsap.to(profileDropdown, { opacity: 1, y: 0, duration: 0.3, ease: "power2.out", clearProps: "transform" });
                 }
-            });
+            };
+            profileTrigger.addEventListener('click', toggleProfile);
 
+            const closeProfile = () => {
+                if (profileDropdown.style.display === 'flex') {
+                    profileDropdown.style.display = 'none';
+                    if (profileBackdrop) profileBackdrop.classList.remove('active');
+                    if (profileBackdrop) profileBackdrop.setAttribute('aria-hidden', 'true');
+                }
+            };
+            if (profileBackdrop) profileBackdrop.addEventListener('click', closeProfile);
             document.addEventListener('click', (e) => {
                 if (profileDropdown.style.display === 'flex' &&
                     !profileDropdown.contains(e.target) &&
-                    !profileTrigger.contains(e.target)) {
-                    profileDropdown.style.display = 'none';
-                }
+                    !profileTrigger.contains(e.target)) closeProfile();
             });
+            const mobileToggle = document.getElementById('mobileMenuToggle');
+            if (mobileToggle) mobileToggle.addEventListener('click', () => setTimeout(closeProfile, 0));
         }
 
         // --- Zoom Parallax Animation Logic ---
@@ -1540,7 +2625,327 @@
         });
 
 
+        // ═══════════════════════════════════════
+        //  Premium Modal Logic
+        // ═══════════════════════════════════════
+        window.togglePremium = function(show) {
+            const modal = document.getElementById('premium-modal');
+            if (!modal) return;
+            if (show) {
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            } else {
+                modal.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        };
+
+        const premiumBtn = document.getElementById('about-premium-btn');
+        if (premiumBtn) {
+            premiumBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                togglePremium(true);
+            });
+        }
+
+        // ═══════════════════════════════════════
+        //  Pickup Scheduling Modal Logic
+        // ═══════════════════════════════════════
+        const pickupModal = document.getElementById('pickup-modal');
+        const closePickupBtn = document.getElementById('pickup-close');
+        const pickupForm = document.getElementById('pickup-form');
+        const pickupDateInput = document.getElementById('pickup-date');
+        const pickupTimeSelect = document.getElementById('pickup-time');
+        const stepBranch = document.getElementById('pickup-step-branch');
+        const stepSchedule = document.getElementById('pickup-step-schedule');
+        const pickupBackBtn = document.getElementById('pickup-back');
+        const selectedBranchNameEl = document.getElementById('selected-branch-name');
+        const pickupBranchIdInput = document.getElementById('pickup-branch-id');
+
+        let selectedBranchId = null;
+
+        const getLocalDateString = (d) => {
+            const year = d.getFullYear();
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        };
+
+        const today = new Date();
+        const minDate = new Date(today);
+        minDate.setDate(today.getDate() + 1); // Min 24hr (tomorrow)
+
+        const maxDate = new Date(today);
+        maxDate.setDate(today.getDate() + 3); // Max 3 days
+
+        const minDateString = getLocalDateString(minDate);
+        const maxDateString = getLocalDateString(maxDate);
+
+        if (pickupDateInput) {
+            pickupDateInput.setAttribute('min', minDateString);
+            pickupDateInput.setAttribute('max', maxDateString);
+        }
+
+        const resetPickupForm = () => {
+            if (pickupForm) pickupForm.reset();
+            if (pickupTimeSelect) {
+                pickupTimeSelect.disabled = true;
+                Array.from(pickupTimeSelect.options).forEach(opt => opt.disabled = false);
+            }
+            selectedBranchId = null;
+            if (stepBranch) stepBranch.classList.add('active');
+            if (stepSchedule) stepSchedule.classList.remove('active');
+            document.querySelectorAll('.branch-card').forEach(c => c.classList.remove('selected'));
+        };
+
+        window.openPickupModal = function() {
+            resetPickupForm();
+            if (pickupModal) pickupModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        };
+
+        const closePickupModal = () => {
+            if (pickupModal) pickupModal.classList.remove('active');
+            document.body.style.overflow = '';
+        };
+
+        if (closePickupBtn) closePickupBtn.addEventListener('click', closePickupModal);
+
+        if (pickupModal) {
+            pickupModal.addEventListener('click', (e) => {
+                if (e.target === pickupModal) closePickupModal();
+            });
+        }
+
+        // Branch card click → go to step 2
+        document.querySelectorAll('.branch-card').forEach(card => {
+            card.addEventListener('click', () => {
+                selectedBranchId = card.dataset.branchId;
+                const branchName = card.dataset.branchName;
+                document.querySelectorAll('.branch-card').forEach(c => c.classList.remove('selected'));
+                card.classList.add('selected');
+                if (selectedBranchNameEl) selectedBranchNameEl.textContent = branchName;
+                if (pickupBranchIdInput) pickupBranchIdInput.value = selectedBranchId;
+                stepBranch.classList.remove('active');
+                stepSchedule.classList.add('active');
+            });
+        });
+
+        // Back button → return to branch selection
+        if (pickupBackBtn) {
+            pickupBackBtn.addEventListener('click', () => {
+                stepSchedule.classList.remove('active');
+                stepBranch.classList.add('active');
+            });
+        }
+
+        // Handle Date Selection & Time Restrictions
+        if (pickupDateInput && pickupTimeSelect) {
+            pickupDateInput.addEventListener('change', (e) => {
+                pickupTimeSelect.disabled = false;
+                const selectedDate = e.target.value;
+                const now = new Date();
+
+                if (selectedDate === getLocalDateString(now)) {
+                    const currentHour = now.getHours();
+                    Array.from(pickupTimeSelect.options).forEach(option => {
+                        if (option.value === "") return;
+                        option.disabled = currentHour >= parseInt(option.value.split(':')[0], 10);
+                    });
+                    if (pickupTimeSelect.selectedOptions[0]?.disabled) pickupTimeSelect.value = "";
+                } else {
+                    Array.from(pickupTimeSelect.options).forEach(opt => opt.disabled = false);
+                }
+            });
+        }
+
+        if (pickupForm) {
+            pickupForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const date = pickupDateInput.value;
+                const timeOption = pickupTimeSelect.options[pickupTimeSelect.selectedIndex];
+                const timeText = timeOption.text;
+                const timeValue = timeOption.value;
+                const branchId = pickupBranchIdInput ? pickupBranchIdInput.value : '1';
+
+                const submitBtn = pickupForm.querySelector('.pickup-submit');
+                const originalText = submitBtn.textContent;
+                submitBtn.textContent = "Scheduling...";
+                submitBtn.disabled = true;
+
+                try {
+                    const response = await fetch('/api/book_pickup', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            date, time: timeText, time_value: timeValue,
+                            branch_id: parseInt(branchId)
+                        })
+                    });
+                    const result = await response.json();
+                    if (response.ok) {
+                        alert(`Pickup scheduled at ${selectedBranchNameEl.textContent} for ${date} between ${timeText}.`);
+                        closePickupModal();
+                        resetPickupForm();
+                    } else {
+                        alert(`Error: ${result.error || 'Failed to schedule.'}`);
+                    }
+                } catch (error) {
+                    console.error('Error scheduling pickup:', error);
+                    alert('A network error occurred. Please try again.');
+                } finally {
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
+                }
+            });
+        }
+
     </script>
+    <!-- Pickup Modal -->
+    <div id="pickup-modal" class="pickup-modal">
+        <div class="pickup-content">
+            <button class="pickup-close-btn" id="pickup-close">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+
+            <div class="pickup-step active" id="pickup-step-branch">
+                <div class="pickup-header">
+                    <h2 class="pickup-title">Select Branch</h2>
+                    <p class="pickup-subtitle">Choose the nearest Feather Lite studio</p>
+                </div>
+                <div class="branch-cards">
+                    <div class="branch-card" data-branch-id="1" data-branch-name="Film Nagar">
+                        <div class="branch-info">
+                            <div class="branch-name">Film Nagar</div>
+                            <div class="branch-address">Jubilee Hills, Phase-I</div>
+                        </div>
+                    </div>
+                    <div class="branch-card" data-branch-id="2" data-branch-name="Manikonda">
+                        <div class="branch-info">
+                            <div class="branch-name">Manikonda</div>
+                            <div class="branch-address">Near Lanco Hills</div>
+                        </div>
+                    </div>
+                    <div class="branch-card" data-branch-id="3" data-branch-name="Kokapet">
+                        <div class="branch-info">
+                            <div class="branch-name">Kokapet</div>
+                            <div class="branch-address">Outer Ring Road</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pickup-step" id="pickup-step-schedule">
+                <button class="pickup-back-btn" id="pickup-back">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="19" y1="12" x2="5" y2="12"></line>
+                        <polyline points="12 19 5 12 12 5"></polyline>
+                    </svg>
+                </button>
+                <div class="pickup-header">
+                    <h2 class="pickup-title">Schedule Pickup</h2>
+                    <p class="pickup-subtitle">At <span id="selected-branch-name">Branch</span></p>
+                </div>
+                <form id="pickup-form">
+                    <input type="hidden" id="pickup-branch-id" name="branch_id">
+                    <div class="pickup-form-group">
+                        <label class="pickup-label">Preferred Date</label>
+                        <input type="date" class="pickup-input" id="pickup-date" required>
+                    </div>
+                    <div class="pickup-form-group">
+                        <label class="pickup-label">Time Slot</label>
+                        <select class="pickup-input" id="pickup-time" required disabled>
+                            <option value="">Select a slot</option>
+                            <option value="10:00">10:00 AM - 01:00 PM</option>
+                            <option value="13:00">01:00 PM - 04:00 PM</option>
+                            <option value="16:00">04:00 PM - 07:00 PM</option>
+                            <option value="19:00">07:00 PM - 09:00 PM</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="pickup-submit">Confirm Schedule</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Premium Modal -->
+    <div id="premium-modal">
+        <div class="premium-content">
+            <button class="close-premium" onclick="togglePremium(false)">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+            <div class="premium-header">
+                <h2 class="premium-title">Feather Lite Premium</h2>
+                <p class="premium-subtitle">Exclusive restoration packages for the discerning wardrobe</p>
+            </div>
+            
+            <div class="pricing-table-container">
+                <table class="pricing-table">
+                    <thead>
+                        <tr>
+                            <th>Service Tier</th>
+                            <th>Monthly</th>
+                            <th>Quarterly</th>
+                            <th>Items/mo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Silver Care</td>
+                            <td>₹2,499</td>
+                            <td>₹6,999</td>
+                            <td>15 Items</td>
+                        </tr>
+                        <tr>
+                            <td style="color: #fbbf24;">Gold Restoration</td>
+                            <td>₹4,999</td>
+                            <td>₹13,999</td>
+                            <td>35 Items</td>
+                        </tr>
+                        <tr>
+                            <td style="color: #e0e7ff;">Platinum Elite</td>
+                            <td>₹8,999</td>
+                            <td>₹24,999</td>
+                            <td>Unlimited</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="privileges-grid">
+                <div class="privilege-item">
+                    <svg class="privilege-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                    <span>Priority Pickup (Within 2hrs)</span>
+                </div>
+                <div class="privilege-item">
+                    <svg class="privilege-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                    <span>Anti-Bacterial UV Treatment</span>
+                </div>
+                <div class="privilege-item">
+                    <svg class="privilege-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                    <span>Italian Perfumed Finishing</span>
+                </div>
+                <div class="privilege-item">
+                    <svg class="privilege-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                    <span>Concierge Wardrobe Audit</span>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>

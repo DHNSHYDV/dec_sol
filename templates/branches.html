@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <title>Our Branches | Featherlite</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;600;700;800&family=Inconsolata:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #061b2c;
+            --accent-cyan: #22d3ee;
+            --accent-purple: #a855f7;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --nav-height: 100px;
+            --glass-border: rgba(255, 255, 255, 0.08);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background-color: var(--bg-primary);
+            background: linear-gradient(135deg, #0a314d 0%, #061b2c 100%);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Nav - from about.html */
+        .nav-master-wrapper { position: fixed; top: 2rem; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 1.2rem; z-index: 3000; width: 95%; max-width: 1300px; justify-content: center; }
+        .glass-nav { position: relative; flex: 1; max-width: 1200px; height: var(--nav-height); background: rgba(15, 15, 17, 0.6); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--glass-border); border-radius: 20px; display: flex; justify-content: space-between; align-items: center; padding: 0 2rem; box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.5); }
+        .nav-logo { display: flex; align-items: center; }
+        .nav-logo img { height: 80px; width: auto; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3)); transition: transform 0.3s ease; }
+        .nav-logo:hover img { transform: scale(1.05); }
+        .logo-text { display: flex; flex-direction: column; margin-left: 12px; justify-content: center; }
+        .brand-name { font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 1.25rem; color: #fff; text-transform: uppercase; letter-spacing: 0.02em; line-height: 1; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); }
+        .brand-tagline { font-family: 'Montserrat', sans-serif; font-weight: 600; font-size: 0.7rem; color: #e5e7eb; text-transform: uppercase; letter-spacing: 0.16em; margin-top: 3px; }
+        .nav-links { display: flex; align-items: center; gap: 0.5rem; }
+        .nav-item { display: flex; align-items: center; gap: 8px; padding: 0.6rem 1.2rem; color: #94a3b8; text-decoration: none; font-size: 0.95rem; font-weight: 500; border-radius: 12px; transition: all 0.3s ease; }
+        .nav-item:hover { color: #fff; background: rgba(255, 255, 255, 0.05); }
+        .nav-icon { width: 20px; height: 20px; stroke-width: 1.5px; flex-shrink: 0; }
+        .mobile-menu-toggle { display: none; background: transparent; border: none; color: #94a3b8; cursor: pointer; padding: 0.5rem; margin-left: auto; }
+        .profile-container-v2 { position: relative; flex-shrink: 0; }
+        .profile-trigger { background: rgba(255, 255, 255, 0.05); border: 1px solid var(--glass-border); color: #94a3b8; width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease; padding: 0; }
+        .profile-trigger:hover { color: #fff; background: rgba(255, 255, 255, 0.1); }
+        .profile-trigger .nav-icon, .profile-trigger svg { width: 22px !important; height: 22px !important; flex-shrink: 0; }
+        .profile-dropdown-backdrop { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.25); backdrop-filter: blur(0); -webkit-backdrop-filter: blur(0); z-index: 1000; visibility: hidden; opacity: 0; pointer-events: none; transition: opacity 0.5s ease-out, visibility 0.5s, backdrop-filter 0.5s ease-out; }
+        .profile-dropdown-backdrop.active { visibility: visible; opacity: 1; pointer-events: auto; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+        .mobile-nav-backdrop { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.25); backdrop-filter: blur(0); -webkit-backdrop-filter: blur(0); z-index: 2998; visibility: hidden; opacity: 0; pointer-events: none; transition: opacity 0.5s ease-out, visibility 0.5s, backdrop-filter 0.5s ease-out; }
+        .mobile-nav-backdrop.active { visibility: visible; opacity: 1; pointer-events: auto; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+        .profile-dropdown-v2 { position: absolute; top: calc(100% + 12px); right: 0; width: 240px; background: rgba(15, 15, 17, 0.95); backdrop-filter: blur(10px); border: 1px solid var(--glass-border); border-radius: 20px; padding: 0.8rem; display: none; flex-direction: column; gap: 4px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6); z-index: 1001; }
+        .dropdown-link { display: flex; align-items: center; gap: 12px; padding: 0.8rem 1rem; color: #d1d5db; text-decoration: none; font-size: 0.9rem; font-weight: 500; border-radius: 12px; transition: all 0.2s ease; }
+        .dropdown-link:hover { background: rgba(255, 255, 255, 0.05); color: var(--accent-cyan); }
+        .dropdown-icon { width: 18px !important; height: 18px !important; opacity: 0.7; flex-shrink: 0; }
+        .mobile-nav-close { display: none; }
+        @media (max-width: 768px) {
+            .glass-nav { width: 95%; padding: 0 1rem; height: 70px; flex: 1; }
+            .nav-logo img { height: 50px; }
+            .brand-tagline { display: block; font-size: 0.6rem; letter-spacing: 0.12em; margin-top: 2px; }
+            .mobile-menu-toggle { display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; }
+            .hamburger-box { display: flex; flex-direction: column; justify-content: space-between; width: 24px; height: 20px; position: relative; }
+            .hamburger-line { display: block; width: 24px; height: 2px; background: #94a3b8; border-radius: 2px; transition: all 0.4s ease; }
+            .mobile-menu-toggle.active .hamburger-line:nth-child(1) { transform: translateY(9px) rotate(45deg); background: #fff; }
+            .mobile-menu-toggle.active .hamburger-line:nth-child(2) { opacity: 0; }
+            .mobile-menu-toggle.active .hamburger-line:nth-child(3) { transform: translateY(-9px) rotate(-45deg); background: #fff; }
+            .nav-links { position: absolute; top: calc(100% + 8px); right: 0; width: 260px; z-index: 3001; background: linear-gradient(135deg, rgba(15, 15, 17, 0.98) 0%, rgba(10, 10, 12, 0.95) 100%); backdrop-filter: blur(30px); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 24px; flex-direction: column; padding: 4rem 1.2rem 1.5rem; gap: 0.6rem; opacity: 0; visibility: hidden; transform: translateY(-20px); transition: all 0.4s ease; }
+            .nav-links.active { opacity: 1; visibility: visible; transform: translateY(0); }
+            .nav-master-wrapper { overflow: visible !important; align-items: center; gap: 0.75rem; }
+            .profile-container-v2 { align-self: center; }
+            .mobile-nav-close { display: flex; position: absolute; top: 0.75rem; right: 0.75rem; width: 40px; height: 40px; align-items: center; justify-content: center; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); border-radius: 50%; color: #94a3b8; cursor: pointer; transition: all 0.3s ease; }
+            .mobile-nav-close:hover { color: #fff; background: rgba(255,255,255,0.15); }
+        }
+
+        /* Branches page: normal scrollable section (override landing's fixed #contact) */
+        .branches-page section { padding: 10rem 2rem 4rem; max-width: 900px; margin: 0 auto; }
+        .contact-wrapper { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 1.5rem; }
+        .contact-header { text-align: center; }
+        .contact-title { font-family: 'Montserrat', sans-serif; font-size: 3rem; font-weight: 800; color: #fff; text-transform: uppercase; letter-spacing: 0.08em; background: linear-gradient(135deg, #fff 0%, #9ca3af 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+        .contact-subtitle { color: #6b7280; font-size: 1rem; margin-top: 0.5rem; }
+        .branch-tab-bar { display: flex; gap: 0.5rem; flex-wrap: wrap; background: rgba(17, 17, 17, 0.6); backdrop-filter: blur(10px); padding: 6px; border-radius: 14px; border: 1px solid rgba(255, 255, 255, 0.08); }
+        .branch-tab-btn { position: relative; padding: 0.45rem 1.2rem; font-size: 0.88rem; font-weight: 500; color: #9ca3af; border: none; background: transparent; cursor: pointer; border-radius: 10px; transition: color 0.3s ease; z-index: 1; font-family: 'Inter', sans-serif; }
+        .branch-tab-btn.active { color: #fff; }
+        .branch-tab-indicator { position: absolute; background: rgba(17, 17, 17, 0.85); box-shadow: 0 0 20px rgba(0, 0, 0, 0.4); backdrop-filter: blur(8px); border-radius: 10px; transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); pointer-events: none; z-index: 0; }
+        .branch-tab-panel { width: 100%; background: rgba(17, 17, 17, 0.6); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 18px; padding: 2rem 2.5rem; min-height: 260px; display: flex; align-items: center; }
+        .branch-content { width: 100%; display: none; animation: tabFadeIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+        .branch-content.active { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 2rem; }
+        @keyframes tabFadeIn { from { opacity: 0; transform: scale(0.96) translateX(-10px); } to { opacity: 1; transform: scale(1) translateX(0); } }
+        .branch-info { display: flex; flex-direction: column; align-items: center; gap: 1.5rem; max-width: 500px; }
+        .branch-name { font-family: 'Montserrat', sans-serif; font-size: 1.6rem; font-weight: 700; color: #fff; margin: 0; }
+        .branch-detail-row { display: flex; align-items: center; justify-content: center; gap: 0.75rem; color: #d1d5db; font-size: 1rem; line-height: 1.5; }
+        .branch-detail-icon { flex-shrink: 0; width: 18px; height: 18px; min-width: 18px; min-height: 18px; color: #fbbf24; margin-top: 2px; }
+        .branch-cta { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.6rem 1.4rem; background: linear-gradient(135deg, #fbbf24, #d97706); color: #000; font-weight: 700; font-size: 0.85rem; border-radius: 10px; text-decoration: none; transition: transform 0.2s ease, box-shadow 0.2s ease; margin-top: 0.5rem; }
+        .branch-cta:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(251, 191, 36, 0.35); }
+        @media (max-width: 768px) {
+            .branches-page section { padding: 7rem 1.5rem 4rem; }
+            .contact-title { font-size: 2rem; }
+            .branch-tab-panel { padding: 1.5rem; }
+        }
+    </style>
+</head>
+
+<body class="branches-page">
+    {% set active_page = 'branches' %}
+    {% include '_nav_glass.html' %}
+
+    <section id="contact">
+        <div class="contact-wrapper">
+            <div class="contact-header">
+                <h2 class="contact-title">Our Branches</h2>
+                <p class="contact-subtitle">Visit us at a location near you.</p>
+            </div>
+            <div class="branch-tab-bar" id="branchTabBar">
+                <div class="branch-tab-indicator" id="branchIndicator"></div>
+                <button class="branch-tab-btn active" data-tab="branch1">Film Nagar</button>
+                <button class="branch-tab-btn" data-tab="branch2">Manikonda</button>
+                <button class="branch-tab-btn" data-tab="branch3">Kokapet</button>
+            </div>
+            <div class="branch-tab-panel">
+                <div class="branch-content active" id="branch1">
+                    <div class="branch-info">
+                        <h3 class="branch-name">Film Nagar</h3>
+                        <div class="branch-detail-row">
+                            <svg class="branch-detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                            <span>Plot No. 22 C-D, Rd No. 16, Film Nagar, beside Ambedkar Statue, Jubilee Hills, Hyderabad, Telangana 500096</span>
+                        </div>
+                        <div class="branch-detail-row">
+                            <svg class="branch-detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.93 3.42 2 2 0 0 1 3.35 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 8.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                            <span>+91 96424 64642</span>
+                        </div>
+                        <div class="branch-detail-row">
+                            <svg class="branch-detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                            <span>featherlitlaundry@gmail.com</span>
+                        </div>
+                        <div class="branch-detail-row">
+                            <svg class="branch-detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                            <span>Mon – Sat: 9:00 AM – 9:00 PM</span>
+                        </div>
+                        <a href="tel:+919642464642" class="branch-cta"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.93 3.42 2 2 0 0 1 3.35 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 8.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg> Call Branch</a>
+                    </div>
+                </div>
+                <div class="branch-content" id="branch2">
+                    <div class="branch-info">
+                        <h3 class="branch-name">Manikonda</h3>
+                        <div class="branch-detail-row">
+                            <svg class="branch-detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                            <span>Opposite Lanco Hills Road, Sri Laxmi Nagar Colony, Manikonda, Hyderabad, Telangana 500089</span>
+                        </div>
+                        <div class="branch-detail-row">
+                            <svg class="branch-detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.93 3.42 2 2 0 0 1 3.35 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 8.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                            <span>+91 75694 62635</span>
+                        </div>
+                        <div class="branch-detail-row">
+                            <svg class="branch-detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                            <span>featherlitlaundry@gmail.com</span>
+                        </div>
+                        <div class="branch-detail-row">
+                            <svg class="branch-detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                            <span>Mon – Sat: 9:00 AM – 9:00 PM</span>
+                        </div>
+                        <a href="tel:+917569462635" class="branch-cta"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.93 3.42 2 2 0 0 1 3.35 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 8.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg> Call Branch</a>
+                    </div>
+                </div>
+                <div class="branch-content" id="branch3">
+                    <div class="branch-info">
+                        <h3 class="branch-name">Kokapet</h3>
+                        <div class="branch-detail-row">
+                            <svg class="branch-detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                            <span>Ground Floor, Shop 20, Raichandani Business Bay, Opp. Rajapushpa Regalia, Narsingi, Hyderabad, Telangana 500075</span>
+                        </div>
+                        <div class="branch-detail-row">
+                            <svg class="branch-detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.93 3.42 2 2 0 0 1 3.35 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 8.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                            <span>+91 79814 35547</span>
+                        </div>
+                        <div class="branch-detail-row">
+                            <svg class="branch-detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                            <span>featherlitlaundry@gmail.com</span>
+                        </div>
+                        <div class="branch-detail-row">
+                            <svg class="branch-detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                            <span>Mon – Sat: 9:00 AM – 9:00 PM</span>
+                        </div>
+                        <a href="tel:+917981435547" class="branch-cta"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.93 3.42 2 2 0 0 1 3.35 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 8.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg> Call Branch</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script>
+        async function logoutUser() {
+            await fetch('/api/logout', { method: 'POST', credentials: 'same-origin' });
+            window.location.href = "{{ url_for('index') }}";
+        }
+
+        const tabBar = document.getElementById('branchTabBar');
+        const indicator = document.getElementById('branchIndicator');
+        const tabBtns = document.querySelectorAll('.branch-tab-btn');
+        function moveIndicator(btn) {
+            if (!indicator || !tabBar) return;
+            const barRect = tabBar.getBoundingClientRect();
+            const btnRect = btn.getBoundingClientRect();
+            indicator.style.left = (btnRect.left - barRect.left) + 'px';
+            indicator.style.top = (btnRect.top - barRect.top) + 'px';
+            indicator.style.width = btnRect.width + 'px';
+            indicator.style.height = btnRect.height + 'px';
+        }
+        function switchBranchTab(targetId) {
+            tabBtns.forEach(btn => btn.classList.toggle('active', btn.dataset.tab === targetId));
+            document.querySelectorAll('.branch-content').forEach(c => c.classList.remove('active'));
+            const target = document.getElementById(targetId);
+            if (target) {
+                target.style.animation = 'none';
+                target.offsetHeight;
+                target.style.animation = '';
+                target.classList.add('active');
+            }
+            const activeBtn = document.querySelector(`.branch-tab-btn[data-tab="${targetId}"]`);
+            if (activeBtn) moveIndicator(activeBtn);
+        }
+        window.addEventListener('load', () => {
+            const firstActive = document.querySelector('.branch-tab-btn.active');
+            if (firstActive) moveIndicator(firstActive);
+        });
+        tabBtns.forEach(btn => btn.addEventListener('click', () => switchBranchTab(btn.dataset.tab)));
+
+        function initMobileMenu() {
+            const mobileToggle = document.getElementById('mobileMenuToggle');
+            const navLinks = document.getElementById('navLinks');
+            const mobileBackdrop = document.getElementById('mobileNavBackdrop');
+            if (mobileToggle && navLinks) {
+                function setMenuOpen(open) {
+                    navLinks.classList.toggle('active', open);
+                    mobileToggle.classList.toggle('active', open);
+                    if (mobileBackdrop) {
+                        mobileBackdrop.classList.toggle('active', open);
+                        mobileBackdrop.setAttribute('aria-hidden', open ? 'false' : 'true');
+                    }
+                }
+                mobileToggle.addEventListener('click', (e) => {
+                    setMenuOpen(!navLinks.classList.contains('active'));
+                    e.stopPropagation();
+                });
+                document.addEventListener('click', (e) => {
+                    if (!navLinks.contains(e.target) && !mobileToggle.contains(e.target)) setMenuOpen(false);
+                });
+                if (mobileBackdrop) mobileBackdrop.addEventListener('click', () => setMenuOpen(false));
+                const mobileClose = document.getElementById('mobileNavClose');
+                if (mobileClose) mobileClose.addEventListener('click', () => setMenuOpen(false));
+                navLinks.querySelectorAll('a.nav-item').forEach(link => link.addEventListener('click', () => setMenuOpen(false)));
+            }
+        }
+        initMobileMenu();
+
+        const profileTrigger = document.getElementById('profileTrigger');
+        const profileDropdown = document.getElementById('profileDropdown');
+        const profileBackdrop = document.getElementById('profileDropdownBackdrop');
+        if (profileTrigger && profileDropdown) {
+            const toggleProfile = (e) => {
+                if (e) { e.preventDefault(); e.stopPropagation(); }
+                const isActive = profileDropdown.style.display === 'flex';
+                profileDropdown.style.display = isActive ? 'none' : 'flex';
+                if (profileBackdrop) profileBackdrop.classList.toggle('active', !isActive);
+                if (profileBackdrop) profileBackdrop.setAttribute('aria-hidden', isActive ? 'true' : 'false');
+                if (!isActive) {
+                    profileDropdown.style.opacity = '0';
+                    profileDropdown.style.transform = 'translateY(10px)';
+                    gsap.to(profileDropdown, { opacity: 1, y: 0, duration: 0.3, ease: "power2.out", clearProps: "transform" });
+                }
+            };
+            profileTrigger.addEventListener('click', toggleProfile);
+            const closeProfile = () => {
+                if (profileDropdown.style.display === 'flex') {
+                    profileDropdown.style.display = 'none';
+                    if (profileBackdrop) profileBackdrop.classList.remove('active');
+                    if (profileBackdrop) profileBackdrop.setAttribute('aria-hidden', 'true');
+                }
+            };
+            if (profileBackdrop) profileBackdrop.addEventListener('click', closeProfile);
+            document.addEventListener('click', (e) => {
+                if (profileDropdown.style.display === 'flex' && !profileDropdown.contains(e.target) && !profileTrigger.contains(e.target)) closeProfile();
+            });
+            const mobileToggle = document.getElementById('mobileMenuToggle');
+            if (mobileToggle) mobileToggle.addEventListener('click', () => setTimeout(closeProfile, 0));
+        }
+    </script>
+</body>
+
+</html>

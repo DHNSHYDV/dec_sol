@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>3D Experience Studio | Featherlite</title>
+    <link rel="preload" href="/static/models/shoe_clean.glb" as="fetch">
+    <link rel="preload" href="/static/models/shoe_dirty.glb" as="fetch">
     <link
         href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800&family=Outfit:wght@300;400;600;700&display=swap"
         rel="stylesheet">
@@ -620,8 +622,12 @@
             }
 
             function animate() {
+                if (document.hidden) {
+                    beamsAnimFrame = requestAnimationFrame(animate);
+                    return;
+                }
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
-                ctx.filter = 'blur(35px)';
+                ctx.filter = window.innerWidth < 768 ? 'blur(20px)' : 'blur(28px)';
                 beams.forEach((beam, i) => {
                     beam.y -= beam.speed;
                     beam.pulse += beam.pulseSpeed;

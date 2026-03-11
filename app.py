@@ -92,6 +92,14 @@ def entry():
 def about():
     return render_template('about.html', user=current_user)
 
+@app.route('/services')
+def services():
+    return render_template('services.html', user=current_user)
+
+@app.route('/branches')
+def branches():
+    return render_template('branches.html', user=current_user)
+
 @app.route('/experience')
 def experience():
     return render_template('experience.html', user=current_user)
@@ -267,5 +275,20 @@ def admin_dashboard():
     return render_template('admin_dashboard.html', bookings=bookings, orders=orders, users=users)
 
 if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 5001))
-    app.run(debug=False, host='0.0.0.0', port=port)
+    port = int(os.environ.get("PORT", 5050))
+    app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0  # Disable static cache in dev
+    app.config['TEMPLATES_AUTO_RELOAD'] = True
+    import socket
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(('8.8.8.8', 80))
+        local_ip = s.getsockname()[0]
+        s.close()
+    except Exception:
+        local_ip = '127.0.0.1'
+    print('\n' + '='*50)
+    print('SERVER RUNNING')
+    print(f'  Local:   http://localhost:{port}')
+    print(f'  Mobile:  http://{local_ip}:{port}')
+    print('='*50 + '\n')
+    app.run(debug=True, host='0.0.0.0', port=port, use_reloader=True)

@@ -13,11 +13,15 @@ if (container) {
     const cameraDistance = window.innerWidth < 768 ? 6 : 5; // Start slightly further on mobile
     camera.position.set(0, 0, cameraDistance);
 
-    // Renderer
-    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: 'high-performance' });
+    // Renderer - disable antialias on mobile for performance
+    const isMobile = window.innerWidth < 768;
+    const renderer = new THREE.WebGLRenderer({
+        alpha: true,
+        antialias: !isMobile,
+        powerPreference: 'high-performance'
+    });
     renderer.setSize(window.innerWidth, window.innerHeight);
-    // Limit pixel ratio to 2 for performance on high-DPI devices
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1.5 : 2));
     renderer.outputEncoding = THREE.sRGBEncoding;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     container.appendChild(renderer.domElement);
@@ -281,21 +285,24 @@ if (container) {
 
     animate();
 
-    // Resizing
+    // Resizing (debounced)
+    let resizeTimeout;
     window.addEventListener('resize', () => {
-        const width = window.innerWidth;
-        const height = window.innerHeight;
-        camera.aspect = width / height;
-        camera.updateProjectionMatrix();
-        renderer.setSize(width, height);
-
-        Object.keys(models).forEach(cat => {
-            if (models[cat].loaded) {
-                const newScale = getTargetScale(cat);
-                if (models[cat].clean) models[cat].clean.scale.set(newScale, newScale, newScale);
-                if (models[cat].dirty) models[cat].dirty.scale.set(newScale, newScale, newScale);
-            }
-        });
+        if (resizeTimeout) clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            camera.aspect = width / height;
+            camera.updateProjectionMatrix();
+            renderer.setSize(width, height);
+            Object.keys(models).forEach(cat => {
+                if (models[cat].loaded) {
+                    const newScale = getTargetScale(cat);
+                    if (models[cat].clean) models[cat].clean.scale.set(newScale, newScale, newScale);
+                    if (models[cat].dirty) models[cat].dirty.scale.set(newScale, newScale, newScale);
+                }
+            });
+        }, 150);
     });
 
     // Compatibility dummies
