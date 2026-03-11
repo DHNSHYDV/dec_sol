@@ -29,18 +29,25 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
 
-# Ensure database tables are created on Vercel cold-starts
-with app.app_context():
-    db.create_all()
-    # Seed Branches if they don't exist
-    if Branch.query.count() == 0:
-        branches = [
-            Branch(name='Manikonda', location='Manikonda Main Road, Hyderabad, 500089'),
-            Branch(name='Kokapet', location='Financial District, Hyderabad, 500075'),
-            Branch(name='Film Nagar', location='Road No.1, Film Nagar, Hyderabad, 500033'),
-        ]
-        db.session.add_all(branches)
-        db.session.commit()
+def init_db():
+    """Consolidated database initialization and seeding."""
+    try:
+        with app.app_context():
+            db.create_all()
+            if Branch.query.count() == 0:
+                branches = [
+                    Branch(name='Manikonda', location='Manikonda Main Road, Hyderabad, 500089'),
+                    Branch(name='Kokapet', location='Financial District, Hyderabad, 500075'),
+                    Branch(name='Film Nagar', location='Road No.1, Film Nagar, Hyderabad, 500033'),
+                ]
+                db.session.add_all(branches)
+                db.session.commit()
+                print("Seeded 3 branches.")
+    except Exception as e:
+        print(f"Database initialization error: {e}")
+
+# Call init_db once during module load, but handle it gracefully
+init_db()
 
 login_manager = LoginManager(app)
 login_manager.login_view = 'entry' # Redirect here if not logged in
@@ -67,6 +74,10 @@ def notify_dev(event_type, user_email, name=""):
             print(f"Webhook failed: {e}")
 
 # --- Routes ---
+@app.route('/health')
+def health():
+    return jsonify({"status": "healthy", "timestamp": datetime.now().isoformat()})
+
 @app.route('/')
 def index():
     return render_template('landing_v2.html', user=current_user)
@@ -256,19 +267,5 @@ def admin_dashboard():
     return render_template('admin_dashboard.html', bookings=bookings, orders=orders, users=users)
 
 if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()
-        
-        # Seed Branches if they don't exist
-        if Branch.query.count() == 0:
-            branches = [
-                Branch(name='Manikonda', location='Manikonda Main Road, Hyderabad, 500089'),
-                Branch(name='Kokapet', location='Financial District, Hyderabad, 500075'),
-                Branch(name='Film Nagar', location='Road No.1, Film Nagar, Hyderabad, 500033'),
-            ]
-            db.session.add_all(branches)
-            db.session.commit()
-            print("Seeded 3 branches.")
-            
     port = int(os.environ.get("PORT", 5001))
     app.run(debug=False, host='0.0.0.0', port=port)
