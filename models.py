@@ -45,7 +45,7 @@ class User(UserMixin, db.Model):
     branch_id = db.Column(db.Integer, db.ForeignKey('branches.id'), nullable=True)
 
     # Relationship to Order
-    orders = db.relationship('Order', backref='user', lazy=True)
+    orders = db.relationship('Order', backref='user', lazy=True, cascade="all, delete-orphan")
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -122,4 +122,4 @@ class Booking(db.Model):
     status = db.Column(db.String(30), default="Pending") # Pending, Confirmed, Cancelled
     created_at = db.Column(db.DateTime, server_default=db.func.now())
 
-    user = db.relationship('User', backref=db.backref('bookings', lazy=True))
+    user = db.relationship('User', backref=db.backref('bookings', lazy=True, cascade="all, delete-orphan"))

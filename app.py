@@ -328,6 +328,29 @@ def update_booking_status():
     
     return jsonify({'message': f'Status updated to {new_status}'})
 
+@app.route('/api/admin/delete_user', methods=['POST'])
+@login_required
+def delete_user():
+    if current_user.role != 'super_admin':
+        return jsonify({'error': 'Unauthorized. Only owner can delete users.'}), 403
+    
+    data = request.get_json()
+    user_id = data.get('user_id')
+    
+    if not user_id:
+        return jsonify({'error': 'User ID is required'}), 400
+        
+    user = User.query.get_or_404(user_id)
+    
+    # Optional: Prevent deleting self
+    if user.id == current_user.id:
+        return jsonify({'error': 'You cannot delete yourself'}), 400
+        
+    db.session.delete(user)
+    db.session.commit()
+    
+    return jsonify({'message': f'User {user.email} deleted successfully'})
+
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5050))
     app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0  # Disable static cache in dev
