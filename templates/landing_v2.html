@@ -1127,6 +1127,89 @@
             }
         }
 
+        /* --- My Bookings Modal --- */
+        #bookings-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, rgba(10, 49, 77, 0.95) 0%, rgba(6, 27, 44, 0.95) 100%);
+            backdrop-filter: blur(20px);
+            z-index: 2000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        #bookings-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .bookings-content {
+            background: rgba(25, 25, 25, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 2rem;
+            width: 95%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            transform: translateY(20px);
+            transition: all 0.4s ease;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+
+        #bookings-modal.active .bookings-content {
+            transform: translateY(0);
+        }
+
+        .bookings-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .booking-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .booking-info h4 {
+            margin: 0;
+            color: #fff;
+            font-size: 1.1rem;
+        }
+
+        .booking-info p {
+            margin: 4px 0 0;
+            color: #9ca3af;
+            font-size: 0.9rem;
+        }
+
+        .booking-status {
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .status-pending { background: rgba(234, 179, 8, 0.2); color: #eab308; }
+        .status-confirmed { background: rgba(34, 197, 94, 0.2); color: #22c55e; }
+        .status-completed { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
+
         /* --- Premium Modal --- */
         #premium-modal {
             position: fixed;
@@ -1719,7 +1802,8 @@
         .catalogue-grid[data-active-category="home"] .linen-card,
         .catalogue-grid[data-active-category="home"] .bed-card,
         .catalogue-grid[data-active-category="other"] .other-card {
-            display: block;
+            display: flex;
+            flex-direction: column;
         }
 
         .disclaimer {
@@ -1839,7 +1923,7 @@
             }
 
             .indian-wear-card .cat-table td:nth-child(4)::before {
-                content: "Normal: ";
+                content: "Ornml: ";
             }
 
             .indian-wear-card .cat-table td:nth-child(5)::before {
@@ -2516,16 +2600,25 @@
             </button>
             <div class="profile-dropdown-v2" id="profileDropdown">
                 {% if current_user.is_authenticated %}
-                <!-- Logged-in: show name and logout -->
-                <div
-                    style="padding:0.6rem 1rem;color:#a1a1aa;font-size:0.8rem;border-bottom:1px solid rgba(255,255,255,0.08);">
+                <div style="padding:0.6rem 1rem;color:#a1a1aa;font-size:0.8rem;border-bottom:1px solid rgba(255,255,255,0.08);">
                     {{ current_user.name }}<br>
                     <span style="font-size:0.7rem;color:#71717a;">{{ current_user.email }}</span>
                 </div>
+                
+                <a href="#" class="dropdown-link" id="open-bookings-btn">
+                    <svg class="dropdown-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                        <polyline points="10 9 9 9 8 9"></polyline>
+                    </svg>
+                    My Bookings
+                </a>
+
                 {% if current_user.role != 'user' %}
                 <a href="/admin/dashboard" class="dropdown-link">
-                    <svg class="dropdown-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                        stroke-linecap="round" stroke-linejoin="round">
+                    <svg class="dropdown-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
                         <line x1="3" y1="9" x2="21" y2="9"></line>
                         <line x1="9" y1="21" x2="9" y2="9"></line>
@@ -2533,9 +2626,9 @@
                     Admin Panel
                 </a>
                 {% endif %}
+
                 <a href="#" class="dropdown-link" onclick="logoutUser(); return false;">
-                    <svg class="dropdown-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                        stroke-linecap="round" stroke-linejoin="round">
+                    <svg class="dropdown-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
                         <polyline points="16 17 21 12 16 7"></polyline>
                         <line x1="21" y1="12" x2="9" y2="12"></line>
@@ -2543,26 +2636,32 @@
                     Logout
                 </a>
                 {% else %}
-                <!-- Not logged in: show signup link -->
                 <a href="{{ url_for('entry') }}" class="dropdown-link">
-                    <svg class="dropdown-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                        stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                        <circle cx="8.5" cy="7" r="4"></circle>
-                        <polyline points="17 11 19 13 23 9"></polyline>
-                    </svg>
-                    Sign up as a customer
-                </a>
-                <a href="{{ url_for('entry') }}" class="dropdown-link">
-                    <svg class="dropdown-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                        stroke-linecap="round" stroke-linejoin="round">
+                    <svg class="dropdown-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
                         <polyline points="10 17 15 12 10 7"></polyline>
                         <line x1="15" y1="12" x2="3" y2="12"></line>
                     </svg>
-                    Login
+                    Sign up / Login
                 </a>
                 {% endif %}
+            </div>
+        </div>
+        
+        <!-- My Bookings Modal -->
+        <div id="bookings-modal">
+            <div class="bookings-content">
+                <button class="pickup-close-btn" id="bookings-close">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+                <div class="pickup-header">
+                    <h2 class="pickup-title">My Bookings</h2>
+                    <p class="pickup-subtitle">View and track your scheduled pickups</p>
+                </div>
+                <div id="bookings-list" class="bookings-list">
+                    <!-- Loaded dynamically -->
+                    <p style="text-align:center; color:#9ca3af;">Loading your bookings...</p>
+                </div>
             </div>
         </div>
     </div>
@@ -4198,6 +4297,57 @@
         if (pickupModal) {
             pickupModal.addEventListener('click', (e) => {
                 if (e.target === pickupModal) closePickupModal();
+            });
+        }
+
+        // --- My Bookings Logic ---
+        const bookingsModal = document.getElementById('bookings-modal');
+        const openBookingsBtn = document.getElementById('open-bookings-btn');
+        const closeBookingsBtn = document.getElementById('bookings-close');
+        const bookingsList = document.getElementById('bookings-list');
+
+        const fetchBookings = async () => {
+            if (!bookingsList) return;
+            bookingsList.innerHTML = '<p style="text-align:center; color:#9ca3af;">Loading your bookings...</p>';
+            try {
+                const response = await fetch('/api/my_bookings');
+                const data = await response.json();
+                
+                if (data.length === 0) {
+                    bookingsList.innerHTML = '<p style="text-align:center; color:#9ca3af; padding: 2rem;">No bookings found yet.</p>';
+                    return;
+                }
+
+                bookingsList.innerHTML = data.map(b => `
+                    <div class="booking-item">
+                        <div class="booking-info">
+                            <h4>${b.service}</h4>
+                            <p>${b.branch} • ${b.time}</p>
+                        </div>
+                        <span class="booking-status status-${b.status.toLowerCase()}">${b.status}</span>
+                    </div>
+                `).join('');
+            } catch (error) {
+                bookingsList.innerHTML = '<p style="text-align:center; color:#ef4444;">Failed to load bookings.</p>';
+            }
+        };
+
+        if (openBookingsBtn && bookingsModal) {
+            openBookingsBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                fetchBookings();
+                bookingsModal.classList.add('active');
+            });
+        }
+
+        const closeBookingsModal = () => {
+            if (bookingsModal) bookingsModal.classList.remove('active');
+        };
+
+        if (closeBookingsBtn) closeBookingsBtn.addEventListener('click', closeBookingsModal);
+        if (bookingsModal) {
+            bookingsModal.addEventListener('click', (e) => {
+                if (e.target === bookingsModal) closeBookingsModal();
             });
         }
 

@@ -43,6 +43,27 @@ def init_db():
                 db.session.add_all(branches)
                 db.session.commit()
                 print("Seeded 3 branches.")
+            
+            # Seed Admins/Shop Mails
+            branch_emails = {
+                'shop1@gmail.com': 1, # Manikonda
+                'shop2@gmail.com': 2, # Kokapet
+                'shop3@gmail.com': 3  # Film Nagar
+            }
+            owner_email = 'owner@gmail.com'
+            
+            for email, b_id in branch_emails.items():
+                if not User.query.filter_by(email=email).first():
+                    u = User(email=email, name=f"Branch {b_id} Admin", role='branch_admin', branch_id=b_id)
+                    u.set_password('admin123')
+                    db.session.add(u)
+            
+            if not User.query.filter_by(email=owner_email).first():
+                o = User(email=owner_email, name="Owner", role='super_admin')
+                o.set_password('owner123')
+                db.session.add(o)
+            
+            db.session.commit()
     except Exception as e:
         print(f"Database initialization error: {e}")
 
@@ -255,11 +276,23 @@ def book_pickup():
         print(f"Error scheduling pickup: {e}")
         return jsonify({'error': 'Failed to schedule pickup. Please check the date and time format.'}), 500
 
+@app.route('/api/my_bookings')
+@login_required
+def get_my_bookings():
+    bookings = Booking.query.filter_by(user_id=current_user.id).order_by(Booking.created_at.desc()).all()
+    return jsonify([{
+        'id': b.id,
+        'branch': b.branch.name,
+        'service': b.service_details,
+        'time': b.appointment_time.strftime('%Y-%m-%d %I:%M %p'),
+        'status': b.status
+    } for b in bookings])
+
 # --- Admin Routes (New) ---
 @app.route('/admin/dashboard')
 @login_required
 def admin_dashboard():
-    if current_user.email != app.config['ADMIN_EMAIL']:
+    if current_user.role not in ['super_admin', 'branch_admin']:
         return redirect(url_for('index'))
     
     # Filter based on branch
