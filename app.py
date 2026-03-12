@@ -307,6 +307,27 @@ def admin_dashboard():
         
     return render_template('admin_dashboard.html', bookings=bookings, orders=orders, users=users)
 
+@app.route('/api/admin/update_booking_status', methods=['POST'])
+@login_required
+def update_booking_status():
+    if current_user.role not in ['super_admin', 'branch_admin']:
+        return jsonify({'error': 'Unauthorized'}), 403
+    
+    data = request.get_json()
+    booking_id = data.get('booking_id')
+    new_status = data.get('status')
+    
+    booking = Booking.query.get_or_404(booking_id)
+    
+    # Check if branch_admin is authorized for this booking
+    if current_user.role == 'branch_admin' and booking.branch_id != current_user.branch_id:
+        return jsonify({'error': 'Unauthorized for this branch'}), 403
+    
+    booking.status = new_status
+    db.session.commit()
+    
+    return jsonify({'message': f'Status updated to {new_status}'})
+
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5050))
     app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0  # Disable static cache in dev

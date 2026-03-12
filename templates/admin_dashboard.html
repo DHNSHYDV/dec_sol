@@ -174,6 +174,27 @@
                 font-size: 0.9rem;
             }
         }
+        .status-select {
+            padding: 0.4rem 0.75rem;
+            border-radius: 0.5rem;
+            border: 1px solid var(--border);
+            background: white;
+            color: var(--text);
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+
+        .status-select:hover {
+            border-color: var(--secondary);
+        }
+
+        .status-select:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 2px rgba(34, 211, 238, 0.2);
+        }
     </style>
 </head>
 
@@ -203,12 +224,20 @@
                     </thead>
                     <tbody>
                         {% for booking in bookings %}
-                        <tr>
+                        <tr id="booking-{{ booking.id }}">
                             <td>{{ booking.user.name }}</td>
                             <td>{{ booking.service_details }}</td>
                             <td>{{ booking.branch.name }}</td>
                             <td>{{ booking.appointment_time.strftime('%Y-%m-%d %H:%M') }}</td>
-                            <td><span class="badge {{ booking.status.lower() }}">{{ booking.status }}</span></td>
+                            <td>
+                                <select class="status-select" onchange="updateStatus({{ booking.id }}, this.value)">
+                                    <option value="Pending" {% if booking.status == 'Pending' %}selected{% endif %}>Pending</option>
+                                    <option value="Confirmed" {% if booking.status == 'Confirmed' %}selected{% endif %}>Confirmed</option>
+                                    <option value="Collected" {% if booking.status == 'Collected' %}selected{% endif %}>Collected</option>
+                                    <option value="Delivered" {% if booking.status == 'Delivered' %}selected{% endif %}>Delivered</option>
+                                    <option value="Cancelled" {% if booking.status == 'Cancelled' %}selected{% endif %}>Cancelled</option>
+                                </select>
+                            </td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -259,6 +288,39 @@
                 Back to Site
             </a>
         </footer>
+        <script>
+            async function updateStatus(bookingId, newStatus) {
+                const select = document.querySelector(`#booking-${bookingId} .status-select`);
+                select.disabled = true;
+                
+                try {
+                    const response = await fetch('/api/admin/update_booking_status', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            booking_id: bookingId,
+                            status: newStatus
+                        })
+                    });
+                    
+                    const data = await response.json();
+                    if (!response.ok) {
+                        alert(data.error || 'Failed to update status');
+                        location.reload(); // Revert on failure
+                    } else {
+                        console.log('Status updated:', data.message);
+                    }
+                } catch (error) {
+                    console.error('Error updating status:', error);
+                    alert('Network error. Please try again.');
+                    location.reload();
+                } finally {
+                    select.disabled = false;
+                }
+            }
+        </script>
     </div>
 </body>
 
