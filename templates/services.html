@@ -96,9 +96,32 @@
         .disclaimer { text-align: center; color: #f3f4f6; font-weight: 700; font-size: 0.9rem; margin-top: 3rem; font-style: italic; }
         .table-responsive { overflow-x: auto; }
         @media (max-width: 1024px) { .catalogue-grid { grid-template-columns: 1fr; } }
-        @media (max-width: 768px) { .section-title { font-size: 2.2rem; } .services-page section { padding: 8rem 1.5rem 4rem; } }
         @media (max-width: 768px) {
+            .section-title { font-size: 2.2rem; }
             .services-page section { padding: 7rem 1.5rem 4rem; }
+            .catalogue-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+            .cat-card { padding: 1.5rem; }
+            .cat-table th, .cat-table td { padding: 0.75rem 0.5rem; }
+            .table-responsive { width: 100%; overflow-x: visible; margin-bottom: 1rem; }
+            .cat-table, .cat-table tbody { display: block; width: 100%; min-width: 0 !important; }
+            .cat-table tr:first-child { display: none; }
+            .cat-table tr { display: block; padding: 1.2rem 0; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+            .cat-table td { display: block; width: 100%; padding: 0.5rem 0 !important; border: none; text-align: left !important; }
+            .cat-table td:first-child { font-size: 1.15rem; color: #fff; font-weight: 600; margin-bottom: 0.5rem; padding-top: 0 !important; }
+            .cat-table td:not(:first-child) { display: inline-flex; align-items: center; background: rgba(255, 255, 255, 0.03); padding: 0.5rem 0.8rem !important; border-radius: 8px; margin-right: 8px; margin-bottom: 8px; font-size: 0.85rem; border: 1px solid rgba(255, 255, 255, 0.05); }
+            .cat-table td:not(:first-child)::before { color: #9ca3af; font-size: 0.7rem; margin-right: 5px; text-transform: uppercase; font-family: 'Montserrat', sans-serif; font-weight: 700; }
+            .cat-table td:nth-child(2)::before { content: "Dry Clean: "; }
+            .cat-table td:nth-child(3)::before { content: "Iron: "; }
+            .indian-wear-card .cat-table td:nth-child(2)::before { content: "Cotton: "; }
+            .indian-wear-card .cat-table td:nth-child(3)::before { content: "Special: "; }
+            .indian-wear-card .cat-table td:nth-child(4)::before { content: "Ornml: "; }
+            .indian-wear-card .cat-table td:nth-child(5)::before { content: "Iron: "; }
+            .linen-card .cat-table td:nth-child(2)::before { content: "S: "; }
+            .linen-card .cat-table td:nth-child(3)::before { content: "M: "; }
+            .linen-card .cat-table td:nth-child(4)::before { content: "L: "; }
+            .bed-card .cat-table td:nth-child(2)::before { content: "Sgl: "; }
+            .bed-card .cat-table td:nth-child(3)::before { content: "Dbl: "; }
+            .other-card .cat-table td:nth-child(2)::before { content: "Price: "; }
         }
     </style>
 </head>
