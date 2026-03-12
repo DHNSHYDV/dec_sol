@@ -196,6 +196,7 @@
                         <tr>
                             <th>User</th>
                             <th>Service</th>
+                            <th>Branch</th>
                             <th>Time</th>
                             <th>Status</th>
                         </tr>
@@ -205,6 +206,7 @@
                         <tr>
                             <td>{{ booking.user.name }}</td>
                             <td>{{ booking.service_details }}</td>
+                            <td>{{ booking.branch.name }}</td>
                             <td>{{ booking.appointment_time.strftime('%Y-%m-%d %H:%M') }}</td>
                             <td><span class="badge {{ booking.status.lower() }}">{{ booking.status }}</span></td>
                         </tr>
