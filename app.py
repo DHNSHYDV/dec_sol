@@ -328,6 +328,24 @@ def update_booking_status():
     
     return jsonify({'message': f'Status updated to {new_status}'})
 
+@app.route('/api/admin/delete_booking', methods=['POST'])
+@login_required
+def delete_booking():
+    if current_user.role != 'super_admin':
+        return jsonify({'error': 'Unauthorized. Only owner can delete bookings.'}), 403
+    
+    data = request.get_json()
+    booking_id = data.get('booking_id')
+    
+    if not booking_id:
+        return jsonify({'error': 'Booking ID is required'}), 400
+        
+    booking = Booking.query.get_or_404(booking_id)
+    db.session.delete(booking)
+    db.session.commit()
+    
+    return jsonify({'message': f'Booking #{booking_id} deleted successfully'})
+
 @app.route('/api/admin/delete_user', methods=['POST'])
 @login_required
 def delete_user():

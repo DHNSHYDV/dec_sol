@@ -241,6 +241,9 @@
                             <th>Branch</th>
                             <th>Time</th>
                             <th>Status</th>
+                            {% if current_user.role == 'super_admin' %}
+                            <th>Actions</th>
+                            {% endif %}
                         </tr>
                     </thead>
                     <tbody>
@@ -259,6 +262,13 @@
                                     <option value="Cancelled" {% if booking.status == 'Cancelled' %}selected{% endif %}>Cancelled</option>
                                 </select>
                             </td>
+                            {% if current_user.role == 'super_admin' %}
+                            <td>
+                                <button class="delete-btn" onclick="deleteBooking({{ booking.id }})">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+                                </button>
+                            </td>
+                            {% endif %}
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -351,6 +361,36 @@
                     location.reload();
                 } finally {
                     select.disabled = false;
+                }
+            }
+
+            async function deleteBooking(bookingId) {
+                if (!confirm(`Are you sure you want to delete this booking?`)) {
+                    return;
+                }
+
+                try {
+                    const response = await fetch('/api/admin/delete_booking', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            booking_id: bookingId
+                        })
+                    });
+
+                    const data = await response.json();
+                    if (!response.ok) {
+                        alert(data.error || 'Failed to delete booking');
+                    } else {
+                        const row = document.getElementById(`booking-${bookingId}`);
+                        if (row) row.remove();
+                        console.log('Booking deleted:', data.message);
+                    }
+                } catch (error) {
+                    console.error('Error deleting booking:', error);
+                    alert('Network error. Please try again.');
                 }
             }
 
